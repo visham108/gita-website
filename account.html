@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Study — Bookmarks, Notes &amp; Reading Plans | Bhagavad-gītā As It Is</title>
+  <meta name="description" content="Your personal Gītā study space — reading plans, bookmarks, highlights, reflections and course progress, together in one place." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400..800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23b3541a'/%3E%3Cpath fill='%23fff6e8' d='M32 12c5 7.5 5 17.5 0 26-5-8.5-5-18.5 0-26Zm-14 9c7.5 2 12 8.5 13 17-8.5-2-14-8.5-13-17Zm28 0c1 8.5-4.5 15-13 17 1-8.5 5.5-15 13-17ZM17 45c4.5 4.5 9.5 6.5 15 6.5s10.5-2 15-6.5c-2.5 7.5-8.5 11-15 11s-12.5-3.5-15-11Z'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<main id="main">
+
+  <section class="page-hero" style="padding-bottom:var(--space-7)">
+    <div class="container">
+      <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb">
+          <li><a href="index.html">Home</a></li>
+          <li aria-current="page">My Study</li>
+        </ol>
+      </nav>
+      <div class="flex-between">
+        <div>
+          <p class="eyebrow">Personal Study Space</p>
+          <h1 data-greeting>Welcome, seeker</h1>
+          <p class="lede">Your bookmarks, reflections, reading plan and course progress — kept
+          together, saved on this device. <span style="color:var(--gold-bright)">In the production
+          release, everything syncs securely across all your devices.</span></p>
+        </div>
+        <form class="card card--night" style="min-width:280px" data-name-form>
+          <label for="profile-name" style="font-size:var(--text-sm); font-weight:600; display:block; margin-bottom:.5rem">What should we call you?</label>
+          <div style="display:flex; gap:.5rem">
+            <input id="profile-name" type="text" placeholder="Your name" maxlength="40"
+              style="flex:1; min-width:0; background:rgba(255,248,237,.07); border:1px solid var(--line-dark); border-radius:var(--radius-pill); color:var(--moon); padding:.6em 1.1em" />
+            <button class="btn btn--gold btn--sm" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD STATS ============ -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="dash-grid">
+        <div class="card dash-stat">
+          <span class="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6.5 3.5h11V21L12 16.8 6.5 21V3.5Z"/></svg></span>
+          <div><strong data-stat-bookmarks>0</strong><span>Bookmarked verses</span></div>
+        </div>
+        <div class="card dash-stat">
+          <span class="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 4h14v13l-4 4H5V4Z"/><path d="M15 21v-4h4M9 9h6M9 12.5h4"/></svg></span>
+          <div><strong data-stat-notes>0</strong><span>Reflections written</span></div>
+        </div>
+        <div class="card dash-stat">
+          <span class="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3.2 1.8"/></svg></span>
+          <div><strong data-stat-course>0%</strong><span>Course progress</span></div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-5" style="align-items:stretch">
+        <div class="card card--night" data-continue-card>
+          <p class="eyebrow" style="color:var(--gold-bright)">Continue Reading</p>
+          <div data-continue-body>
+            <p style="color:var(--moon-soft)">You haven't opened a verse yet. The journey of 700
+            verses begins with a single śloka.</p>
+            <a class="btn btn--gold" href="explorer.html">Open the Verse Explorer</a>
+          </div>
+        </div>
+        <div class="card" style="display:flex; flex-direction:column; justify-content:space-between; gap:var(--space-4)">
+          <div>
+            <p class="eyebrow">Today's Practice</p>
+            <p class="verse-detail__translation" style="font-size:var(--text-md); margin-bottom:var(--space-2)" data-daily-verse>
+              “You have a right to perform your prescribed duty, but you are not entitled to the fruits of action.”
+            </p>
+            <p class="muted" data-daily-ref>Bhagavad-gītā 2.47</p>
+          </div>
+          <a class="link-arrow" href="explorer.html" data-daily-link>Read today's verse in context <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING PLANS ============ -->
+  <section class="section section--cream" id="plans">
+    <div class="container">
+      <div class="center mb-6 reveal">
+        <p class="eyebrow">Reading Plans</p>
+        <h2 class="display-md">Choose your pace</h2>
+        <p class="lede">A plan turns intention into habit. Pick one — you can change it any time.</p>
+      </div>
+      <div class="grid-3" data-plans>
+        <label class="plan-option">
+          <input type="radio" name="plan" value="pilgrim" />
+          <span class="card" style="display:block">
+            <span class="badge badge--sage mb-4" style="display:inline-flex">18 weeks</span>
+            <h3 style="font-size:var(--text-md)">The Pilgrim's Path</h3>
+            <p>One chapter a week with purports, aligned to the free course. The classic first journey.</p>
+          </span>
+        </label>
+        <label class="plan-option">
+          <input type="radio" name="plan" value="essence" />
+          <span class="card" style="display:block">
+            <span class="badge mb-4" style="display:inline-flex">2 weeks</span>
+            <h3 style="font-size:var(--text-md)">The Essence First</h3>
+            <p>Chapters 2, 9 and 18 in a fortnight — the summary, the summit and the conclusion.</p>
+          </span>
+        </label>
+        <label class="plan-option">
+          <input type="radio" name="plan" value="daily" />
+          <span class="card" style="display:block">
+            <span class="badge badge--night mb-4" style="display:inline-flex; color:var(--moon)">700 days</span>
+            <h3 style="font-size:var(--text-md)">A Verse a Day</h3>
+            <p>One verse with purport every morning. Small, unbreakable, and quietly life-changing.</p>
+          </span>
+        </label>
+      </div>
+      <p class="center muted mt-5" data-plan-status></p>
+    </div>
+  </section>
+
+  <!-- ============ BOOKMARKS & NOTES ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="gap:var(--space-7); align-items:start">
+        <div>
+          <div class="flex-between mb-5">
+            <h2 class="display-sm" style="margin:0">Bookmarks</h2>
+            <a class="link-arrow" href="explorer.html">Add more <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="stack-3" data-bookmark-list></div>
+        </div>
+        <div>
+          <div class="flex-between mb-5">
+            <h2 class="display-sm" style="margin:0">My Reflections</h2>
+            <span class="muted" data-note-count></span>
+          </div>
+          <div class="stack-3" data-note-list></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section section--tight">
+    <div class="container">
+      <div class="cta-band reveal">
+        <h2 style="font-size:var(--text-xl)">Study best with the book in hand</h2>
+        <p class="lede">Your digital study space pairs perfectly with a physical copy — underline,
+        dog-ear, and live with it.</p>
+        <a class="btn btn--gold btn--lg" href="book.html#editions">Get Your Copy</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/account.js"></script>
+<script>
+  Site.init({ page: "account", darkHeader: true });
+  Account.init();
+</script>
+</body>
+</html>

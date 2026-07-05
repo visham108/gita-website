@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — Bhagavad-gītā As It Is</title>
+  <meta name="description" content="Complete your order of Bhagavad-gītā As It Is. Free worldwide shipping over $35 · 30-day guarantee." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400..800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23b3541a'/%3E%3Cpath fill='%23fff6e8' d='M32 12c5 7.5 5 17.5 0 26-5-8.5-5-18.5 0-26Zm-14 9c7.5 2 12 8.5 13 17-8.5-2-14-8.5-13-17Zm28 0c1 8.5-4.5 15-13 17 1-8.5 5.5-15 13-17ZM17 45c4.5 4.5 9.5 6.5 15 6.5s10.5-2 15-6.5c-2.5 7.5-8.5 11-15 11s-12.5-3.5-15-11Z'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<main id="main">
+
+  <section class="page-hero" style="padding-bottom:var(--space-6)">
+    <div class="container">
+      <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="book.html#editions">Editions</a></li>
+          <li aria-current="page">Checkout</li>
+        </ol>
+      </nav>
+      <h1 style="font-size:var(--text-2xl)">Checkout</h1>
+      <p class="lede" style="margin-bottom:0">Secure checkout · Free worldwide shipping over $35 · 30-day money-back guarantee</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container" style="max-width:1020px">
+
+      <div class="steps" data-steps>
+        <div class="step is-active" data-step-ind="1"><span class="step__dot">1</span> Order</div>
+        <span class="steps__line"></span>
+        <div class="step" data-step-ind="2"><span class="step__dot">2</span> Details</div>
+        <span class="steps__line"></span>
+        <div class="step" data-step-ind="3"><span class="step__dot">3</span> Confirmation</div>
+      </div>
+
+      <!-- STEP 1: ORDER REVIEW -->
+      <div data-step="1">
+        <div class="grid-2" style="align-items:start; gap:var(--space-6)">
+          <div class="card" style="cursor:default">
+            <h2 class="display-sm">Your order</h2>
+            <div class="stack-4 mt-5" data-order-items></div>
+          </div>
+          <div class="card" style="cursor:default">
+            <h2 class="display-sm">Summary</h2>
+            <table class="summary-table mt-4">
+              <tbody data-summary></tbody>
+            </table>
+            <button class="btn btn--gold btn--block mt-5" type="button" data-to-step="2">Continue to Details</button>
+            <a class="link-arrow mt-4" href="book.html#editions" style="justify-content:center; display:flex">← Continue shopping</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: DETAILS -->
+      <div data-step="2" hidden>
+        <div class="grid-2" style="align-items:start; gap:var(--space-6)">
+          <form class="card" style="cursor:default" data-details-form novalidate>
+            <h2 class="display-sm mb-5">Shipping details</h2>
+            <div class="field-row">
+              <div class="field"><label for="f-first">First name</label><input id="f-first" required autocomplete="given-name" /></div>
+              <div class="field"><label for="f-last">Last name</label><input id="f-last" required autocomplete="family-name" /></div>
+            </div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" required autocomplete="email" /></div>
+            <div class="field"><label for="f-address">Address</label><input id="f-address" required autocomplete="street-address" /></div>
+            <div class="field-row">
+              <div class="field"><label for="f-city">City</label><input id="f-city" required autocomplete="address-level2" /></div>
+              <div class="field"><label for="f-country">Country</label>
+                <select id="f-country" required autocomplete="country-name">
+                  <option value="">Select…</option><option>India</option><option>United States</option>
+                  <option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label style="display:flex; align-items:center; gap:.6em; font-weight:500; cursor:pointer">
+                <input type="checkbox" id="f-gift" style="width:auto" /> This is a gift — include wrap &amp; inscription card
+              </label>
+            </div>
+            <div class="field" hidden data-gift-field>
+              <label for="f-inscription">Gift inscription</label>
+              <textarea id="f-inscription" rows="2" maxlength="180" placeholder="“May this book be your companion, as it has been mine.”"></textarea>
+            </div>
+            <div class="card" style="background:var(--cream); box-shadow:none; cursor:default; padding:var(--space-4) var(--space-5); margin-bottom:var(--space-4)">
+              <p style="font-size:var(--text-sm); color:var(--ink-soft); margin:0">
+                <strong>Payment · demo mode.</strong> This prototype does not collect payment.
+                The production build integrates Stripe (cards, wallets, UPI) with PCI-DSS-compliant
+                hosted fields at this step.
+              </p>
+            </div>
+            <div style="display:flex; gap:var(--space-3)">
+              <button class="btn btn--ghost-light" type="button" data-to-step="1">← Back</button>
+              <button class="btn btn--gold" type="submit" style="flex:1">Place Order (Demo)</button>
+            </div>
+          </form>
+          <div class="card" style="cursor:default">
+            <h2 class="display-sm">Summary</h2>
+            <table class="summary-table mt-4"><tbody data-summary-2></tbody></table>
+            <div class="mt-5" style="display:grid; gap:.6rem; font-size:var(--text-xs); color:var(--ink-faint)">
+              <span>🔒 256-bit TLS encryption on every page</span>
+              <span>↩️ 30-day money-back guarantee, no questions asked</span>
+              <span>🌍 Every order supports worldwide book distribution</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: CONFIRMATION -->
+      <div data-step="3" hidden>
+        <div class="certificate" style="max-width:700px; margin-inline:auto">
+          <p class="eyebrow" style="justify-content:center; color:var(--gold-bright)">Order Confirmed</p>
+          <h2 style="font-size:var(--text-2xl)" data-confirm-title>Thank you!</h2>
+          <p style="color:var(--moon-soft); max-width:46ch; margin-inline:auto">
+            Your Bhagavad-gītā is on its way<span data-confirm-email></span>.
+            Order reference <strong style="color:var(--gold-bright)" data-order-ref>BG-000000</strong>.
+            May it be the beginning of something eternal.
+          </p>
+          <div style="display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap; margin-top:var(--space-5)">
+            <a class="btn btn--gold" href="course.html">Start the Free Course While You Wait</a>
+            <a class="btn btn--ghost-dark" href="explorer.html">Read Verses Now</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/checkout.js"></script>
+<script>
+  Site.init({ page: "checkout", darkHeader: true });
+  Checkout.init();
+</script>
+</body>
+</html>
