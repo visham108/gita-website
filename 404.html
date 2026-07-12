@@ -3,17 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Verse Explorer — Bhagavad-gītā As It Is | All 18 Chapters</title>
-  <meta name="description" content="Explore the Bhagavad-gītā chapter by chapter and verse by verse — original Sanskrit, transliteration and translation, with bookmarks, highlights and personal notes." />
-  <link rel="canonical" href="https://visham108.github.io/gita-website/explorer.html" />
-  <meta property="og:url" content="https://visham108.github.io/gita-website/explorer.html" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://visham108.github.io/gita-website/images/og-card.png" />
+  <title>Page Not Found — Bhagavad-gītā As It Is</title>
+  <meta name="robots" content="noindex" />
   <link rel="icon" type="image/png" href="images/prabhupada-badge.png" />
-  <link rel="apple-touch-icon" href="images/prabhupada-badge.png" />
   <link rel="preload" href="fonts/fraunces-latin-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="fonts/fraunces-latin-ext-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="fonts/inter-latin-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/styles.css" />
   <script>document.documentElement.classList.add("js")</script>
 </head>
@@ -32,7 +25,7 @@
     <nav class="nav" id="site-nav" aria-label="Primary">
       <a href="index.html" data-nav-id="home">Home</a>
       <a href="book.html" data-nav-id="book">The Book</a>
-      <a href="explorer.html" data-nav-id="explorer" aria-current="page">Verse Explorer</a>
+      <a href="explorer.html" data-nav-id="explorer">Verse Explorer</a>
       <a href="course.html" data-nav-id="course">Course</a>
       <a href="resources.html" data-nav-id="resources">Resources</a>
       <a href="account.html" data-nav-id="account">My Study</a>
@@ -47,55 +40,21 @@
 <!-- /chrome:header -->
 
 <main id="main">
-
-  <section class="page-hero" style="padding-bottom: var(--space-6);">
-    <div class="container">
-      <nav aria-label="Breadcrumb">
-        <ol class="breadcrumb">
-          <li><a href="index.html">Home</a></li>
-          <li aria-current="page">Verse Explorer</li>
-        </ol>
-      </nav>
-      <div class="flex-between">
-        <div>
-          <p class="eyebrow">Śrīmad Bhagavad-gītā</p>
-          <h1>Verse Explorer</h1>
-          <p class="lede">Eighteen chapters. Seven hundred verses. One conversation that answers
-          everything. Bookmark, highlight and annotate as you go — your study is saved on this device.</p>
-        </div>
-        <div class="card card--night" style="min-width:260px">
-          <p class="muted mb-0" style="font-size:var(--text-xs); letter-spacing:.14em; text-transform:uppercase;">Featured selection</p>
-          <p style="margin:.4rem 0 0; color:var(--moon-soft); font-size:var(--text-sm)">
-            This explorer presents <strong style="color:var(--gold-bright)" data-verse-count>40</strong> key verses
-            in full. The complete 700-verse text lives in
-            <a href="book.html#editions" style="color:var(--gold-bright)">the book</a>.
-          </p>
-        </div>
+  <section class="page-hero" style="min-height:70svh; display:flex; align-items:center;">
+    <div class="container center">
+      <p class="eyebrow" style="justify-content:center">Bhagavad-gītā 2.40</p>
+      <h1 style="font-size:var(--text-3xl)">This page has passed on —<br />but nothing is ever lost.</h1>
+      <p class="lede" style="margin-inline:auto; margin-bottom:var(--space-6)">
+        <em class="iast">nehābhikrama-nāśo 'sti</em> — “In this endeavor there is no loss or
+        diminution.” The page you sought isn't here, but every path on this site still leads
+        somewhere worth going.
+      </p>
+      <div style="display:flex; gap:var(--space-3); justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn--gold btn--lg" href="index.html">Return Home</a>
+        <a class="btn btn--ghost-dark btn--lg" href="explorer.html">Read a Verse Instead</a>
       </div>
     </div>
   </section>
-
-  <section class="section section--tight" style="background:var(--ivory)">
-    <div class="container container--wide">
-      <div class="explorer">
-
-        <aside class="explorer__sidebar" aria-label="Chapters">
-          <div class="search-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
-            <label class="visually-hidden" for="verse-search">Search verses</label>
-            <input id="verse-search" type="search" placeholder="Search: karma, soul, 2.47, surrender…" autocomplete="off" />
-          </div>
-          <div class="chapter-scroller" data-chapter-list></div>
-        </aside>
-
-        <div>
-          <div data-view></div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <!-- chrome:footer -->
@@ -150,10 +109,6 @@
 
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
-<script src="js/explorer.js"></script>
-<script>
-  Site.init({ page: "explorer" });
-  Explorer.init();
-</script>
+<script>Site.init({ page: "404" });</script>
 </body>
 </html>

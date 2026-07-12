@@ -61,9 +61,8 @@
     const { sub, ship, total } = totals();
     const rows = `
       <tr><td>Subtotal</td><td>${Site.money(sub)}</td></tr>
-      <tr><td>Shipping</td><td>${ship === 0 ? "Free" : Site.money(ship)}</td></tr>
-      ${sub > 0 && sub < FREE_SHIP_THRESHOLD ? `<tr><td colspan="2" style="color:var(--gold-deep); font-size:var(--text-xs)">Add ${Site.money(FREE_SHIP_THRESHOLD - sub)} more for free worldwide shipping</td></tr>` : ""}
-      <tr class="total"><td>Total</td><td>${Site.money(total)}</td></tr>`;
+      <tr><td>Shipping (estimated)</td><td>${ship === 0 ? "Free" : Site.money(ship)}</td></tr>
+      <tr class="total"><td>Total (preview)</td><td>${Site.money(total)}</td></tr>`;
     const s1 = $("[data-summary]");
     const s2 = $("[data-summary-2]");
     if (s1) s1.innerHTML = rows;
