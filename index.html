@@ -75,7 +75,6 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero" id="top">
-    <div class="book-backdrop" data-book-backdrop hidden></div>
     <div class="hero__bg" aria-hidden="true"></div>
     <svg class="hero__mandala" viewBox="0 0 400 400" aria-hidden="true" fill="none" stroke="currentColor">
       <g stroke-width="0.8">
@@ -123,26 +122,30 @@
       </div>
 
       <div class="book-scene">
-        <div class="book" id="book" role="button" tabindex="0" aria-expanded="false" aria-label="Open the book to read the verse of the day">
-          <div class="book__spine" aria-hidden="true"></div>
-          <div class="book__pages" aria-hidden="true"></div>
-          <div class="book__inside">
-            <p class="bi-brand">Bhagavad-gītā · As It Is</p>
-            <p class="bi-ref">Verse of the day — <span data-vod-ref>2.13</span></p>
-            <div class="bi-rule" aria-hidden="true"></div>
-            <p class="bi-iast" data-vod-iast>dehino 'smin yathā dehe<br />kaumāraṁ yauvanaṁ jarā<br />tathā dehāntara-prāptir<br />dhīras tatra na muhyati</p>
-            <p class="bi-trans" data-vod-trans>As the embodied soul continuously passes, in this body, from boyhood to youth to old age, the soul similarly passes into another body at death. A sober person is not bewildered by such a change.</p>
-            <div class="bi-nav">
-              <button type="button" data-vod-prev aria-label="Previous verse">‹</button>
-              <span data-vod-count></span>
-              <button type="button" data-vod-next aria-label="Next verse">›</button>
-            </div>
-          </div>
-          <div class="book__cover"><img src="images/bgaii-cover.jpg" alt="Bhagavad-gītā As It Is — original cover painting of Lord Kṛṣṇa driving Arjuna's chariot at Kurukṣetra" width="241" height="413" /></div>
-        </div>
+        <button class="book" id="book" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open the book to read the verse of the day">
+          <img src="images/bgaii-cover.jpg" alt="Bhagavad-gītā As It Is — original cover painting of Lord Kṛṣṇa driving Arjuna's chariot at Kurukṣetra" width="241" height="413" />
+        </button>
       </div>
     </div>
   </section>
+
+  <!-- verse of the day (opens from the hero book) -->
+  <div class="book-backdrop" data-book-backdrop hidden></div>
+  <div class="verse-page" data-verse-page role="dialog" aria-modal="true" aria-label="Verse of the day" hidden>
+    <button class="verse-page__close" type="button" data-vod-close aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="bi-brand">Bhagavad-gītā · As It Is</p>
+    <p class="bi-ref">Verse of the day — <span data-vod-ref>2.13</span></p>
+    <div class="bi-rule" aria-hidden="true"></div>
+    <p class="bi-iast" data-vod-iast>dehino 'smin yathā dehe<br />kaumāraṁ yauvanaṁ jarā<br />tathā dehāntara-prāptir<br />dhīras tatra na muhyati</p>
+    <p class="bi-trans" data-vod-trans>As the embodied soul continuously passes, in this body, from boyhood to youth to old age, the soul similarly passes into another body at death. A sober person is not bewildered by such a change.</p>
+    <div class="bi-nav">
+      <button type="button" data-vod-prev aria-label="Previous verse">‹</button>
+      <span data-vod-count></span>
+      <button type="button" data-vod-next aria-label="Next verse">›</button>
+    </div>
+  </div>
 
   <!-- ============ MANIFESTO + CHAPTER RIBBON ============ -->
   <section class="section" id="about">
