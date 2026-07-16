@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /checkout.html
-Disallow: /account.html
-
-Sitemap: https://visham108.github.io/gita-website/sitemap.xml

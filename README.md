@@ -1,18 +1,19 @@
 # Bhagavad-gītā As It Is — Premium Digital Experience
 
-A complete design prototype and strategy package for a world-class website dedicated to
-**Bhagavad-gītā As It Is** by His Divine Grace A.C. Bhaktivedanta Swami Prabhupāda.
+A world-class website dedicated to **Bhagavad-gītā As It Is** by His Divine Grace
+A.C. Bhaktivedanta Swami Prabhupāda — now a Next.js application on the road to a
+production launch (Supabase auth/data and Razorpay payments arrive in the next phases).
 
 ## Run it
 
-No build step, no dependencies. Serve the folder statically:
-
 ```bash
-python -m http.server 4173
-# or: npx serve .
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
 ```
 
-Then open http://localhost:4173. (Opening `index.html` directly also works.)
+Structure: `app/` (routes), `components/` (React components), `lib/` (data + cart),
+`public/` (fonts, images), `app/globals.css` (the entire "Gītā Radiance v2" design system).
 
 ## What's inside
 
