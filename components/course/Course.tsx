@@ -1,47 +1,22 @@
 "use client";
 
 /* Gītā Foundations course — enrollment, lesson completion, module progress,
-   Module 1 quiz, certificate unlock. State in localStorage under the
-   prototype's key (Supabase sync arrives in Phase 2). */
+   Module 1 quiz, certificate unlock. State lives in the StudyProvider:
+   device-local when anonymous, account-synced when signed in. */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { COURSE, QUIZ_M1 } from "@/lib/data";
 import { useToast } from "@/components/Toast";
-
-const KEY = "bgaii_course_v1";
-
-interface CourseState {
-  enrolled: boolean;
-  done: Record<string, boolean>;
-  quiz: number | null;
-}
-
-const EMPTY: CourseState = { enrolled: false, done: {}, quiz: null };
-
-function loadState(): CourseState {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) ?? "null") || EMPTY;
-  } catch {
-    return EMPTY;
-  }
-}
+import { useStudy } from "@/lib/study/StudyProvider";
 
 const allLessons = COURSE.flatMap((m) => m.lessons);
 
 export default function Course() {
   const toast = useToast();
-  const [state, setState] = useState<CourseState>(EMPTY);
+  const study = useStudy();
+  const state = study.course;
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [openModule, setOpenModule] = useState(0);
-
-  useEffect(() => {
-    setState(loadState());
-  }, []);
-
-  const update = (next: CourseState) => {
-    setState(next);
-    localStorage.setItem(KEY, JSON.stringify(next));
-  };
 
   const doneCount = allLessons.filter((l) => state.done[l.id]).length;
   const total = allLessons.length;
@@ -50,7 +25,7 @@ export default function Course() {
 
   const enroll = () => {
     if (!state.enrolled) {
-      update({ ...state, enrolled: true });
+      study.enroll();
       toast("Welcome to Gītā Foundations! Module 1 awaits below.");
     } else {
       toast("You are already enrolled — continue where you left off.");
@@ -60,15 +35,9 @@ export default function Course() {
 
   const toggleLesson = (id: string) => {
     const wasDone = !!state.done[id];
-    const next: CourseState = {
-      ...state,
-      enrolled: true,
-      done: { ...state.done, [id]: !wasDone },
-    };
     if (!state.enrolled) toast("Enrolled! Lesson marked complete.");
-    update(next);
-    const newDone = allLessons.filter((l) => next.done[l.id]).length;
-    if (!wasDone && newDone === total) toast("🎉 Course complete! Your certificate is unlocked.");
+    study.toggleLesson(id);
+    if (!wasDone && doneCount + 1 === total) toast("🎉 Course complete! Your certificate is unlocked.");
   };
 
   const gotoLesson = (id: string) => {
@@ -85,7 +54,7 @@ export default function Course() {
     setQuizAnswers(nextAnswers);
     if (Object.keys(nextAnswers).length === QUIZ_M1.length) {
       const score = QUIZ_M1.reduce((s, q, i) => s + (nextAnswers[i] === q.answer ? 1 : 0), 0);
-      update({ ...state, quiz: score });
+      study.setQuizScore(score);
     }
   };
 

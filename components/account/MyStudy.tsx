@@ -1,33 +1,15 @@
 "use client";
 
 /* My Study dashboard — aggregates bookmarks, reflections, course progress,
-   reading plan and the daily verse from localStorage (Supabase-synced in
-   Phase 2). The daily verse now shares the homepage's numeric-order
-   algorithm — one sequence across the whole site. */
+   reading plan and the daily verse from the StudyProvider (device-local when
+   anonymous, account-synced when signed in), plus magic-link sign in. */
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { COURSE, GITA_VERSES } from "@/lib/data";
 import { ORDERED_VERSES, dailyVerseIndex } from "@/lib/verses";
 import { useToast } from "@/components/Toast";
-
-const KEYS = {
-  bookmarks: "bgaii_bookmarks_v1",
-  notes: "bgaii_notes_v1",
-  lastRead: "bgaii_lastread_v1",
-  course: "bgaii_course_v1",
-  plan: "bgaii_plan_v1",
-  profile: "bgaii_profile_v1",
-};
-
-function load<T>(k: string, fallback: T): T {
-  try {
-    return (JSON.parse(localStorage.getItem(k) ?? "null") as T) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-const save = (k: string, v: unknown) => localStorage.setItem(k, JSON.stringify(v));
+import { useStudy } from "@/lib/study/StudyProvider";
 
 const PLAN_NAMES: Record<string, string> = {
   pilgrim: "The Pilgrim's Path — one chapter a week for 18 weeks.",
@@ -43,26 +25,94 @@ const PLANS = [
 
 const TOTAL_LESSONS = COURSE.flatMap((m) => m.lessons).length;
 
+function AuthCard() {
+  const toast = useToast();
+  const study = useStudy();
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  if (study.user) {
+    return (
+      <div className="card card--night" style={{ minWidth: 280 }}>
+        <p style={{ fontSize: "var(--text-xs)", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--gold-bright)", margin: "0 0 .5rem" }}>Signed in</p>
+        <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", margin: "0 0 var(--space-4)", overflowWrap: "anywhere" }}>{study.user.email}</p>
+        <button
+          className="btn btn--ghost-dark btn--sm"
+          type="button"
+          onClick={async () => {
+            await study.signOut();
+            toast("Signed out. Your study stays safe in your account.");
+          }}
+        >
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      className="card card--night"
+      style={{ minWidth: 280 }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const addr = email.trim();
+        if (!addr || busy) return;
+        setBusy(true);
+        const { error } = await study.signInWithEmail(addr);
+        setBusy(false);
+        if (error) toast("Could not send the link — " + error);
+        else setSent(true);
+      }}
+    >
+      <label htmlFor="auth-email" style={{ fontSize: "var(--text-sm)", fontWeight: 600, display: "block", marginBottom: ".5rem" }}>
+        Sign in to sync across devices
+      </label>
+      {sent ? (
+        <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", margin: 0 }}>
+          Check your email — we sent you a sign-in link. It signs you in on this device with one click.
+        </p>
+      ) : (
+        <>
+          <div style={{ display: "flex", gap: ".5rem" }}>
+            <input
+              id="auth-email"
+              type="email"
+              required
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ flex: 1, minWidth: 0, background: "rgba(255,248,237,.07)", border: "1px solid var(--line-dark)", borderRadius: "var(--radius-pill)", color: "var(--moon)", padding: ".6em 1.1em" }}
+            />
+            <button className="btn btn--gold btn--sm" type="submit" disabled={busy}>
+              {busy ? "Sending…" : "Send link"}
+            </button>
+          </div>
+          <p style={{ color: "var(--moon-faint)", fontSize: "var(--text-xs)", margin: ".6rem 0 0" }}>
+            No password needed — a magic link arrives in your inbox.
+          </p>
+        </>
+      )}
+    </form>
+  );
+}
+
 export default function MyStudy() {
   const toast = useToast();
-  const [rev, setRev] = useState(0);
+  const study = useStudy();
   const [mounted, setMounted] = useState(false);
   const [nameInput, setNameInput] = useState("");
 
-  useEffect(() => {
-    setMounted(true);
-    setNameInput(load<{ name?: string }>(KEYS.profile, {}).name ?? "");
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { setNameInput(study.name); }, [study.name]);
 
-  void rev;
-  const profile = mounted ? load<{ name?: string }>(KEYS.profile, {}) : {};
-  const bookmarks = mounted ? load<string[]>(KEYS.bookmarks, []) : [];
-  const notes = mounted ? load<Record<string, string>>(KEYS.notes, {}) : {};
-  const lastRead = mounted ? load<{ ref: string; when: number } | null>(KEYS.lastRead, null) : null;
-  const course = mounted ? load<{ done?: Record<string, boolean> }>(KEYS.course, {}) : {};
-  const plan = mounted ? load<string | null>(KEYS.plan, null) : null;
+  const bookmarks = mounted ? study.bookmarks : [];
+  const notes = mounted ? study.notes : {};
+  const lastRead = mounted ? study.lastRead : null;
+  const plan = mounted ? study.plan : null;
 
-  const doneLessons = Object.values(course.done ?? {}).filter(Boolean).length;
+  const doneLessons = Object.values(study.course.done).filter(Boolean).length;
   const coursePct = Math.round((doneLessons / TOTAL_LESSONS) * 100);
   const noteEntries = Object.entries(notes);
   const daily = ORDERED_VERSES[mounted ? dailyVerseIndex() : 0];
@@ -79,39 +129,44 @@ export default function MyStudy() {
               <li aria-current="page">My Study</li>
             </ol>
           </nav>
-          <div className="flex-between">
+          <div className="flex-between" style={{ alignItems: "start" }}>
             <div>
               <p className="eyebrow">Personal Study Space</p>
-              <h1>{profile.name ? `Hare Kṛṣṇa, ${profile.name}` : "Welcome, seeker"}</h1>
-              <p className="lede">Your bookmarks, reflections, reading plan and course progress — kept
-                together, saved on this device. <span style={{ color: "var(--gold-bright)" }}>In the production
-                  release, everything syncs securely across all your devices.</span></p>
+              <h1>{mounted && study.name ? `Hare Kṛṣṇa, ${study.name}` : "Welcome, seeker"}</h1>
+              <p className="lede">Your bookmarks, reflections, reading plan and course progress — kept together.{" "}
+                <span style={{ color: "var(--gold-bright)" }}>
+                  {mounted && study.user
+                    ? "Synced securely to your account, on every device you sign in to."
+                    : "Saved on this device — sign in and they follow you everywhere."}
+                </span>
+              </p>
             </div>
-            <form
-              className="card card--night"
-              style={{ minWidth: 280 }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                const name = nameInput.trim();
-                save(KEYS.profile, { name });
-                setRev((r) => r + 1);
-                toast(name ? `Welcome, ${name}. Your study space is ready.` : "Name cleared.");
-              }}
-            >
-              <label htmlFor="profile-name" style={{ fontSize: "var(--text-sm)", fontWeight: 600, display: "block", marginBottom: ".5rem" }}>What should we call you?</label>
-              <div style={{ display: "flex", gap: ".5rem" }}>
-                <input
-                  id="profile-name"
-                  type="text"
-                  placeholder="Your name"
-                  maxLength={40}
-                  value={nameInput}
-                  onChange={(e) => setNameInput(e.target.value)}
-                  style={{ flex: 1, minWidth: 0, background: "rgba(255,248,237,.07)", border: "1px solid var(--line-dark)", borderRadius: "var(--radius-pill)", color: "var(--moon)", padding: ".6em 1.1em" }}
-                />
-                <button className="btn btn--gold btn--sm" type="submit">Save</button>
-              </div>
-            </form>
+            <div className="stack-3" style={{ minWidth: 280 }}>
+              <AuthCard />
+              <form
+                className="card card--night"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const name = nameInput.trim();
+                  study.setName(name);
+                  toast(name ? `Welcome, ${name}. Your study space is ready.` : "Name cleared.");
+                }}
+              >
+                <label htmlFor="profile-name" style={{ fontSize: "var(--text-sm)", fontWeight: 600, display: "block", marginBottom: ".5rem" }}>What should we call you?</label>
+                <div style={{ display: "flex", gap: ".5rem" }}>
+                  <input
+                    id="profile-name"
+                    type="text"
+                    placeholder="Your name"
+                    maxLength={40}
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    style={{ flex: 1, minWidth: 0, background: "rgba(255,248,237,.07)", border: "1px solid var(--line-dark)", borderRadius: "var(--radius-pill)", color: "var(--moon)", padding: ".6em 1.1em" }}
+                  />
+                  <button className="btn btn--gold btn--sm" type="submit">Save</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </section>
@@ -182,8 +237,7 @@ export default function MyStudy() {
                   value={p.value}
                   checked={plan === p.value}
                   onChange={() => {
-                    save(KEYS.plan, p.value);
-                    setRev((r) => r + 1);
+                    study.setPlan(p.value);
                     toast("Reading plan saved. See you tomorrow.");
                   }}
                 />
@@ -231,8 +285,7 @@ export default function MyStudy() {
                             type="button"
                             aria-label={`Remove bookmark ${ref}`}
                             onClick={() => {
-                              save(KEYS.bookmarks, load<string[]>(KEYS.bookmarks, []).filter((r) => r !== ref));
-                              setRev((r) => r + 1);
+                              study.removeBookmark(ref);
                               toast("Bookmark removed.");
                             }}
                           >

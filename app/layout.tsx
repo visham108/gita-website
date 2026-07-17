@@ -4,6 +4,7 @@ import SiteChrome from "@/components/SiteChrome";
 import Footer from "@/components/Footer";
 import RevealObserver from "@/components/RevealObserver";
 import { ToastProvider } from "@/components/Toast";
+import { StudyProvider } from "@/lib/study/StudyProvider";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -43,9 +44,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* reveal-on-scroll is gated on html.js so content is never hidden without JS */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <ToastProvider>
-          <SiteChrome />
-          {children}
-          <Footer />
+          <StudyProvider>
+            <SiteChrome />
+            {children}
+            <Footer />
+          </StudyProvider>
         </ToastProvider>
         <RevealObserver />
       </body>

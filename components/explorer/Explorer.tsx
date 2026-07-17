@@ -1,30 +1,14 @@
 "use client";
 
-/* Verse Explorer — chapter navigation, search, verse detail, and study state
-   (bookmarks / highlights / notes / last-read). Phase 1 keeps the prototype's
-   localStorage keys so existing visitors lose nothing; Phase 2 swaps this
-   storage layer for Supabase when signed in. */
+/* Verse Explorer — chapter navigation, search, verse detail. Study state
+   (bookmarks / highlights / notes / last-read) lives in the StudyProvider:
+   device-local when anonymous, account-synced when signed in. */
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GITA_CHAPTERS, GITA_VERSES } from "@/lib/data";
 import { useToast } from "@/components/Toast";
-
-const KEYS = {
-  bookmarks: "bgaii_bookmarks_v1",
-  highlights: "bgaii_highlights_v1",
-  notes: "bgaii_notes_v1",
-  lastRead: "bgaii_lastread_v1",
-};
-
-function load<T>(k: string, fallback: T): T {
-  try {
-    return (JSON.parse(localStorage.getItem(k) ?? "null") as T) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-const save = (k: string, v: unknown) => localStorage.setItem(k, JSON.stringify(v));
+import { useStudy } from "@/lib/study/StudyProvider";
 
 const versesOf = (ch: number) =>
   Object.keys(GITA_VERSES)
@@ -47,15 +31,16 @@ const withBreaks = (s: string) =>
 
 export default function Explorer() {
   const toast = useToast();
+  const study = useStudy();
   const [chapter, setChapter] = useState(1);
   const [verse, setVerse] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [noteOpen, setNoteOpen] = useState(false);
-  // bump to re-read localStorage after mutations
-  const [rev, setRev] = useState(0);
   const [mounted, setMounted] = useState(false);
   const viewRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const setLastReadRef = useRef(study.setLastRead);
+  setLastReadRef.current = study.setLastRead;
 
   const openVerse = useCallback((ref: string) => {
     setVerse(ref);
@@ -63,8 +48,7 @@ export default function Explorer() {
     setQuery("");
     setNoteOpen(false);
     history.replaceState(null, "", "#" + ref);
-    save(KEYS.lastRead, { ref, when: Date.now() });
-    setRev((r) => r + 1);
+    setLastReadRef.current(ref);
     viewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
@@ -82,21 +66,11 @@ export default function Explorer() {
     if (/^\d{1,2}\.\d{1,2}$/.test(hash) && GITA_VERSES[hash]) {
       setVerse(hash);
       setChapter(Number(hash.split(".")[0]));
-      save(KEYS.lastRead, { ref: hash, when: Date.now() });
+      setLastReadRef.current(hash);
     } else if (/^ch(\d{1,2})$/.test(hash)) {
       setChapter(Math.min(18, Math.max(1, Number(hash.slice(2)))));
     }
   }, []);
-
-  const toggleIn = (key: string, ref: string) => {
-    const arr = load<string[]>(key, []);
-    const i = arr.indexOf(ref);
-    if (i >= 0) arr.splice(i, 1);
-    else arr.push(ref);
-    save(key, arr);
-    setRev((r) => r + 1);
-    return i < 0;
-  };
 
   const shareVerse = async (ref: string) => {
     const v = GITA_VERSES[ref];
@@ -118,10 +92,9 @@ export default function Explorer() {
     }
   };
 
-  const bookmarks = mounted ? load<string[]>(KEYS.bookmarks, []) : [];
-  const highlights = mounted ? load<string[]>(KEYS.highlights, []) : [];
-  const notes = mounted ? load<Record<string, string>>(KEYS.notes, {}) : {};
-  void rev;
+  const bookmarks = mounted ? study.bookmarks : [];
+  const highlights = mounted ? study.highlights : [];
+  const notes = mounted ? study.notes : {};
 
   const q = query.trim().toLowerCase();
   const searching = q.length >= 2;
@@ -195,7 +168,7 @@ export default function Explorer() {
                 type="button"
                 aria-pressed={isBook}
                 onClick={() => {
-                  const added = toggleIn(KEYS.bookmarks, ref);
+                  const added = study.toggleBookmark(ref);
                   toast(added ? `Bookmarked ${ref} — find it in My Study.` : `Bookmark removed from ${ref}.`);
                 }}
               >
@@ -207,7 +180,7 @@ export default function Explorer() {
                 type="button"
                 aria-pressed={isHi}
                 onClick={() => {
-                  const added = toggleIn(KEYS.highlights, ref);
+                  const added = study.toggleHighlight(ref);
                   toast(added ? `Highlighted ${ref}.` : "Highlight removed.");
                 }}
               >
@@ -230,7 +203,7 @@ export default function Explorer() {
             <p className="verse-detail__translation">{v.r}</p>
             <p className="muted" style={{ fontSize: "var(--text-xs)", marginBottom: "var(--space-4)" }}>Study rendering. The official BBT translation, word-for-word meanings and full purport appear in the book and the production edition of this site.</p>
             <div className="verse-detail__essence"><strong style={{ color: "var(--gold-deep)" }}>Essence · </strong>{v.e}</div>
-            {showNote && <NoteEditor key={ref + rev} verseRef={ref} initial={note} onSaved={() => setRev((r) => r + 1)} />}
+            {showNote && <NoteEditor key={ref} verseRef={ref} initial={note} />}
           </div>
         </article>
         <div className="flex-between mt-5">
@@ -313,17 +286,10 @@ export default function Explorer() {
   );
 }
 
-function NoteEditor({ verseRef, initial, onSaved }: { verseRef: string; initial: string; onSaved: () => void }) {
+function NoteEditor({ verseRef, initial }: { verseRef: string; initial: string }) {
   const toast = useToast();
+  const study = useStudy();
   const [text, setText] = useState(initial);
-
-  const persist = (value: string) => {
-    const notes = load<Record<string, string>>(KEYS.notes, {});
-    if (value) notes[verseRef] = value;
-    else delete notes[verseRef];
-    save(KEYS.notes, notes);
-    onSaved();
-  };
 
   return (
     <div className="note-editor mt-5">
@@ -342,8 +308,12 @@ function NoteEditor({ verseRef, initial, onSaved }: { verseRef: string; initial:
           type="button"
           onClick={() => {
             const trimmed = text.trim();
-            persist(trimmed);
-            if (trimmed) toast(`Reflection saved for ${verseRef}.`);
+            if (trimmed) {
+              study.saveNote(verseRef, trimmed);
+              toast(`Reflection saved for ${verseRef}.`);
+            } else {
+              study.deleteNote(verseRef);
+            }
           }}
         >
           Save note
@@ -353,7 +323,7 @@ function NoteEditor({ verseRef, initial, onSaved }: { verseRef: string; initial:
           type="button"
           onClick={() => {
             setText("");
-            persist("");
+            study.deleteNote(verseRef);
             toast("Note deleted.");
           }}
         >
