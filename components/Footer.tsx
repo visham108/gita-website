@@ -32,8 +32,9 @@ export default function Footer() {
             <ul>
               <li><Link href="/book#editions">Hardcover</Link></li>
               <li><Link href="/book#editions">Paperback</Link></li>
-              <li><Link href="/book#editions">eBook</Link></li>
-              <li><Link href="/book#editions">Audiobook</Link></li>
+              <li><Link href="/orders">Track Your Order</Link></li>
+              <li><Link href="/policies/shipping">Shipping Policy</Link></li>
+              <li><Link href="/policies/refunds">Refunds &amp; Cancellation</Link></li>
             </ul>
           </div>
           <div>
@@ -47,7 +48,10 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p style={{ margin: 0 }}>Bhagavad-gītā As It Is © Bhaktivedanta Book Trust. This site is a design prototype created in devotion, for study purposes; official translations pending BBT license.</p>
+          <p style={{ margin: 0 }}>
+            Bhagavad-gītā As It Is © Bhaktivedanta Book Trust; verse study renderings are placeholders pending BBT license.{" "}
+            <Link href="/policies/terms">Terms</Link> · <Link href="/policies/privacy">Privacy</Link> · <Link href="/policies/contact">Contact</Link>
+          </p>
           <label>
             <span className="visually-hidden">Language</span>
             <select

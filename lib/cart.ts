@@ -6,7 +6,7 @@
    the server recomputes all money at checkout (Phase 3). */
 
 import { useSyncExternalStore } from "react";
-import { PRODUCTS } from "@/lib/data";
+import type { DbProduct } from "@/lib/commerce";
 
 const CART_KEY = "bgaii_cart_v1";
 const CART_EVENT = "bgaii:cart";
@@ -54,14 +54,14 @@ export function cartCount(cart: Cart): number {
   return Object.values(cart).reduce((a, b) => a + b, 0);
 }
 
-export function cartTotal(cart: Cart): number {
+/** Display subtotal in paise from the live catalog. The server recomputes
+    this independently at checkout — this is presentation only. */
+export function cartSubtotalPaise(cart: Cart, products: DbProduct[]): number {
   return Object.entries(cart).reduce((sum, [id, qty]) => {
-    const p = PRODUCTS.find((x) => x.id === id);
-    return p ? sum + p.price * qty : sum;
+    const p = products.find((x) => x.id === id);
+    return p ? sum + p.price_paise * qty : sum;
   }, 0);
 }
-
-export const money = (n: number) => "$" + n.toFixed(2);
 
 /* React binding: re-renders subscribers whenever the cart changes
    (in this tab via CART_EVENT, in other tabs via the storage event). */

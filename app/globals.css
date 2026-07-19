@@ -1848,6 +1848,16 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   color: var(--ink-faint);
 }
 
+/* ---------- Policy pages ---------- */
+
+.policy-body h2 {
+  font-size: var(--text-lg);
+  margin-top: var(--space-6);
+}
+.policy-body h2:first-child { margin-top: 0; }
+.policy-body p { color: var(--ink-soft); max-width: 68ch; }
+.policy-body a { color: var(--gold-deep); font-weight: 600; }
+
 /* ---------- Utility ---------- */
 
 .mt-2 { margin-top: var(--space-2); }

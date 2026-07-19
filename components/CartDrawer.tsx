@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { cartTotal, money, setQty, useCart } from "@/lib/cart";
-import { PRODUCTS } from "@/lib/data";
+import { cartSubtotalPaise, setQty, useCart } from "@/lib/cart";
+import { moneyINR } from "@/lib/commerce";
+import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const cart = useCart();
+  const products = useCatalog();
   const drawerRef = useRef<HTMLElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const entries = Object.entries(cart);
@@ -73,7 +75,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
             </div>
           ) : (
             entries.map(([id, qty]) => {
-              const p = PRODUCTS.find((x) => x.id === id);
+              const p = products.find((x) => x.id === id);
               if (!p) return null;
               return (
                 <div className="cart-item" key={id}>
@@ -90,7 +92,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                     </div>
                   </div>
                   <div>
-                    <div className="cart-item__price">{money(p.price * qty)}</div>
+                    <div className="cart-item__price">{moneyINR(p.price_paise * qty)}</div>
                     <button className="cart-item__remove" type="button" onClick={() => setQty(id, 0)}>Remove</button>
                   </div>
                 </div>
@@ -99,12 +101,12 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
           )}
         </div>
         <div className="cart-drawer__foot">
-          <div className="cart-total"><span>Total</span><span>{money(cartTotal(cart))}</span></div>
+          <div className="cart-total"><span>Subtotal</span><span>{moneyINR(cartSubtotalPaise(cart, products))}</span></div>
           <Link className="btn btn--gold btn--block" href="/checkout" onClick={onClose}>
-            Review Order — Preview
+            Checkout
           </Link>
           <p className="muted" style={{ textAlign: "center", margin: 0 }}>
-            Online ordering opens soon — your cart is saved on this device.
+            Free shipping on orders of {moneyINR(49900)} or more.
           </p>
         </div>
       </aside>

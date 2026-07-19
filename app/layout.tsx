@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import RevealObserver from "@/components/RevealObserver";
 import { ToastProvider } from "@/components/Toast";
 import { StudyProvider } from "@/lib/study/StudyProvider";
+import { CatalogProvider } from "@/components/CatalogProvider";
+import { getProducts } from "@/lib/products";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -32,7 +34,8 @@ const PRELOAD_FONTS = [
   "/fonts/tiro-devanagari-normal.woff2",
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const products = await getProducts();
   return (
     // suppressHydrationWarning: the inline script below intentionally adds the
     // "js" class to <html> before hydration (reveal-on-scroll gate).
@@ -45,9 +48,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <ToastProvider>
           <StudyProvider>
-            <SiteChrome />
-            {children}
-            <Footer />
+            <CatalogProvider products={products}>
+              <SiteChrome />
+              {children}
+              <Footer />
+            </CatalogProvider>
           </StudyProvider>
         </ToastProvider>
         <RevealObserver />
