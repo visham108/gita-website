@@ -22,7 +22,7 @@ These are wrong on purpose right now. Fix them or you'll launch with fake data.
 | Business name, address, phone | `app/policies/contact/page.tsx` | `[REGISTERED BUSINESS NAME]` etc. |
 | Support email | `app/policies/contact/page.tsx` | `[SUPPORT EMAIL]` |
 | Grievance officer | `app/policies/contact/page.tsx` | `[NAME]`, `[EMAIL]` |
-| Test admin account | `ADMIN_EMAILS` secret | remove `phase2-test-a@example.com` |
+| ~~Test admin account~~ | ~~`ADMIN_EMAILS`~~ | ✅ done — test account removed, only your address remains |
 | Test orders | Supabase `orders` | BG-1001, BG-1002, BG-1003 — delete before launch |
 
 Prices and stock are editable at `/admin` after launch without a redeploy;
