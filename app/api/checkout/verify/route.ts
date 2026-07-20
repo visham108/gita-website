@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { verifyPaymentSignature } from "@/lib/razorpay";
+import { notifyOrderPaid } from "@/lib/email";
 
 /** Called by the browser after the Razorpay widget reports success.
     The signature proves the payment is genuine (HMAC with our secret);
@@ -21,10 +22,11 @@ export async function POST(request: Request) {
   if (!valid) return NextResponse.json({ error: "Signature verification failed" }, { status: 403 });
 
   const admin = supabaseAdmin();
-  await admin.rpc("mark_order_paid", {
+  const { data: firstCapture } = await admin.rpc("mark_order_paid", {
     p_rzp_order_id: razorpay_order_id,
     p_payment_id: razorpay_payment_id,
   });
+  if (firstCapture === true) await notifyOrderPaid(admin, razorpay_order_id);
 
   const { data: order } = await admin
     .from("orders")

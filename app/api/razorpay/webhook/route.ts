@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/razorpay";
+import { notifyOrderPaid, notifyOrderRefunded } from "@/lib/email";
 
 /** Razorpay webhook — the authoritative record of payment events, covering
     cases the browser callback misses (tab closed mid-payment, flaky network).
@@ -29,10 +30,11 @@ export async function POST(request: Request) {
   switch (event.event) {
     case "payment.captured": {
       if (payment?.order_id && payment.id) {
-        await admin.rpc("mark_order_paid", {
+        const { data: firstCapture } = await admin.rpc("mark_order_paid", {
           p_rzp_order_id: payment.order_id,
           p_payment_id: payment.id,
         });
+        if (firstCapture === true) await notifyOrderPaid(admin, payment.order_id);
       }
       break;
     }
@@ -43,11 +45,16 @@ export async function POST(request: Request) {
     }
     case "refund.processed": {
       if (payment?.order_id) {
-        await admin
+        // .select() reveals whether THIS event did the transition — replays
+        // match zero rows, so the refund email goes out exactly once.
+        const { data: transitioned } = await admin
           .from("orders")
           .update({ status: "refunded" })
           .eq("razorpay_order_id", payment.order_id)
-          .in("status", ["paid", "packed", "cancelled"]);
+          .in("status", ["paid", "packed", "cancelled"])
+          .select("id");
+        if (transitioned && transitioned.length > 0)
+          await notifyOrderRefunded(admin, payment.order_id);
       }
       break;
     }
