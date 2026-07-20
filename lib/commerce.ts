@@ -37,4 +37,19 @@ export interface DbProduct {
   format: "physical" | "digital";
   active: boolean;
   stock_qty: number;
+  /** false = made to order: stock never gates the sale, never moves. */
+  track_stock: boolean;
+}
+
+/** Can a customer buy this right now? Digital is not on sale yet; tracked
+    products need stock; made-to-order products are always available. */
+export function isPurchasable(p: DbProduct): boolean {
+  if (!p.active || p.format !== "physical") return false;
+  return p.track_stock ? p.stock_qty > 0 : true;
+}
+
+/** Only true for a tracked product that has actually run out — a made-to-order
+    product is never "sold out". */
+export function isSoldOut(p: DbProduct): boolean {
+  return p.active && p.format === "physical" && p.track_stock && p.stock_qty <= 0;
 }

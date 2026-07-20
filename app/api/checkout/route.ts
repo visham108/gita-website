@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     if (!p) return NextResponse.json({ error: `"${id}" is not available.` }, { status: 400 });
     if (p.format !== "physical")
       return NextResponse.json({ error: `${p.type} is coming soon — not yet purchasable.` }, { status: 400 });
-    if (p.stock_qty < qty)
+    if (p.track_stock && p.stock_qty < qty)
       return NextResponse.json({ error: `Only ${p.stock_qty} of ${p.type} in stock.` }, { status: 409 });
     subtotal += p.price_paise * qty;
     lines.push({ product_id: id, qty, unit_price_paise: p.price_paise, title: p.title });

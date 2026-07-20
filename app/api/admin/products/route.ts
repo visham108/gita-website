@@ -12,7 +12,7 @@ export async function GET() {
   const admin = supabaseAdmin();
   const { data, error } = await admin
     .from("products")
-    .select("id, type, title, price_paise, tag, format, active, stock_qty")
+    .select("id, type, title, price_paise, tag, format, active, stock_qty, track_stock")
     .order("price_paise", { ascending: false });
 
   if (error) return NextResponse.json({ error: "Query failed" }, { status: 500 });
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     .from("products")
     .update(patch)
     .eq("id", body.id)
-    .select("id, type, title, price_paise, tag, format, active, stock_qty")
+    .select("id, type, title, price_paise, tag, format, active, stock_qty, track_stock")
     .single();
 
   if (error || !data) return NextResponse.json({ error: "Update failed" }, { status: 500 });

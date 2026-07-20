@@ -4,7 +4,7 @@
    cart; digital formats show as coming soon. Prices in INR from the DB. */
 
 import { addToCart, openCartDrawer } from "@/lib/cart";
-import { moneyINR } from "@/lib/commerce";
+import { moneyINR, isPurchasable, isSoldOut } from "@/lib/commerce";
 import { useCatalog } from "@/components/CatalogProvider";
 import { useToast } from "@/components/Toast";
 
@@ -19,8 +19,8 @@ export default function EditionsGrid() {
   return (
     <div className="grid-4">
       {products.map((p, i) => {
-        const purchasable = p.format === "physical" && p.stock_qty > 0;
-        const soldOut = p.format === "physical" && p.stock_qty === 0;
+        const purchasable = isPurchasable(p);
+        const soldOut = isSoldOut(p);
         return (
           <article className="card reveal" data-delay={i || undefined} style={{ position: "relative" }} key={p.id}>
             <div className="format-card">

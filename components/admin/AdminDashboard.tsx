@@ -47,6 +47,7 @@ interface AdminProduct {
   format: "physical" | "digital";
   active: boolean;
   stock_qty: number;
+  track_stock: boolean;
 }
 
 const STATUSES = ["paid", "packed", "shipped", "delivered", "pending", "cancelled", "refunded"] as const;
@@ -396,7 +397,13 @@ function InventoryEditor({ products, onSaved }: { products: AdminProduct[] | nul
           <div key={p.id} className={`admin-product ${p.active ? "" : "is-inactive"}`}>
             <div className="admin-product-name">
               <strong>{p.type}</strong>
-              <span>{p.format === "digital" ? "digital — not purchasable yet" : `${p.stock_qty} in stock`}</span>
+              <span>
+                {p.format === "digital"
+                  ? "digital — not purchasable yet"
+                  : p.track_stock
+                    ? `${p.stock_qty} in stock`
+                    : "made to order — always available"}
+              </span>
             </div>
             <div className="field">
               <label htmlFor={`price-${p.id}`}>Price (₹)</label>
@@ -405,7 +412,9 @@ function InventoryEditor({ products, onSaved }: { products: AdminProduct[] | nul
             </div>
             <div className="field">
               <label htmlFor={`stock-${p.id}`}>Stock</label>
-              <input id={`stock-${p.id}`} inputMode="numeric" value={e.stock}
+              <input id={`stock-${p.id}`} inputMode="numeric" value={p.track_stock ? e.stock : "—"}
+                disabled={!p.track_stock}
+                title={p.track_stock ? undefined : "Made to order — stock is not tracked for this edition."}
                 onChange={(ev) => setEdits({ ...edits, [p.id]: { ...e, stock: ev.target.value } })} />
             </div>
             <div className="field">
