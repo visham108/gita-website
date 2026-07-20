@@ -10,6 +10,35 @@ For deployment steps and launch checklist, see [DEPLOY.md](./DEPLOY.md).
 
 ---
 
+## 0. Hard requirement: independence from Shopify
+
+**This site must keep working if the VRNDA Shopify storefront is taken down.**
+
+It already does, and any future change must preserve this:
+
+- `gita.vrnda.store` is its own DNS record pointing at the Cloudflare Worker.
+  Subdomains resolve independently of the root, so Shopify going away breaks
+  `vrnda.store` / `www` and leaves this site untouched.
+- The application has **no Shopify dependency of any kind** — no API, no SDK, no
+  shared data. It runs on Supabase, Razorpay, Resend and Cloudflare. Do not
+  introduce one.
+- The domain is registered at **GoDaddy**, not through Shopify (confirmed from
+  the `_domainconnect.gd.domaincontrol.com` and `secureserver.net` records), so
+  closing the Shopify account cannot take the domain with it.
+- DNS is served by Cloudflare and email by GoDaddy's mail servers. Neither
+  routes through Shopify.
+
+The one real coupling is **Razorpay**: the merchant account is KYC'd to the VRNDA
+business entity. Closing the *storefront* leaves it intact; winding up the
+*business* would require a new merchant account.
+
+If Shopify is decommissioned, the only work is repointing the root: change the
+`A` record and `www` CNAME from Shopify to the Worker and add redirects, so
+`vrnda.store` serves this site. Until then both stay **DNS only** (grey cloud) —
+that reproduces today's behaviour exactly and cannot disturb the storefront.
+
+---
+
 ## 1. Stack
 
 | Layer | Choice | Why this, not the alternative |
