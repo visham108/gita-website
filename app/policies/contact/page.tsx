@@ -8,28 +8,32 @@ export default function Contact() {
     <PolicyPage title="Contact Us" updated="July 2026">
       <h2>Orders & support</h2>
       <p>
-        Email <strong>[SUPPORT EMAIL]</strong> with your order number and we will reply
-        within 1 business day. For delivery status, the{" "}
+        Email <a href="mailto:orders@vrnda.store">orders@vrnda.store</a> with your order
+        number and we will reply within 1 business day. For delivery status, the{" "}
         <a href="/orders">Orders page</a> has live tracking.
       </p>
 
       <h2>Business details</h2>
       <p>
-        <strong>[REGISTERED BUSINESS NAME]</strong><br />
-        <strong>[REGISTERED ADDRESS]</strong><br />
-        Phone: <strong>[PHONE]</strong>
+        <strong>Visham Singh Rawat</strong><br />
+        42/1 Ganesh Nagar, Vadgaon Sheri<br />
+        Pune, Maharashtra 411014<br />
+        India<br />
+        Phone: <a href="tel:+919717348679">+91 97173 48679</a>
       </p>
 
       <h2>Grievance officer</h2>
       <p>
-        <strong>[NAME]</strong> · <strong>[EMAIL]</strong> — per the Consumer Protection
-        (E-Commerce) Rules, 2020.
+        <strong>Visham Singh Rawat</strong> ·{" "}
+        <a href="mailto:visham.rawat@gmail.com">visham.rawat@gmail.com</a> — per the
+        Consumer Protection (E-Commerce) Rules, 2020.
       </p>
 
       <h2>Bulk & sponsorship</h2>
       <p>
         For sets for schools, libraries, prisons and events (10–10,000 copies), write to{" "}
-        <strong>[SUPPORT EMAIL]</strong> with &ldquo;Bulk&rdquo; in the subject.
+        <a href="mailto:orders@vrnda.store">orders@vrnda.store</a> with
+        &ldquo;Bulk&rdquo; in the subject.
       </p>
     </PolicyPage>
   );

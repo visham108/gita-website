@@ -7,9 +7,10 @@ export default function Terms() {
   return (
     <PolicyPage title="Terms of Service" updated="July 2026">
       <p>
-        This website is operated by <strong>[REGISTERED BUSINESS NAME]</strong>{" "}
+        This website is operated by <strong>Visham Singh Rawat</strong>{" "}
         (&ldquo;we&rdquo;, &ldquo;us&rdquo;), registered at{" "}
-        <strong>[REGISTERED ADDRESS]</strong>. By placing an order you agree to these terms.
+        <strong>42/1 Ganesh Nagar, Vadgaon Sheri, Pune, Maharashtra 411014</strong>. By
+        placing an order you agree to these terms.
       </p>
 
       <h2>Products and pricing</h2>
@@ -41,13 +42,13 @@ export default function Terms() {
       <h2>Grievances</h2>
       <p>
         In accordance with the Consumer Protection (E-Commerce) Rules, 2020, complaints may
-        be addressed to our grievance officer: <strong>[NAME]</strong>,{" "}
-        <strong>[EMAIL]</strong>. We acknowledge complaints within 48 hours and resolve them
-        within one month.
+        be addressed to our grievance officer: <strong>Visham Singh Rawat</strong>,{" "}
+        <a href="mailto:visham.rawat@gmail.com">visham.rawat@gmail.com</a>. We acknowledge
+        complaints within 48 hours and resolve them within one month.
       </p>
 
       <h2>Jurisdiction</h2>
-      <p>These terms are governed by the laws of India. Courts at <strong>[CITY]</strong> have exclusive jurisdiction.</p>
+      <p>These terms are governed by the laws of India. Courts at <strong>Pune</strong> have exclusive jurisdiction.</p>
     </PolicyPage>
   );
 }
