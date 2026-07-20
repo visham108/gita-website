@@ -19,9 +19,9 @@ These are wrong on purpose right now. Fix them or you'll launch with fake data.
 | Stock counts | same | 18 / 28 (left over from test orders) |
 | Shipping charge | `lib/commerce.ts` `SHIPPING_FLAT_PAISE` | ₹49 |
 | Free-shipping threshold | `lib/commerce.ts` `FREE_SHIPPING_THRESHOLD_PAISE` | ₹499 |
-| Business name, address, phone | `app/policies/contact/page.tsx` | `[REGISTERED BUSINESS NAME]` etc. |
-| Support email | `app/policies/contact/page.tsx` | `[SUPPORT EMAIL]` |
-| Grievance officer | `app/policies/contact/page.tsx` | `[NAME]`, `[EMAIL]` |
+| ~~Business name, address, phone~~ | ~~Contact + Terms~~ | ✅ done — Visham Singh Rawat, Pune |
+| ~~Support email~~ | ~~Contact + Terms~~ | ✅ done — orders@vrnda.store (**mailbox must exist before launch**) |
+| ~~Grievance officer~~ | ~~Contact + Terms~~ | ✅ done |
 | ~~Test admin account~~ | ~~`ADMIN_EMAILS`~~ | ✅ done — test account removed, only your address remains |
 | Test orders | Supabase `orders` | BG-1001, BG-1002, BG-1003 — delete before launch |
 
