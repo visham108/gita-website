@@ -85,15 +85,27 @@ function addressBlock(o: OrderRow): string {
   return `<p style="color:#4a3826;line-height:1.6;margin:4px 0 16px;">${lines.join("<br/>")}</p>`;
 }
 
-function shell(title: string, body: string): string {
+function shell(title: string, body: string, footer?: string): string {
   return `<div style="background:#faf6ef;padding:24px;font-family:Georgia,serif;color:#2b2118;">
     <div style="max-width:560px;margin:0 auto;background:#fffdf8;border:1px solid #eee2d0;border-radius:8px;padding:32px;">
       <h1 style="color:#9c430b;font-size:22px;margin:0 0 16px;">${title}</h1>
       ${body}
       <p style="color:#77624e;font-size:13px;margin-top:24px;border-top:1px solid #eee2d0;padding-top:16px;">
-        Bhagavad-gītā <em>As It Is</em> — questions? Just reply to this email.
+        ${footer ?? "Bhagavad-gītā <em>As It Is</em> — questions? Just reply to this email."}
       </p>
     </div>
+  </div>`;
+}
+
+/** Gift inscription block. The seller has to hand-write this card, so it must
+    travel with the order alert — not sit only in the dashboard. */
+function giftBlock(o: OrderRow): string {
+  if (!o.gift) return "";
+  const note = o.gift_note?.trim();
+  return `<div style="background:#faefdf;border-left:3px solid #9c430b;padding:12px 16px;margin:16px 0;">
+    <strong style="color:#9c430b;">🎁 Gift order</strong>
+    ${note ? `<p style="margin:6px 0 0;line-height:1.6;font-style:italic;">“${esc(note)}”</p>`
+           : `<p style="margin:6px 0 0;color:#77624e;">No inscription requested.</p>`}
   </div>`;
 }
 
@@ -105,6 +117,7 @@ export function orderConfirmedEmail(o: OrderRow): { subject: string; html: strin
       `<p style="line-height:1.6;">Order <strong>${orderNoOf(o)}</strong> is paid and being prepared.
        We'll email you again the moment it ships.</p>
        ${itemsTable(o)}
+       ${giftBlock(o)}
        <h3 style="color:#9c430b;font-size:15px;margin:16px 0 4px;">Shipping to</h3>
        ${addressBlock(o)}
        <p><a href="${trackLink(o)}" style="color:#9c430b;">Track your order</a></p>`
@@ -142,17 +155,19 @@ export function orderRefundedEmail(o: OrderRow): { subject: string; html: string
   };
 }
 
-function newOrderSellerEmail(o: OrderRow): { subject: string; html: string } {
+export function newOrderSellerEmail(o: OrderRow): { subject: string; html: string } {
   return {
     subject: `🛎️ New order ${orderNoOf(o)} — ${moneyINR(o.amount_paise)}`,
     html: shell(
       `New paid order`,
-      `<p style="line-height:1.6;"><strong>${orderNoOf(o)}</strong> from ${esc(o.ship_name ?? o.email)}
-       ${o.gift ? "(gift 🎁)" : ""}</p>
+      `<p style="line-height:1.6;"><strong>${orderNoOf(o)}</strong> from ${esc(o.ship_name ?? o.email)}</p>
        ${itemsTable(o)}
+       ${giftBlock(o)}
+       <h3 style="color:#9c430b;font-size:15px;margin:16px 0 4px;">Ship to</h3>
        ${addressBlock(o)}
-       ${o.phone ? `<p>Phone: ${esc(o.phone)}</p>` : ""}
-       <p><a href="${SITE_URL}/admin" style="color:#9c430b;">Open the admin dashboard</a></p>`
+       <p style="margin:0 0 4px;">${esc(o.email)}${o.phone ? ` · ${esc(o.phone)}` : ""}</p>
+       <p><a href="${SITE_URL}/admin" style="color:#9c430b;">Open the admin dashboard</a></p>`,
+      "Seller notification — Bhagavad-gītā <em>As It Is</em>."
     ),
   };
 }
