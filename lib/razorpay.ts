@@ -7,7 +7,9 @@ function authHeader(): string {
   const id = process.env.RAZORPAY_KEY_ID;
   const secret = process.env.RAZORPAY_KEY_SECRET;
   if (!id || !secret) throw new Error("Razorpay keys not configured");
-  return "Basic " + Buffer.from(`${id}:${secret}`).toString("base64");
+  // btoa, not Buffer — Web-standard, so this runs on Workers without relying
+  // on the Node compat shim. Razorpay keys are ASCII, which btoa handles.
+  return "Basic " + btoa(`${id}:${secret}`);
 }
 
 export interface RazorpayOrder {

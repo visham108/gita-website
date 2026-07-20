@@ -16,3 +16,8 @@ next-env.d.ts
 
 # TS incremental build cache
 *.tsbuildinfo
+
+# wrangler local secrets — never commit
+.dev.vars
+.open-next/
+.wrangler/

@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gita-website",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-25",
+
+  // nodejs_compat gives the Worker Node built-ins Next's server runtime expects.
+  // Payment code deliberately avoids Node APIs anyway (fetch + Web Crypto only),
+  // so the money path doesn't depend on this shim.
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+
+  // Secrets are NOT set here — this file is committed. Set them with
+  // `wrangler secret put <NAME>` (see docs/DEPLOY.md).
+}
