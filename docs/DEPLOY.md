@@ -3,8 +3,29 @@
 The site runs on Cloudflare Workers via `@opennextjs/cloudflare`. Free tier is
 fine for launch volume, and commercial use is permitted.
 
-Everything below has been verified locally against the real Workers runtime
-(`wrangler dev`) except the steps marked **[needs your account]**.
+## Live status (2026-07-21)
+
+**DEPLOYED and verified in production** at
+<https://gita-website.visham-rawat.workers.dev>. wrangler is authenticated
+(OAuth). The 5 runtime secrets are set on the Worker (service role, 3 Razorpay,
+ADMIN_EMAILS). Verified live: pages render, catalog from Postgres, made-to-order
+editions purchasable with stock untouched on capture, admin 404s for anonymous,
+a real Razorpay test order created + captured by valid signature, tampered
+signature and webhook both 403.
+
+Nameservers have propagated — `vrnda.store` now answers from Cloudflare, store
+still resolves to Shopify.
+
+**Still to do before real customers (all flagged below):**
+- Attach `gita.vrnda.store` custom domain to the Worker.
+- Set `NEXT_PUBLIC_SITE_URL=https://gita.vrnda.store` and **rebuild** (it is
+  build-time inlined; email links default to localhost until then).
+- Register the production Razorpay webhook and replace the placeholder
+  `RAZORPAY_WEBHOOK_SECRET` (currently the local test value).
+- Real MRP prices (check the printed cover — selling above MRP is an offence).
+- Resend signup → set `RESEND_API_KEY` / `EMAIL_FROM`.
+- Razorpay live keys.
+- Delete test orders BG-1001..BG-1005.
 
 ---
 
