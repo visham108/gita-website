@@ -14,6 +14,13 @@
     "binding": "ASSETS"
   },
 
+  // Serve the site at the subdomain. custom_domain:true makes Cloudflare create
+  // the proxied DNS record and issue the TLS cert. The root vrnda.store stays on
+  // Shopify (untouched) — only this subdomain points at the Worker.
+  "routes": [
+    { "pattern": "gita.vrnda.store", "custom_domain": true }
+  ],
+
   "observability": {
     "enabled": true
   }
