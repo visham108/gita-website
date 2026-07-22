@@ -59,7 +59,9 @@ export async function POST(request: Request) {
     subtotal += p.price_paise * qty;
     lines.push({ product_id: id, qty, unit_price_paise: p.price_paise, title: p.title });
   }
-  const shipping = shippingFor(subtotal);
+  // Quantity across all lines — two copies weigh twice as much as one.
+  const itemCount = lines.reduce((n, l) => n + l.qty, 0);
+  const shipping = shippingFor(subtotal, itemCount);
   const total = subtotal + shipping;
 
   // Attach the signed-in user if there is one (guests are fine too).

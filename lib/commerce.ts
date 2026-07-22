@@ -2,25 +2,40 @@
    All amounts are integers in paise. The client renders these; the SERVER
    recomputes them — client-supplied prices are never trusted. */
 
-/* Shipping is FREE on every order — the courier cost is absorbed into the book
-   price rather than charged separately. To start charging again, set
-   SHIPPING_FLAT_PAISE to the amount (e.g. 4900 for ₹49) and, if you want a
-   free-over-X tier, set FREE_SHIPPING_THRESHOLD_PAISE above 0. The customer-
-   facing copy in CartDrawer and the shipping policy reads from these, so it
-   follows automatically. */
-export const SHIPPING_FLAT_PAISE = 0;
-export const FREE_SHIPPING_THRESHOLD_PAISE = 0;
+/* Shipping is charged by QUANTITY, which for a single-SKU shop is the same as
+   charging by weight: one hardcover is ~1kg, and chargeable weight scales with
+   how many go in the box. A second book adds weight to the same parcel, so it
+   costs less than the first — hence a base rate plus a smaller per-extra rate.
 
-export function shippingFor(subtotalPaise: number): number {
-  if (subtotalPaise === 0 || SHIPPING_FLAT_PAISE === 0) return 0;
-  return FREE_SHIPPING_THRESHOLD_PAISE > 0 && subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE
-    ? 0
-    : SHIPPING_FLAT_PAISE;
+   Numbers are set from published 2026 surface rate cards (Shiprocket/DTDC
+   class), where 1kg runs roughly ₹40–60 local, ₹60–95 metro-to-metro and
+   ₹95–150 for the rest of India. A hardcover plus packaging bills in the
+   1–1.5kg slab. ₹79 sits mid-range: it over-recovers on nearby deliveries and
+   under-recovers on far ones (the north-east and J&K can reach ₹150+), which
+   averages out and keeps one honest number on the page instead of a
+   pincode-by-pincode quote.
+
+   To go free again, set SHIPPING_FIRST_ITEM_PAISE to 0. To add a free-over-X
+   tier, set FREE_SHIPPING_THRESHOLD_PAISE above 0 — but keep it BELOW a
+   realistic order value, or it advertises a discount nobody can reach. */
+/* Typed as `number`, not the literal, so setting any of these to 0 stays a
+   valid one-line change instead of a type error. */
+export const SHIPPING_FIRST_ITEM_PAISE: number = 7900;   // ₹79 — first book
+export const SHIPPING_EXTRA_ITEM_PAISE: number = 3900;   // ₹39 — each additional book
+export const FREE_SHIPPING_THRESHOLD_PAISE: number = 0;  // 0 = no free tier
+
+/** Total delivery charge. `itemCount` is the number of physical books, not the
+    number of distinct products — two copies weigh twice as much as one. */
+export function shippingFor(subtotalPaise: number, itemCount: number): number {
+  if (subtotalPaise === 0 || itemCount <= 0) return 0;
+  if (SHIPPING_FIRST_ITEM_PAISE === 0) return 0;
+  if (FREE_SHIPPING_THRESHOLD_PAISE > 0 && subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE) return 0;
+  return SHIPPING_FIRST_ITEM_PAISE + Math.max(0, itemCount - 1) * SHIPPING_EXTRA_ITEM_PAISE;
 }
 
 /** True when nothing is ever charged for delivery — lets the UI say "free
     shipping" plainly instead of quoting a threshold that doesn't exist. */
-export const SHIPPING_IS_FREE = SHIPPING_FLAT_PAISE === 0;
+export const SHIPPING_IS_FREE = SHIPPING_FIRST_ITEM_PAISE === 0;
 
 /* Any order whose payment was captured can be refunded, INCLUDING after it has
    shipped or been delivered — that is precisely when most refund requests

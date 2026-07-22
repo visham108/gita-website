@@ -49,7 +49,9 @@ export default function Checkout() {
     .filter((l): l is { p: NonNullable<typeof l.p>; qty: number } => !!l.p);
 
   const subtotal = cartSubtotalPaise(cart, products);
-  const shipping = shippingFor(subtotal);
+  // Count only books still in the catalogue — matches what the server charges.
+  const itemCount = entries.reduce((n, l) => n + l.qty, 0);
+  const shipping = shippingFor(subtotal, itemCount);
   const total = subtotal + shipping;
 
   const goStep = (n: number) => {

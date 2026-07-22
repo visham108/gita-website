@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { cartSubtotalPaise, setQty, useCart } from "@/lib/cart";
-import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FLAT_PAISE, FREE_SHIPPING_THRESHOLD_PAISE } from "@/lib/commerce";
+import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, FREE_SHIPPING_THRESHOLD_PAISE } from "@/lib/commerce";
 import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -110,7 +110,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
               ? "Free shipping on every order."
               : FREE_SHIPPING_THRESHOLD_PAISE > 0
                 ? `Free shipping on orders of ${moneyINR(FREE_SHIPPING_THRESHOLD_PAISE)} or more.`
-                : `Shipping ${moneyINR(SHIPPING_FLAT_PAISE)} per order.`}
+                : `Shipping ${moneyINR(SHIPPING_FIRST_ITEM_PAISE)}, plus ${moneyINR(SHIPPING_EXTRA_ITEM_PAISE)} per extra copy.`}
           </p>
         </div>
       </aside>

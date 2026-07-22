@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import PolicyPage from "@/components/PolicyPage";
-import { moneyINR, FREE_SHIPPING_THRESHOLD_PAISE, SHIPPING_FLAT_PAISE, SHIPPING_IS_FREE } from "@/lib/commerce";
+import { moneyINR, FREE_SHIPPING_THRESHOLD_PAISE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, SHIPPING_IS_FREE } from "@/lib/commerce";
 
 export const metadata: Metadata = { title: "Shipping Policy" };
 
@@ -19,10 +19,12 @@ export default function ShippingPolicy() {
         </p>
       ) : (
         <p>
-          Shipping is a flat {moneyINR(SHIPPING_FLAT_PAISE)} per order
-          {FREE_SHIPPING_THRESHOLD_PAISE > 0 && <>, and free for orders of{" "}
-          {moneyINR(FREE_SHIPPING_THRESHOLD_PAISE)} or more</>}. The exact charge is always
-          shown at checkout before you pay.
+          Shipping is {moneyINR(SHIPPING_FIRST_ITEM_PAISE)} for the first book and{" "}
+          {moneyINR(SHIPPING_EXTRA_ITEM_PAISE)} for each additional copy in the same order —
+          a second book shares the parcel, so it costs less to send
+          {FREE_SHIPPING_THRESHOLD_PAISE > 0 && <>. Orders of{" "}
+          {moneyINR(FREE_SHIPPING_THRESHOLD_PAISE)} or more ship free</>}. The exact charge is
+          always shown at checkout before you pay, and we do not add anything after that.
         </p>
       )}
 
