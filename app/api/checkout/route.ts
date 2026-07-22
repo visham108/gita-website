@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { supabaseServer } from "@/lib/supabase/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
-import { shippingFor, type DbProduct } from "@/lib/commerce";
+import { shippingFor, MAX_ITEM_QTY, type DbProduct } from "@/lib/commerce";
 
 interface CheckoutBody {
   items: Record<string, number>; // productId -> qty (client cart; prices ignored)
@@ -30,7 +30,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const items = Object.entries(body.items ?? {}).filter(([, q]) => Number.isInteger(q) && q > 0 && q <= 20);
+  const rawItems = Object.entries(body.items ?? {});
+  // Reject an over-large quantity loudly. Silently dropping the line used to
+  // turn a 50-copy order into "your cart is empty", losing the biggest sales.
+  const tooMany = rawItems.find(([, q]) => Number.isInteger(q) && (q as number) > MAX_ITEM_QTY);
+  if (tooMany)
+    return NextResponse.json(
+      {
+        error: `We can take up to ${MAX_ITEM_QTY} copies per order online. For ${tooMany[1]} copies, email orders@vrnda.store and we'll quote you bulk pricing and freight.`,
+      },
+      { status: 400 }
+    );
+  const items = rawItems.filter(([, q]) => Number.isInteger(q) && (q as number) > 0);
   const c = body.customer;
   if (!items.length) return NextResponse.json({ error: "Your cart is empty." }, { status: 400 });
   if (!c?.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email))

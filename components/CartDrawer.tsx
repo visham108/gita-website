@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { cartSubtotalPaise, setQty, useCart } from "@/lib/cart";
-import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, FREE_SHIPPING_THRESHOLD_PAISE } from "@/lib/commerce";
+import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, FREE_SHIPPING_THRESHOLD_PAISE, MAX_ITEM_QTY } from "@/lib/commerce";
 import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -85,10 +85,30 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                   <div className="cart-item__meta">
                     <strong>{p.type}</strong>
                     <span>Bhagavad-gītā As It Is</span>
+                    {/* Typable quantity — a bulk buyer wanting 50 copies should
+                        not have to press "+" fifty times. */}
                     <div className="qty" aria-label={`Quantity for ${p.type}`}>
                       <button type="button" onClick={() => setQty(id, qty - 1)} aria-label="Decrease">−</button>
-                      <span>{qty}</span>
-                      <button type="button" onClick={() => setQty(id, qty + 1)} aria-label="Increase">+</button>
+                      <input
+                        type="number"
+                        className="qty__input"
+                        min={1}
+                        max={MAX_ITEM_QTY}
+                        value={qty}
+                        aria-label={`Quantity of ${p.type}`}
+                        onChange={(e) => {
+                          const n = parseInt(e.target.value, 10);
+                          if (Number.isFinite(n)) setQty(id, Math.min(Math.max(n, 0), MAX_ITEM_QTY));
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setQty(id, Math.min(qty + 1, MAX_ITEM_QTY))}
+                        aria-label="Increase"
+                        disabled={qty >= MAX_ITEM_QTY}
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                   <div>

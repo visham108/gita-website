@@ -24,6 +24,11 @@ export const SHIPPING_FIRST_ITEM_PAISE: number = 7900;   // ₹79 — first book
 export const SHIPPING_EXTRA_ITEM_PAISE: number = 3900;   // ₹39 — each additional book
 export const FREE_SHIPPING_THRESHOLD_PAISE: number = 0;  // 0 = no free tier
 
+/** Largest quantity of one edition a customer may buy self-serve. Above this we
+    send them to a bulk enquiry, because 50+ copies ship as freight rather than
+    a parcel and want a real quote, not an estimate. */
+export const MAX_ITEM_QTY = 50;
+
 /** Total delivery charge. `itemCount` is the number of physical books, not the
     number of distinct products — two copies weigh twice as much as one. */
 export function shippingFor(subtotalPaise: number, itemCount: number): number {
