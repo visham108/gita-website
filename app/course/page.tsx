@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Course from "@/components/course/Course";
 
 export const metadata: Metadata = {
-  title: "The Gītā Course — Free 18-Week Guided Study",
+  title: "Reading Plan — A Free Path Through the Gītā",
   description:
-    "Gītā Foundations: a free 18-week guided journey through every chapter of Bhagavad-gītā As It Is — 27 lessons, reflections, quizzes and a certificate.",
+    "A free 18-week reading plan for Bhagavad-gītā As It Is: six stages, what to read at each, the key concepts, and how they apply to study, work and daily life.",
 };
 
 export default function CoursePage() {

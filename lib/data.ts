@@ -31,24 +31,33 @@ export interface Product {
   features: string[];
 }
 
-export interface Lesson {
+/** One checkable step in the reading plan. Ids stay stable (m1l1, m2l3 …)
+    because completion is stored against them in course_progress. */
+export interface Reading {
   id: string;
   title: string;
   time: string;
 }
 
-export interface CourseModule {
+/** A key idea, with where to find it and where it bites in ordinary life. */
+export interface PlanConcept {
+  term: string;
+  verse: string;
+  meaning: string;
+  inPractice: string;
+}
+
+export interface PlanStage {
   id: string;
   title: string;
   time: string;
-  lessons: Lesson[];
-}
-
-export interface QuizQuestion {
-  q: string;
-  options: string[];
-  answer: number;
-  why: string;
+  read: string;
+  audience: string;
+  concepts: PlanConcept[];
+  readings: Reading[];
+  /** Replaces the old multiple-choice quiz: something to sit with and write,
+      which is what this book actually asks of a reader. */
+  reflection: string;
 }
 
 export const GITA_CHAPTERS: Chapter[] = [
@@ -393,92 +402,308 @@ export const PRODUCTS: Product[] = [
   }
 ];
 
-/* -------------------- Course curriculum -------------------- */
+/* -------------------- Reading plan --------------------
+   NOT a taught course — a structured path through the book. Each stage says
+   what to read, names the concepts devotees actually centre on, and shows
+   where each one bites in ordinary working life. All wording here is original;
+   Prabhupāda's translations and purports are © BBT and are never reproduced —
+   we point to verse numbers so the reader meets the text in the book itself. */
 
-export const COURSE: CourseModule[] = [
+export const READING_PLAN: PlanStage[] = [
   {
-    id: "m1", title: "Orientation — The Setting of the Gītā", time: "Week 1 · 4 lessons · 55 min",
-    lessons: [
-      { id: "m1l1", title: "Why the Gītā, why now", time: "12 min" },
-      { id: "m1l2", title: "Kurukṣetra: the battlefield and the crisis", time: "14 min" },
-      { id: "m1l3", title: "Who is Kṛṣṇa? Who is Arjuna?", time: "15 min" },
-      { id: "m1l4", title: "How to read As It Is: paramparā and purports", time: "14 min" }
-    ]
-  },
-  {
-    id: "m2", title: "You Are Not the Body — Chapters 1–2", time: "Weeks 2–3 · 5 lessons · 80 min",
-    lessons: [
-      { id: "m2l1", title: "Arjuna's grief and ours", time: "14 min" },
-      { id: "m2l2", title: "The eternal soul (2.11–2.30)", time: "18 min" },
-      { id: "m2l3", title: "Duty without attachment (2.47)", time: "16 min" },
-      { id: "m2l4", title: "The steady sage (2.54–2.72)", time: "17 min" },
-      { id: "m2l5", title: "Practice: a week of sacred reading", time: "15 min" }
-    ]
-  },
-  {
-    id: "m3", title: "The Art of Work — Chapters 3–6", time: "Weeks 4–6 · 5 lessons · 85 min",
-    lessons: [
-      { id: "m3l1", title: "Karma-yoga: work as offering", time: "17 min" },
-      { id: "m3l2", title: "Knowledge that liberates (4.7–4.9)", time: "18 min" },
-      { id: "m3l3", title: "Approaching a teacher (4.34)", time: "15 min" },
-      { id: "m3l4", title: "Meditation and the mind (6.5–6.6)", time: "18 min" },
-      { id: "m3l5", title: "The highest yogī (6.47)", time: "17 min" }
-    ]
-  },
-  {
-    id: "m4", title: "Knowing the Absolute — Chapters 7–12", time: "Weeks 7–10 · 5 lessons · 90 min",
-    lessons: [
-      { id: "m4l1", title: "Kṛṣṇa as the source of everything (7.7, 10.8)", time: "18 min" },
-      { id: "m4l2", title: "Remembering at the end (8.5–8.6)", time: "16 min" },
-      { id: "m4l3", title: "The most confidential knowledge (9.22–9.34)", time: "20 min" },
-      { id: "m4l4", title: "The universal form (Chapter 11)", time: "18 min" },
-      { id: "m4l5", title: "The path of devotion (Chapter 12)", time: "18 min" }
-    ]
-  },
-  {
-    id: "m5", title: "Nature, Modes and Faith — Chapters 13–17", time: "Weeks 11–14 · 4 lessons · 70 min",
-    lessons: [
-      { id: "m5l1", title: "The field and its knower (13.1–13.35)", time: "18 min" },
-      { id: "m5l2", title: "The three modes in daily life (14.5–14.27)", time: "18 min" },
-      { id: "m5l3", title: "The supreme person (15.7, 15.15)", time: "16 min" },
-      { id: "m5l4", title: "Divine and demoniac natures; faith (16–17)", time: "18 min" }
-    ]
-  },
-  {
-    id: "m6", title: "Surrender and Beyond — Chapter 18", time: "Weeks 15–18 · 4 lessons · 75 min",
-    lessons: [
-      { id: "m6l1", title: "Renunciation in action (18.1–18.49)", time: "18 min" },
-      { id: "m6l2", title: "The most confidential instruction (18.64–18.66)", time: "20 min" },
-      { id: "m6l3", title: "Living the Gītā: sādhana for a lifetime", time: "19 min" },
-      { id: "m6l4", title: "Final integration + course assessment", time: "18 min" }
-    ]
-  }
-];
-
-export const QUIZ_M1: QuizQuestion[] = [
-  {
-    q: "Where is the Bhagavad-gītā spoken?",
-    options: ["In the forest of Vṛndāvana", "On the battlefield of Kurukṣetra", "On the bank of the Ganges", "In the palace at Hastināpura"],
-    answer: 1,
-    why: "The Gītā is spoken on dharma-kṣetra kuru-kṣetra — the battlefield that is also a place of pilgrimage (1.1)."
-  },
-  {
-    q: "What does the phrase 'As It Is' signify in the title of Śrīla Prabhupāda's edition?",
-    options: [
-      "It is a literal word-for-word dictionary",
-      "The Gītā is presented without speculative interpretation, as Kṛṣṇa spoke it and as the disciplic succession carries it",
-      "It contains only the Sanskrit text",
-      "It is an abridged summary"
+    id: "m1",
+    title: "Before You Begin — How to Read This Book",
+    time: "Week 1",
+    read: "Introduction, and Chapter 1",
+    audience:
+      "Anyone who has started the Gītā before and stalled. This stage is about how to read it, so the rest lands.",
+    concepts: [
+      {
+        term: "Paramparā",
+        verse: "4.1–4.3",
+        meaning:
+          "The teaching is passed down an unbroken chain rather than re-invented by each reader. This is what the phrase “As It Is” claims: the text is presented as its speaker meant it, not bent to fit a modern thesis.",
+        inPractice:
+          "You already trust chains of transmission — a surgeon trained by surgeons, a craft learned from a master. Read with the same posture: receive first, argue later.",
+      },
+      {
+        term: "Dharma-kṣetra",
+        verse: "1.1",
+        meaning:
+          "The very first line calls the battlefield a field of dharma. The Gītā is not spoken in a monastery but in the middle of an unavoidable, messy obligation.",
+        inPractice:
+          "Your life does not need to be quiet or sorted before this book applies. It was spoken into exactly the kind of pressure you are already under.",
+      },
+      {
+        term: "Viṣāda — the crisis that opens inquiry",
+        verse: "1.28–1.46",
+        meaning:
+          "Arjuna collapses. He is not a beginner asking idle questions; he is a capable man whose competence has run out. Only then does he ask to be taught.",
+        inPractice:
+          "Feeling stuck is not disqualifying — in this text it is the doorway. The honest admission “I don't know what is right here” is where the teaching starts.",
+      },
     ],
-    answer: 1,
-    why: "Prabhupāda's edition presents Kṛṣṇa's words through the unbroken paramparā, without diluting or explaining away the speaker's own stated purpose."
+    readings: [
+      { id: "m1l1", title: "Read the Introduction — why this edition exists", time: "Week 1" },
+      { id: "m1l2", title: "Read Chapter 1 — the setting and Arjuna's collapse", time: "Week 1" },
+      { id: "m1l3", title: "Learn the five layers of each verse (Sanskrit → purport)", time: "Week 1" },
+    ],
+    reflection:
+      "Write down one decision you are currently avoiding. Is it hard because you don't know what will happen, or because you don't know what is right? The Gītā treats those as different problems.",
   },
+
   {
-    q: "According to Chapter 2, what happens to the soul when the body dies?",
-    options: ["It dies with the body", "It merges and loses identity forever", "It continues, passing to another body, as it passed from youth to old age", "Nothing can be known about it"],
-    answer: 2,
-    why: "Dehāntara-prāptiḥ (2.13): as the self persists through the body's changes in this life, it persists through the change called death."
-  }
+    id: "m2",
+    title: "You Are Not the Body",
+    time: "Weeks 2–4",
+    read: "Chapter 2 — especially 2.11–2.30, 2.47, and 2.54–2.72",
+    audience:
+      "Students facing exams, anyone whose sense of worth rises and falls with results.",
+    concepts: [
+      {
+        term: "Ātmā — the self is not the body",
+        verse: "2.13, 2.20, 2.22",
+        meaning:
+          "The self that occupies childhood, youth and old age is one continuous thing; the body it wears is not. Death is described as a change of garment, not an ending.",
+        inPractice:
+          "Most performance anxiety assumes that if the work fails, you are diminished. This chapter separates the two: outcomes touch the garment, not the wearer.",
+      },
+      {
+        term: "Niṣkāma-karma — work without clutching the result",
+        verse: "2.47",
+        meaning:
+          "The most quoted verse in the book: your claim is on the action, never on its fruit. Not indifference to quality — release of ownership over the outcome.",
+        inPractice:
+          "Exams, appraisals, launches. Obsessing over the result actively degrades the work — attention leaks from the task to the scoreboard. Do the work; let the result be the result.",
+      },
+      {
+        term: "The ladder from thought to ruin",
+        verse: "2.62–2.63",
+        meaning:
+          "A precise sequence: dwelling on an object → attachment → desire → anger when thwarted → confusion → memory failure → collapse of judgement.",
+        inPractice:
+          "The most practical psychology in the book. Every blow-up you regret climbed these rungs. Catch it at rung one — the dwelling — and the rest never fires.",
+      },
+      {
+        term: "Sthita-prajña — steadiness that isn't numbness",
+        verse: "2.54–2.72",
+        meaning:
+          "Arjuna asks how such a person walks and speaks. The answer describes someone undisturbed by both gain and loss — not because they feel nothing, but because their centre isn't outside them.",
+        inPractice:
+          "A working definition of composure: not the absence of pressure, but the absence of being owned by it.",
+      },
+    ],
+    readings: [
+      { id: "m2l1", title: "Read 2.11–2.30 — the nature of the self", time: "Week 2" },
+      { id: "m2l2", title: "Sit with 2.47 for a full week before moving on", time: "Week 3" },
+      { id: "m2l3", title: "Read 2.54–2.72 — the steady mind", time: "Week 4" },
+      { id: "m2l4", title: "Trace 2.62–2.63 in one real incident from your week", time: "Week 4" },
+    ],
+    reflection:
+      "Where in your week does anxiety about the result actually damage the quality of your work? Name one task where you could commit fully to the effort and genuinely release the outcome.",
+  },
+
+  {
+    id: "m3",
+    title: "Work Without Burning Out",
+    time: "Weeks 5–8",
+    read: "Chapters 3, 4 and 5",
+    audience:
+      "Working professionals, anyone comparing their career to someone else's.",
+    concepts: [
+      {
+        term: "Karma-yoga — action as offering",
+        verse: "3.9",
+        meaning:
+          "Work done as an offering does not bind the worker; the same work done to feed the ego does. The action can look identical from outside — the difference is interior.",
+        inPractice:
+          "You cannot leave your job to become spiritual. This reframes the job itself: the spreadsheet done well and offered is not lesser than the retreat.",
+      },
+      {
+        term: "Sva-dharma — your own duty, imperfectly",
+        verse: "3.35, 18.47",
+        meaning:
+          "It is better to do your own work badly than another's well. Duty suited to your nature is safer ground than a more prestigious role that isn't yours.",
+        inPractice:
+          "The clearest antidote to career envy in the book. The question stops being “is this impressive?” and becomes “is this mine?”",
+      },
+      {
+        term: "Who is actually the doer",
+        verse: "3.27",
+        meaning:
+          "Nature's qualities carry out the work while the ego announces “I did this.” Not a denial of effort — a correction of the credit.",
+        inPractice:
+          "Deflates both arrogance after a win and collapse after a failure. Neither was entirely yours.",
+      },
+      {
+        term: "Detachment is not indifference",
+        verse: "5.10",
+        meaning:
+          "One who acts while surrendering attachment is untouched, as a lotus leaf is untouched by water. Fully in the water; not soaked by it.",
+        inPractice:
+          "You can care enormously about doing the work well and still not be destroyed when it goes wrong. These are compatible — most people assume they aren't.",
+      },
+    ],
+    readings: [
+      { id: "m3l1", title: "Read Chapter 3 — action and its obligations", time: "Week 5" },
+      { id: "m3l2", title: "Read Chapter 4 — knowledge, and the chain of teachers", time: "Week 6" },
+      { id: "m3l3", title: "Read Chapter 5 — renunciation compared with action", time: "Week 7" },
+      { id: "m3l4", title: "Re-read 3.35 and write what your own dharma actually is", time: "Week 8" },
+    ],
+    reflection:
+      "Whose career are you quietly measuring yours against? Write down what you would do differently this month if that comparison simply weren't available to you.",
+  },
+
+  {
+    id: "m4",
+    title: "The Mind — Friend or Enemy",
+    time: "Weeks 9–11",
+    read: "Chapter 6",
+    audience:
+      "Anyone fighting distraction, burnout, or a discipline they keep abandoning.",
+    concepts: [
+      {
+        term: "The mind is your friend or your enemy",
+        verse: "6.5–6.6",
+        meaning:
+          "Nobody else holds this position. The untrained mind works against you with full knowledge of your weak points; the trained one is your closest ally.",
+        inPractice:
+          "The voice narrating your failures is not an objective observer. It is a faculty — and faculties can be trained.",
+      },
+      {
+        term: "Moderation — yoga is not extremity",
+        verse: "6.16–6.17",
+        meaning:
+          "Not for one who eats too much or too little, sleeps too much or too little. Regulated eating, sleeping, working and recreation is named as the path itself.",
+        inPractice:
+          "Sleep and meals are not obstacles to your practice; they are part of it. Most burnout is a moderation failure dressed up as dedication.",
+      },
+      {
+        term: "Abhyāsa and vairāgya — practice and dispassion",
+        verse: "6.35",
+        meaning:
+          "Kṛṣṇa concedes the mind is restless and hard to curb, then gives two levers: consistent practice, and loosening the grip of craving.",
+        inPractice:
+          "Consistency beats intensity. Twenty unglamorous minutes daily outperforms a heroic weekend you won't repeat.",
+      },
+      {
+        term: "The honest admission",
+        verse: "6.33–6.34",
+        meaning:
+          "Arjuna says plainly that controlling the mind seems as hard as controlling the wind. The text records the objection rather than dismissing it.",
+        inPractice:
+          "Your difficulty is not a sign you're unsuited. The book's own student said the same thing to the teacher's face.",
+      },
+    ],
+    readings: [
+      { id: "m4l1", title: "Read Chapter 6 in full", time: "Week 9" },
+      { id: "m4l2", title: "Apply 6.16–6.17 — audit sleep, food, work, rest for one week", time: "Week 10" },
+      { id: "m4l3", title: "Re-read 6.34–6.35 after that week and note what broke", time: "Week 11" },
+    ],
+    reflection:
+      "Name one discipline you have started and abandoned more than once. What was the unrealistic part? Write the smallest version of it you could genuinely sustain for a month.",
+  },
+
+  {
+    id: "m5",
+    title: "Knowing the Divine",
+    time: "Weeks 12–14",
+    read: "Chapters 7 through 11",
+    audience:
+      "Readers who came for philosophy and are meeting the devotional heart of the book.",
+    concepts: [
+      {
+        term: "Four kinds of people who turn to God",
+        verse: "7.16",
+        meaning:
+          "The distressed, the curious, the seeker of gain, and the one who seeks knowledge itself. Notably, none of the four is turned away.",
+        inPractice:
+          "If you came here in difficulty or out of curiosity, that counts. The text does not require a purer motive before you may begin.",
+      },
+      {
+        term: "You become what you dwell on",
+        verse: "8.6",
+        meaning:
+          "Whatever state of being one remembers at the end is the state one attains — and remembrance at the end is shaped by a lifetime of attention.",
+        inPractice:
+          "The most demanding idea in the book for a phone-shaped life. Attention is not neutral consumption; it is formation. What you scroll, you become.",
+      },
+      {
+        term: "Vibhūti — recognising the Divine in excellence",
+        verse: "10.41",
+        meaning:
+          "Wherever there is particular splendour or power, understand it as a spark of the Divine. A long list of the best of each kind is given as a training in seeing.",
+        inPractice:
+          "A discipline of attention for ordinary days: the excellent thing in front of you — a piece of work, a mountain, a person's skill — is a pointer, not a distraction.",
+      },
+      {
+        term: "Viśva-rūpa — awe, and its limits",
+        verse: "11.8, 11.45–11.46",
+        meaning:
+          "Arjuna is given cosmic vision, is terrified by it, and asks for the familiar form back. Overwhelming grandeur is not the destination; relationship is.",
+        inPractice:
+          "Spiritual experience is not measured by intensity. Arjuna's own preference was for the intimate over the spectacular.",
+      },
+    ],
+    readings: [
+      { id: "m5l1", title: "Read Chapters 7–8 — the two energies, and remembrance", time: "Week 12" },
+      { id: "m5l2", title: "Read Chapters 9–10 — the confidential knowledge, and the splendours", time: "Week 13" },
+      { id: "m5l3", title: "Read Chapter 11 — the universal form", time: "Week 14" },
+    ],
+    reflection:
+      "What occupies your mind in unguarded moments — waiting in a queue, lying awake? Write it down honestly. Given 8.6, what is that shaping you into?",
+  },
+
+  {
+    id: "m6",
+    title: "Devotion, Character, and the Life Well Lived",
+    time: "Weeks 15–18",
+    read: "Chapters 12 through 18",
+    audience:
+      "Everyone — this is where the book turns from understanding to living.",
+    concepts: [
+      {
+        term: "Bhakti — the accessible path",
+        verse: "12.6–12.8",
+        meaning:
+          "After chapters of philosophy and discipline, the path named as most accessible is devotion — an offering of the heart rather than an intellectual or athletic feat.",
+        inPractice:
+          "You do not need to be scholarly or ascetically gifted. This is the chapter that opens the book to a working parent.",
+      },
+      {
+        term: "The qualities of one dear to God",
+        verse: "12.13–12.20",
+        meaning:
+          "A concrete list: free from envy, kind, without false ego, equal in happiness and distress, forgiving, content, self-controlled, and not a source of anxiety to others.",
+        inPractice:
+          "Read it as a character audit rather than poetry. “Not a source of anxiety to anyone” alone would rewrite most workplaces.",
+      },
+      {
+        term: "The three guṇas — reading your own state",
+        verse: "14.11–14.13, 17.8–17.10",
+        meaning:
+          "Goodness, passion and ignorance colour everything — your food, your work, your charity, your mood. Each is described with enough precision to be diagnosed.",
+        inPractice:
+          "A daily instrument: which quality drove that decision, that meal, that message you fired off at 11pm? Naming it is most of the correction.",
+      },
+      {
+        term: "Deliberate fully, then choose",
+        verse: "18.63",
+        meaning:
+          "Having explained everything, Kṛṣṇa tells Arjuna to reflect on it completely and then do as he wishes. The freedom is handed back deliberately.",
+        inPractice:
+          "The book refuses to coerce even at its climax. Take counsel seriously, then own the decision — that is the model it leaves you with.",
+      },
+    ],
+    readings: [
+      { id: "m6l1", title: "Read Chapter 12 — the path of devotion", time: "Week 15" },
+      { id: "m6l2", title: "Read Chapters 13–15 — nature, the guṇas, the eternal tree", time: "Week 16" },
+      { id: "m6l3", title: "Read Chapters 16–17 — character and the qualities of action", time: "Week 17" },
+      { id: "m6l4", title: "Read Chapter 18 — the conclusion, and re-read 18.63", time: "Week 18" },
+    ],
+    reflection:
+      "From the list in 12.13–12.20, choose the quality most absent in you. Not the one easiest to admit — the true one. What would practising it look like in one specific relationship this week?",
+  },
 ];
 
 /* Expose for other scripts (plain script-tag loading) */

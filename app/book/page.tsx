@@ -22,7 +22,7 @@ const FAQ = [
   { q: "How is this edition different from other Bhagavad-gītās?", a: "Most editions present the translator's own philosophy through the Gītā. Bhagavad-gītā As It Is presents the Gītā through its own tradition — the unbroken line of teachers descending from Kṛṣṇa Himself. It is also unusually complete: original Sanskrit, transliteration, word-for-word meanings, translation, and full commentary for all 700 verses." },
   { q: "Is this a religious book? I'm not looking to convert to anything.", a: "The Gītā is a book of knowledge — about consciousness, action, time, death, and love. It asks for your attention, not your allegiance. Millions read it as philosophy, as literature, as a manual for living. What you do with its conclusions remains entirely, and deliberately, up to you." },
   { q: "Which edition do you sell?", a: "The complete hardcover — the edition readers overwhelmingly choose for study. It lies flat, lasts decades, and holds up to a lifetime of underlining. Sewn binding, colour plates, and all 700 verses unabridged." },
-  { q: "How long does it take to read?", a: "Cover to cover at a steady pace, most first-time readers take three to six months with the purports. Our 18-week guided course paces the whole book with lessons and discussion. But the honest answer is: a lifetime — the Gītā is a book one rereads forever, and it reads differently at every stage of life." },
+  { q: "How long does it take to read?", a: "Cover to cover at a steady pace, most first-time readers take three to six months with the purports. Our free 18-week reading plan paces the whole book, stage by stage. But the honest answer is: a lifetime — the Gītā is a book one rereads forever, and it reads differently at every stage of life." },
   { q: "Can I order the book from this site?", a: "Yes. Order the hardcover here and pay securely by UPI, card or netbanking. We ship across India, and you receive an order number and email confirmation straight away. The book has been in continuous print for over fifty years and is also available worldwide through BBT centers and major booksellers." },
 ];
 
@@ -181,7 +181,7 @@ export default function BookPage() {
               <div className="stack-4">
                 <div className="card">
                   <h3 style={{ fontSize: "var(--text-md)" }}>1 · The Pilgrim&rsquo;s Path <span className="badge badge--sage" style={{ marginLeft: ".5em" }}>18 weeks</span></h3>
-                  <p>One chapter per week, reading translation and purports together. Pairs perfectly with our <Link href="/course" style={{ color: "var(--gold-deep)", fontWeight: 600 }}>free guided course</Link>. The most complete first reading.</p>
+                  <p>One chapter per week, reading translation and purports together. Pairs perfectly with our <Link href="/course" style={{ color: "var(--gold-deep)", fontWeight: 600 }}>free reading plan</Link>. The most complete first reading.</p>
                 </div>
                 <div className="card">
                   <h3 style={{ fontSize: "var(--text-md)" }}>2 · The Essence First <span className="badge" style={{ marginLeft: ".5em" }}>2 weeks</span></h3>
@@ -204,7 +204,7 @@ export default function BookPage() {
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Keep a notebook — or use the <Link href="/explorer" style={{ color: "var(--gold-bright)" }}>Verse Explorer</Link> to bookmark and annotate as you go.</li>
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Ask questions. Join a local or online study group; the Gītā was spoken in dialogue and is best studied in one.</li>
                 </ul>
-                <Link className="btn btn--gold btn--block mt-6" href="/course">Study With Guidance — Free</Link>
+                <Link className="btn btn--gold btn--block mt-6" href="/course">Follow the Reading Plan — Free</Link>
               </div>
             </div>
           </div>

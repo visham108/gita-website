@@ -253,10 +253,10 @@ export default function HomePage() {
           <div className="cta-band reveal">
             <p className="eyebrow" style={{ justifyContent: "center" }}>Your Journey Begins Here</p>
             <h2>Don&rsquo;t just read about the Gītā.<br />Read the Gītā.</h2>
-            <p className="lede">Join the free 18-week guided course, explore the verses, or open your own
+            <p className="lede">Follow the free 18-week reading plan, explore the verses, or open your own
               copy tonight. Five thousand years of wisdom is waiting for one decision.</p>
             <div className="cta-band__btns">
-              <Link className="btn btn--gold btn--lg" href="/course">Start the Free Course</Link>
+              <Link className="btn btn--gold btn--lg" href="/course">See the Reading Plan</Link>
               <Link className="btn btn--ghost-dark btn--lg" href="/book#editions">Get Your Copy</Link>
             </div>
             <DemoForm

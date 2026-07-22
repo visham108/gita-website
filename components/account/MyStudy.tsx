@@ -6,7 +6,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { COURSE, GITA_VERSES } from "@/lib/data";
+import { READING_PLAN, GITA_VERSES } from "@/lib/data";
 import { ORDERED_VERSES, dailyVerseIndex } from "@/lib/verses";
 import { useToast } from "@/components/Toast";
 import { useStudy } from "@/lib/study/StudyProvider";
@@ -18,12 +18,12 @@ const PLAN_NAMES: Record<string, string> = {
 };
 
 const PLANS = [
-  { value: "pilgrim", badge: "18 weeks", badgeClass: "badge badge--sage", title: "The Pilgrim's Path", body: "One chapter a week with purports, aligned to the free course. The classic first journey." },
+  { value: "pilgrim", badge: "18 weeks", badgeClass: "badge badge--sage", title: "The Pilgrim's Path", body: "One chapter a week with purports, aligned to the free reading plan. The classic first journey." },
   { value: "essence", badge: "2 weeks", badgeClass: "badge", title: "The Essence First", body: "Chapters 2, 9 and 18 in a fortnight — the summary, the summit and the conclusion." },
   { value: "daily", badge: "700 days", badgeClass: "badge badge--night", title: "A Verse a Day", body: "One verse with purport every morning. Small, unbreakable, and quietly life-changing." },
 ];
 
-const TOTAL_LESSONS = COURSE.flatMap((m) => m.lessons).length;
+const TOTAL_LESSONS = READING_PLAN.flatMap((s) => s.readings).length;
 
 function AuthCard() {
   const toast = useToast();
@@ -185,7 +185,7 @@ export default function MyStudy() {
             </div>
             <div className="card dash-stat">
               <span className="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 3a9 9 0 1 0 9 9" /><path d="M12 7v5l3.2 1.8" /></svg></span>
-              <div><strong>{coursePct}%</strong><span>Course progress</span></div>
+              <div><strong>{coursePct}%</strong><span>Reading plan</span></div>
             </div>
           </div>
 

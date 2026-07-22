@@ -23,7 +23,7 @@ export default function Footer() {
             <ul>
               <li><Link href="/book">About the Book</Link></li>
               <li><Link href="/explorer">Verse Explorer</Link></li>
-              <li><Link href="/course">Gītā Course</Link></li>
+              <li><Link href="/course">Reading Plan</Link></li>
               <li><Link href="/resources">Resource Library</Link></li>
             </ul>
           </div>

@@ -10,7 +10,7 @@ const NAV = [
   { href: "/", label: "Home" },
   { href: "/book", label: "The Book" },
   { href: "/explorer", label: "Verse Explorer" },
-  { href: "/course", label: "Course" },
+  { href: "/course", label: "Reading Plan" },
   { href: "/resources", label: "Resources" },
   { href: "/account", label: "My Study" },
 ];

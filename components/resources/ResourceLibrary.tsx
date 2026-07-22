@@ -108,7 +108,7 @@ export default function ResourceLibrary() {
             <p className="lede">Finished your first reading? Continue with Śrīmad-Bhāgavatam, join a weekly
               study circle, or visit a temple near you — the Gītā opens a door; a whole world lies beyond it.</p>
             <div style={{ display: "flex", gap: "var(--space-3)", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link className="btn btn--gold" href="/course">Join the Course</Link>
+              <Link className="btn btn--gold" href="/course">Follow the Reading Plan</Link>
               <a
                 className="btn btn--ghost-dark"
                 href="#"
