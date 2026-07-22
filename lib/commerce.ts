@@ -2,13 +2,25 @@
    All amounts are integers in paise. The client renders these; the SERVER
    recomputes them — client-supplied prices are never trusted. */
 
-export const SHIPPING_FLAT_PAISE = 4900;        // ₹49 flat shipping
-export const FREE_SHIPPING_THRESHOLD_PAISE = 49900; // free at ₹499+
+/* Shipping is FREE on every order — the courier cost is absorbed into the book
+   price rather than charged separately. To start charging again, set
+   SHIPPING_FLAT_PAISE to the amount (e.g. 4900 for ₹49) and, if you want a
+   free-over-X tier, set FREE_SHIPPING_THRESHOLD_PAISE above 0. The customer-
+   facing copy in CartDrawer and the shipping policy reads from these, so it
+   follows automatically. */
+export const SHIPPING_FLAT_PAISE = 0;
+export const FREE_SHIPPING_THRESHOLD_PAISE = 0;
 
 export function shippingFor(subtotalPaise: number): number {
-  if (subtotalPaise === 0) return 0;
-  return subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE ? 0 : SHIPPING_FLAT_PAISE;
+  if (subtotalPaise === 0 || SHIPPING_FLAT_PAISE === 0) return 0;
+  return FREE_SHIPPING_THRESHOLD_PAISE > 0 && subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE
+    ? 0
+    : SHIPPING_FLAT_PAISE;
 }
+
+/** True when nothing is ever charged for delivery — lets the UI say "free
+    shipping" plainly instead of quoting a threshold that doesn't exist. */
+export const SHIPPING_IS_FREE = SHIPPING_FLAT_PAISE === 0;
 
 const inr = new Intl.NumberFormat("en-IN", {
   style: "currency",
