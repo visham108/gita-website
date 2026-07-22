@@ -22,6 +22,17 @@ export function shippingFor(subtotalPaise: number): number {
     shipping" plainly instead of quoting a threshold that doesn't exist. */
 export const SHIPPING_IS_FREE = SHIPPING_FLAT_PAISE === 0;
 
+/* Any order whose payment was captured can be refunded, INCLUDING after it has
+   shipped or been delivered — that is precisely when most refund requests
+   arrive (the customer has the book in hand and wants to return it). Only
+   'pending' (nothing captured) and 'refunded' (already done) are excluded.
+   Shared so the API guard, the webhook and the dashboard can't drift apart. */
+export const REFUNDABLE_STATUSES = ["paid", "packed", "shipped", "delivered", "cancelled"] as const;
+
+export function isRefundable(status: string): boolean {
+  return (REFUNDABLE_STATUSES as readonly string[]).includes(status);
+}
+
 const inr = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",

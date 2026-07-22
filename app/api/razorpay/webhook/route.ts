@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { notifyOrderPaid, notifyOrderRefunded } from "@/lib/email";
+import { REFUNDABLE_STATUSES } from "@/lib/commerce";
 
 /** Razorpay webhook — the authoritative record of payment events, covering
     cases the browser callback misses (tab closed mid-payment, flaky network).
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
           .from("orders")
           .update({ status: "refunded" })
           .eq("razorpay_order_id", payment.order_id)
-          .in("status", ["paid", "packed", "cancelled"])
+          .in("status", [...REFUNDABLE_STATUSES])
           .select("id");
         if (transitioned && transitioned.length > 0)
           await notifyOrderRefunded(admin, payment.order_id);

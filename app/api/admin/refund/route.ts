@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { refundPayment } from "@/lib/razorpay";
+import { isRefundable, REFUNDABLE_STATUSES } from "@/lib/commerce";
 import { notifyOrderRefunded } from "@/lib/email";
 
 /** Full refund via Razorpay. Money moves only if Razorpay accepts the refund;
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
   if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
   if (!order.razorpay_payment_id)
     return NextResponse.json({ error: "Order has no captured payment to refund" }, { status: 409 });
-  if (!["paid", "packed", "cancelled"].includes(order.status))
+  if (!isRefundable(order.status))
     return NextResponse.json({ error: `Cannot refund an order in status "${order.status}"` }, { status: 409 });
 
   try {
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
     .from("orders")
     .update({ status: "refunded" })
     .eq("id", order.id)
-    .in("status", ["paid", "packed", "cancelled"])
+    .in("status", [...REFUNDABLE_STATUSES])
     .select("id");
   if (transitioned && transitioned.length > 0 && order.razorpay_order_id)
     await notifyOrderRefunded(admin, order.razorpay_order_id);

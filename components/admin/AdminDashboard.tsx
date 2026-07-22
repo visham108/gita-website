@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { moneyINR } from "@/lib/commerce";
+import { moneyINR, isRefundable } from "@/lib/commerce";
 import { useToast } from "@/components/Toast";
 
 /* Seller dashboard — order queue + inventory. All mutations go through
@@ -308,7 +308,7 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
                               Cancel order
                             </button>
                           )}
-                          {["paid", "packed", "cancelled"].includes(o.status) && o.razorpay_payment_id && (
+                          {isRefundable(o.status) && o.razorpay_payment_id && (
                             <button className="btn btn--ghost-light btn--sm admin-danger" disabled={isBusy} onClick={() => refund(o)}>
                               Refund {moneyINR(o.amount_paise)}
                             </button>
