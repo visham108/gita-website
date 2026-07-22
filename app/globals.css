@@ -1955,3 +1955,11 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   .admin-detail-grid { grid-template-columns: 1fr; }
   .admin-product { grid-template-columns: 1fr 1fr; align-items: center; }
 }
+
+/* A single edition on sale: centre the lone card instead of stranding it in a
+   4-up grid. Matches .grid-* spacing. */
+.editions-solo {
+  display: grid;
+  justify-content: center;
+}
+.editions-solo > * { max-width: 26rem; width: 100%; }

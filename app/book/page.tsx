@@ -6,7 +6,7 @@ import EditionsGrid from "@/components/EditionsGrid";
 export const metadata: Metadata = {
   title: "The Book — Editions, Sample & Reading Guide",
   description:
-    "Everything inside Bhagavad-gītā As It Is: original Sanskrit, word-for-word meanings, translations and purports. Choose hardcover, paperback, eBook or audiobook.",
+    "Everything inside Bhagavad-gītā As It Is: original Sanskrit, word-for-word meanings, translations and purports. Complete hardcover edition, shipped across India.",
 };
 
 const LAYERS = [
@@ -21,9 +21,9 @@ const FAQ = [
   { q: "Do I need any background in Hinduism or Sanskrit to read this book?", a: "None at all. The book was written expressly for readers meeting this wisdom for the first time. Every Sanskrit term is translated and explained, an introduction sets the scene, and the purports assume no prior knowledge — only sincere curiosity.", open: true },
   { q: "How is this edition different from other Bhagavad-gītās?", a: "Most editions present the translator's own philosophy through the Gītā. Bhagavad-gītā As It Is presents the Gītā through its own tradition — the unbroken line of teachers descending from Kṛṣṇa Himself. It is also unusually complete: original Sanskrit, transliteration, word-for-word meanings, translation, and full commentary for all 700 verses." },
   { q: "Is this a religious book? I'm not looking to convert to anything.", a: "The Gītā is a book of knowledge — about consciousness, action, time, death, and love. It asks for your attention, not your allegiance. Millions read it as philosophy, as literature, as a manual for living. What you do with its conclusions remains entirely, and deliberately, up to you." },
-  { q: "Which format should I choose?", a: "For deep study, readers overwhelmingly choose the hardcover — it lies flat, lasts decades, and holds up to underlining. The paperback is ideal for travel and gifting; the eBook offers instant full-text search; the audiobook turns a commute into a classroom. Many students eventually keep more than one." },
+  { q: "Which edition do you sell?", a: "The complete hardcover — the edition readers overwhelmingly choose for study. It lies flat, lasts decades, and holds up to a lifetime of underlining. Sewn binding, colour plates, and all 700 verses unabridged." },
   { q: "How long does it take to read?", a: "Cover to cover at a steady pace, most first-time readers take three to six months with the purports. Our 18-week guided course paces the whole book with lessons and discussion. But the honest answer is: a lifetime — the Gītā is a book one rereads forever, and it reads differently at every stage of life." },
-  { q: "Can I order the book from this site?", a: "Not quite yet — online ordering opens soon, and until then your cart is saved on this device. The book itself has been in continuous print for over fifty years and is also available worldwide through BBT centers and major booksellers." },
+  { q: "Can I order the book from this site?", a: "Yes. Order the hardcover here and pay securely by UPI, card or netbanking. We ship across India, and you receive an order number and email confirmation straight away. The book has been in continuous print for over fifty years and is also available worldwide through BBT centers and major booksellers." },
 ];
 
 export default function BookPage() {
@@ -146,10 +146,10 @@ export default function BookPage() {
       <section className="section" id="editions">
         <div className="container">
           <div className="center mb-7 reveal">
-            <p className="eyebrow">Editions &amp; Formats</p>
-            <h2 className="display-md">Choose how you&rsquo;ll meet the Gītā</h2>
-            <p className="lede">Complete and unabridged in every format. Online ordering opens soon —
-              your cart is saved on this device.</p>
+            <p className="eyebrow">The Edition</p>
+            <h2 className="display-md">Bring the Gītā home</h2>
+            <p className="lede">The complete hardcover — all 700 verses unabridged, with the original
+              Sanskrit, word-for-word meanings and full purports. Shipped across India.</p>
           </div>
           <EditionsGrid />
           <div className="grid-3 mt-7">

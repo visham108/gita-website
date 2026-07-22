@@ -65,7 +65,12 @@ export default function Checkout() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: cart,
+          // Only send items still in the catalogue. A cart saved before an
+          // edition was withdrawn would otherwise fail server-side on a line
+          // the customer can no longer even see in the drawer.
+          items: Object.fromEntries(
+            Object.entries(cart).filter(([id]) => products.some((p) => p.id === id))
+          ),
           customer: {
             name: `${val("f-first")} ${val("f-last")}`.trim(),
             email: val("f-email"),

@@ -4,7 +4,7 @@ import Checkout from "@/components/checkout/Checkout";
 export const metadata: Metadata = {
   title: "Checkout",
   description:
-    "Preview the checkout for Bhagavad-gītā As It Is. Online ordering opens soon — your cart is saved on this device.",
+    "Secure checkout for Bhagavad-gītā As It Is. Pay by UPI, card or netbanking. Shipped across India.",
   robots: { index: false },
 };
 

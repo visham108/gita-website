@@ -237,12 +237,12 @@ export default function HomePage() {
         <div className="container">
           <div className="center mb-7 reveal">
             <p className="eyebrow" style={{ justifyContent: "center" }}>Bring the Gītā Home</p>
-            <h2 className="display-md">Choose your edition</h2>
-            <p className="lede">Every format contains the complete, unabridged text — original Sanskrit,
+            <h2 className="display-md">Get your copy</h2>
+            <p className="lede">The complete, unabridged text — original Sanskrit,
               transliteration, word meanings, translation and purports.</p>
           </div>
           <EditionsGrid />
-          <p className="center muted mt-6">Online ordering opens soon — your cart is saved on this device.
+          <p className="center muted mt-6">Ships across India. Pay securely by UPI, card or netbanking.
             Gifting? Add a personal inscription at checkout.</p>
         </div>
       </section>

@@ -16,8 +16,16 @@ export default function EditionsGrid() {
     return <p className="center muted">The catalog is loading — please refresh in a moment.</p>;
   }
 
+  // One edition shouldn't sit lonely in a 4-up grid — narrow the layout to match
+  // how many we actually sell, and centre a solo card.
+  const layout =
+    products.length === 1 ? "editions-solo"
+    : products.length === 2 ? "grid-2"
+    : products.length === 3 ? "grid-3"
+    : "grid-4";
+
   return (
-    <div className="grid-4">
+    <div className={layout}>
       {products.map((p, i) => {
         const purchasable = isPurchasable(p);
         const soldOut = isSoldOut(p);
