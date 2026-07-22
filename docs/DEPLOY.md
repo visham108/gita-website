@@ -16,16 +16,21 @@ signature and webhook both 403.
 Nameservers have propagated — `vrnda.store` now answers from Cloudflare, store
 still resolves to Shopify.
 
-**Still to do before real customers (all flagged below):**
-- Attach `gita.vrnda.store` custom domain to the Worker.
-- Set `NEXT_PUBLIC_SITE_URL=https://gita.vrnda.store` and **rebuild** (it is
-  build-time inlined; email links default to localhost until then).
-- Register the production Razorpay webhook and replace the placeholder
-  `RAZORPAY_WEBHOOK_SECRET` (currently the local test value).
-- Real MRP prices (check the printed cover — selling above MRP is an offence).
-- Resend signup → set `RESEND_API_KEY` / `EMAIL_FROM`.
-- Razorpay live keys.
-- Delete test orders BG-1001..BG-1005.
+**Done since:** ✅ custom domain `gita.vrnda.store` attached · ✅
+`NEXT_PUBLIC_SITE_URL` baked in · ✅ Razorpay **live keys** set + production
+webhook registered (id `TGSRw1BtlSQcUB`) with a fresh 64-char secret · ✅ Resend
+key + `EMAIL_FROM=orders@vrnda.store` set, domain DKIM/SPF added to Cloudflare
+(verification auto-completing) · ✅ test orders deleted, order sequence reset to
+BG-1001.
+
+**Still to do before real customers:**
+- **A real ₹1 end-to-end test** — must be done by the seller (enters real
+  payment; the assistant cannot). Temporarily price something at ₹1 in `/admin`,
+  buy it, confirm the email + admin flow, refund, restore the price.
+- **Real MRP prices** (seller decided to keep ₹399/₹199 — must stay at/below the
+  printed cover MRP; over-MRP is an offence under the Legal Metrology Act).
+- **Redirect the old GitHub Pages site** to `gita.vrnda.store` — do AFTER the ₹1
+  test proves live payments end to end.
 
 ---
 
