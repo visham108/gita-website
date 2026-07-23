@@ -44,10 +44,22 @@ export async function POST(request: Request) {
   const items = rawItems.filter(([, q]) => Number.isInteger(q) && (q as number) > 0);
   const c = body.customer;
   if (!items.length) return NextResponse.json({ error: "Your cart is empty." }, { status: 400 });
-  if (!c?.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email))
+  if (!c?.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email) || c.email.length > 200)
     return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
   if (!c.name?.trim() || !c.address?.trim() || !c.city?.trim() || !/^\d{6}$/.test(c.pincode ?? ""))
     return NextResponse.json({ error: "Please complete the shipping address (6-digit PIN code)." }, { status: 400 });
+
+  /* Cap every free-text field. These land in Postgres `text` columns and in
+     emails, so without a limit a single request could store megabytes. The
+     caps are generous for real addresses and reject only abuse. */
+  const LIMITS = { name: 120, address: 300, city: 80, state: 80, phone: 20, giftNote: 300 } as const;
+  const overLong = (Object.keys(LIMITS) as (keyof typeof LIMITS)[])
+    .find((k) => typeof c[k] === "string" && (c[k] as string).length > LIMITS[k]);
+  if (overLong)
+    return NextResponse.json(
+      { error: `That ${overLong === "giftNote" ? "gift note" : overLong} is too long.` },
+      { status: 400 }
+    );
 
   const admin = supabaseAdmin();
 
