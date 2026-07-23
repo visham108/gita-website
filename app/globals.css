@@ -2089,3 +2089,11 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 .page-hero--flame .breadcrumb li {
   color: var(--moon);
 }
+
+/* Touch devices only: the header icon buttons render at 42px (38px of hit
+   area after the border), which clears the WCAG 24px minimum but sits under
+   the 44px comfort guideline. Bump them on coarse pointers so cart and
+   account are easy to hit with a thumb; desktop density is unchanged. */
+@media (pointer: coarse) {
+  .icon-btn { width: 44px; height: 44px; }
+}
