@@ -31,9 +31,11 @@ export default function Contact() {
 
       <h2>Bulk & sponsorship</h2>
       <p>
-        For sets for schools, libraries, prisons and events (10–10,000 copies), write to{" "}
-        <a href="mailto:orders@vrnda.store">orders@vrnda.store</a> with
-        &ldquo;Bulk&rdquo; in the subject.
+        Up to 10 copies you can order directly on the site. For larger sets — schools,
+        libraries, temples, prisons and events — write to{" "}
+        <a href="mailto:orders@vrnda.store?subject=Bulk%20order%20enquiry">orders@vrnda.store</a>{" "}
+        with &ldquo;Bulk&rdquo; in the subject and we&rsquo;ll quote pricing and shipping for
+        your quantity.
       </p>
     </PolicyPage>
   );

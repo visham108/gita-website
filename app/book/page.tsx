@@ -159,7 +159,7 @@ export default function BookPage() {
             </div>
             <div className="card reveal" data-delay="1" style={{ textAlign: "center" }}>
               <h3 style={{ fontSize: "var(--text-md)" }}>📦 Bulk &amp; Sponsorship</h3>
-              <p>Sponsor sets for schools, libraries, prisons and hotels — from 10 to 10,000 copies. Contact us for distribution pricing.</p>
+              <p>Sponsor sets for schools, libraries, temples, prisons and hotels. Order up to 10 copies here; for anything larger, <a href="mailto:orders@vrnda.store?subject=Bulk%20order%20enquiry" style={{ color: "var(--gold-deep)", fontWeight: 600 }}>write to us</a> and we&rsquo;ll quote pricing and shipping.</p>
             </div>
             <div className="card reveal" data-delay="2" style={{ textAlign: "center" }}>
               <h3 style={{ fontSize: "var(--text-md)" }}>🌍 89 Languages</h3>

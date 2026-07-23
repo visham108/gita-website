@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { supabaseServer } from "@/lib/supabase/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
-import { shippingFor, MAX_ITEM_QTY, type DbProduct } from "@/lib/commerce";
+import { shippingFor, MAX_ITEM_QTY, BULK_ENQUIRY_EMAIL, type DbProduct } from "@/lib/commerce";
 
 interface CheckoutBody {
   items: Record<string, number>; // productId -> qty (client cart; prices ignored)
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
   if (tooMany)
     return NextResponse.json(
       {
-        error: `We can take up to ${MAX_ITEM_QTY} copies per order online. For ${tooMany[1]} copies, email orders@vrnda.store and we'll quote you bulk pricing and freight.`,
+        error: `We can take up to ${MAX_ITEM_QTY} copies per order online. For ${tooMany[1]} copies, email ${BULK_ENQUIRY_EMAIL} — we'll quote you bulk pricing and arrange the shipment directly.`,
       },
       { status: 400 }
     );

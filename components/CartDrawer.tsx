@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { cartSubtotalPaise, setQty, useCart } from "@/lib/cart";
-import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, FREE_SHIPPING_THRESHOLD_PAISE, MAX_ITEM_QTY } from "@/lib/commerce";
+import { moneyINR, SHIPPING_IS_FREE, SHIPPING_FIRST_ITEM_PAISE, SHIPPING_EXTRA_ITEM_PAISE, FREE_SHIPPING_THRESHOLD_PAISE, MAX_ITEM_QTY, BULK_ENQUIRY_EMAIL } from "@/lib/commerce";
 import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -132,6 +132,17 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                 ? `Free shipping on orders of ${moneyINR(FREE_SHIPPING_THRESHOLD_PAISE)} or more.`
                 : `Shipping ${moneyINR(SHIPPING_FIRST_ITEM_PAISE)}, plus ${moneyINR(SHIPPING_EXTRA_ITEM_PAISE)} per extra copy.`}
           </p>
+          {/* Surface the bulk route as they approach the cap, rather than
+              letting them hit it and bounce. */}
+          {entries.some(([, q]) => q >= MAX_ITEM_QTY) && (
+            <p className="muted" style={{ textAlign: "center", margin: ".6rem 0 0", fontSize: "var(--text-xs)" }}>
+              Need more than {MAX_ITEM_QTY}?{" "}
+              <a href={`mailto:${BULK_ENQUIRY_EMAIL}?subject=Bulk%20order%20enquiry`} style={{ color: "var(--gold-deep)", fontWeight: 600 }}>
+                Email us for bulk pricing
+              </a>{" "}
+              — schools, temples, libraries and gifting.
+            </p>
+          )}
         </div>
       </aside>
     </>

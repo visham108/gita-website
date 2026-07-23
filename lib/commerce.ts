@@ -24,10 +24,15 @@ export const SHIPPING_FIRST_ITEM_PAISE: number = 7900;   // ₹79 — first book
 export const SHIPPING_EXTRA_ITEM_PAISE: number = 3900;   // ₹39 — each additional book
 export const FREE_SHIPPING_THRESHOLD_PAISE: number = 0;  // 0 = no free tier
 
-/** Largest quantity of one edition a customer may buy self-serve. Above this we
-    send them to a bulk enquiry, because 50+ copies ship as freight rather than
-    a parcel and want a real quote, not an estimate. */
-export const MAX_ITEM_QTY = 50;
+/** Largest quantity of one edition a customer may buy self-serve. Set at 10
+    deliberately: the per-extra-copy shipping rate is a parcel rate, and beyond
+    about ten copies the real courier cost outruns it — a 20-copy order would
+    cost the seller several hundred rupees out of pocket. Above this we route
+    the customer to a direct enquiry so the shipment can be quoted properly. */
+export const MAX_ITEM_QTY = 10;
+
+/** Where bulk enquiries go. Kept next to the cap so the two never disagree. */
+export const BULK_ENQUIRY_EMAIL = "orders@vrnda.store";
 
 /** Total delivery charge. `itemCount` is the number of physical books, not the
     number of distinct products — two copies weigh twice as much as one. */
