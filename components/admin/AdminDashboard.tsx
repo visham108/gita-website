@@ -62,6 +62,14 @@ const STATUS_LABEL: Record<string, string> = {
   refunded: "Refunded",
 };
 
+interface AdminSignup {
+  id: string;
+  kind: "course" | "newsletter";
+  name: string | null;
+  email: string;
+  created_at: string;
+}
+
 function fmtDate(iso: string): string {
   return new Date(iso).toLocaleString("en-IN", {
     day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
@@ -73,23 +81,37 @@ function csvCell(v: string | number | null | undefined): string {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+/** BOM so Excel reads the diacritics in Sanskrit names correctly. */
+function downloadCsv(filename: string, header: string[], rows: (string | number | null | undefined)[][]) {
+  const body = [header.join(","), ...rows.map((r) => r.map(csvCell).join(","))].join("\r\n");
+  const blob = new Blob(["﻿" + body], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   const toast = useToast();
-  const [tab, setTab] = useState<"orders" | "inventory">("orders");
+  const [tab, setTab] = useState<"orders" | "inventory" | "signups">("orders");
   const [orders, setOrders] = useState<AdminOrder[] | null>(null);
   const [products, setProducts] = useState<AdminProduct[] | null>(null);
+  const [signups, setSignups] = useState<AdminSignup[] | null>(null);
   const [filter, setFilter] = useState<string>("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [shipForm, setShipForm] = useState<{ id: string; awb: string; url: string } | null>(null);
 
   const load = useCallback(async () => {
-    const [oRes, pRes] = await Promise.all([
+    const [oRes, pRes, sRes] = await Promise.all([
       fetch("/api/admin/orders"),
       fetch("/api/admin/products"),
+      fetch("/api/admin/signups"),
     ]);
     if (oRes.ok) setOrders((await oRes.json()).orders);
     if (pRes.ok) setProducts((await pRes.json()).products);
+    if (sRes.ok) setSignups((await sRes.json()).signups);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -153,19 +175,14 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   function exportCsv() {
     const header = ["order_no", "date", "status", "name", "email", "phone", "address", "city", "state", "pincode",
       "items", "shipping_inr", "total_inr", "payment_id", "awb", "gift_note"];
-    const lines = visible.map((o) => [
+    const lines: (string | number | null | undefined)[][] = visible.map((o) => [
       `BG-${o.order_no}`, o.created_at, o.status, o.ship_name, o.email, o.phone,
       o.ship_address, o.ship_city, o.ship_state, o.ship_pincode,
       o.order_items.map((i) => `${i.title} x${i.qty}`).join("; "),
       (o.shipping_paise / 100).toFixed(2), (o.amount_paise / 100).toFixed(2),
       o.razorpay_payment_id, o.awb, o.gift ? (o.gift_note ?? "gift") : "",
-    ].map(csvCell).join(","));
-    const blob = new Blob(["﻿" + [header.join(","), ...lines].join("\r\n")], { type: "text/csv;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `orders-${filter}-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    ]);
+    downloadCsv(`orders-${filter}-${new Date().toISOString().slice(0, 10)}.csv`, header, lines);
   }
 
   return (
@@ -185,6 +202,9 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           </button>
           <button role="tab" aria-selected={tab === "inventory"} className={`chip ${tab === "inventory" ? "is-active" : ""}`} onClick={() => setTab("inventory")}>
             Inventory
+          </button>
+          <button role="tab" aria-selected={tab === "signups"} className={`chip ${tab === "signups" ? "is-active" : ""}`} onClick={() => setTab("signups")}>
+            Signups{signups?.length ? ` (${signups.length})` : ""}
           </button>
         </div>
 
@@ -326,8 +346,97 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
         {tab === "inventory" && (
           <InventoryEditor products={products} onSaved={load} />
         )}
+
+        {tab === "signups" && (
+          <SignupsPanel signups={signups} onChanged={load} />
+        )}
       </div>
     </main>
+  );
+}
+
+/* --------------------------------------------------------------- signups tab */
+
+function SignupsPanel({ signups, onChanged }: { signups: AdminSignup[] | null; onChanged: () => Promise<void> }) {
+  const toast = useToast();
+  const [kind, setKind] = useState<"all" | "course" | "newsletter">("all");
+  const [busy, setBusy] = useState<string | null>(null);
+
+  if (signups === null) return <p className="admin-empty">Loading signups…</p>;
+
+  const counts = {
+    all: signups.length,
+    course: signups.filter((s) => s.kind === "course").length,
+    newsletter: signups.filter((s) => s.kind === "newsletter").length,
+  };
+  const visible = signups.filter((s) => kind === "all" || s.kind === kind);
+
+  async function remove(s: AdminSignup) {
+    if (!window.confirm(`Remove ${s.email} from the ${s.kind} list? Do this when someone asks to unsubscribe.`)) return;
+    setBusy(s.id);
+    try {
+      const res = await fetch("/api/admin/signups", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: s.id }),
+      });
+      if (!res.ok) { toast("Could not remove that — try again."); return; }
+      toast(`${s.email} removed.`);
+      await onChanged();
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  function exportSignups() {
+    downloadCsv(
+      `signups-${kind}-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["list", "name", "email", "signed_up"],
+      visible.map((s) => [s.kind, s.name, s.email, s.created_at])
+    );
+  }
+
+  return (
+    <>
+      <p className="admin-hint">
+        People who asked to hear about the free live course, and weekly-verse subscribers.
+        Export the course list when you announce a batch — you promised these people an email
+        when dates are confirmed.
+      </p>
+      <div className="admin-filters">
+        {(["all", "course", "newsletter"] as const).map((k) => (
+          <button key={k} className={`chip ${kind === k ? "is-active" : ""}`} onClick={() => setKind(k)}>
+            {k === "all" ? "All" : k === "course" ? "Live course" : "Newsletter"} · {counts[k]}
+          </button>
+        ))}
+        <button className="btn btn--ghost-light btn--sm admin-export" onClick={exportSignups} disabled={visible.length === 0}>
+          Export CSV
+        </button>
+      </div>
+
+      {visible.length === 0 ? (
+        <p className="admin-empty">No signups on this list yet.</p>
+      ) : (
+        visible.map((s) => (
+          <div className="admin-signup" key={s.id}>
+            <span className={`admin-status admin-status--${s.kind === "course" ? "paid" : "packed"}`}>
+              {s.kind === "course" ? "Live course" : "Newsletter"}
+            </span>
+            <span className="admin-signup__email">{s.email}</span>
+            <span className="admin-signup__name">{s.name || "—"}</span>
+            <span className="admin-signup__date">{fmtDate(s.created_at)}</span>
+            <button
+              className="btn btn--ghost-light btn--sm"
+              type="button"
+              disabled={busy === s.id}
+              onClick={() => remove(s)}
+            >
+              Remove
+            </button>
+          </div>
+        ))
+      )}
+    </>
   );
 }
 
