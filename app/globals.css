@@ -1152,18 +1152,23 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 
 /* ---------- CTA band (flame bookend) ---------- */
 
+/* Full-bleed: the band spans the viewport and butts cleanly against the
+   section above and the footer below. Content stays on the shared .container
+   grid, so headings line up with every other section on the page. */
 .cta-band {
   position: relative;
-  border-radius: var(--radius-lg);
-  padding: clamp(2.5rem, 6vw, 4.5rem);
+  padding-block: clamp(3.5rem, 8vw, 6rem);
   background:
-    radial-gradient(700px 300px at 85% 0%, rgba(255, 205, 148, 0.18), transparent 60%),
+    radial-gradient(900px 380px at 50% 0%, rgba(255, 205, 148, 0.18), transparent 62%),
     linear-gradient(150deg, #a04a12, var(--flame-deep) 75%);
-  border: 1px solid rgba(255, 205, 148, 0.3);
+  border-top: 1px solid rgba(255, 205, 148, 0.28);
   color: var(--moon);
   text-align: center;
   overflow: hidden;
 }
+/* Uses the plain .container width so its edges line up with every other
+   section; only the paragraph is narrowed, for a readable measure. */
+.cta-band__inner > .lede { max-width: 60ch; margin-inline: auto; }
 .cta-band h2 { font-size: var(--text-2xl); }
 .cta-band .lede { margin-inline: auto; margin-bottom: var(--space-6); }
 .cta-band__btns { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; margin-bottom: var(--space-6); }
@@ -2012,3 +2017,38 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 .qty__input::-webkit-outer-spin-button,
 .qty__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .qty__input:focus-visible { outline: 2px solid var(--gold-deep); border-radius: 4px; }
+
+/* ---- Free live course promo ---- */
+.course-points {
+  list-style: none; padding: 0;
+  margin: var(--space-5) auto 0; max-width: 46ch;
+  display: grid; gap: .7rem; text-align: left;
+}
+.course-points li {
+  position: relative; padding-left: 1.9em; color: var(--ink-soft);
+}
+.course-points li::before {
+  content: "◆"; position: absolute; left: 0; top: 0;
+  color: var(--gold-deep); font-size: .8em; line-height: 1.9;
+}
+.course-points strong { color: var(--ink); }
+
+/* Name + email + button; collapses to stacked on narrow screens. */
+.signup-form {
+  display: flex; gap: var(--space-3); flex-wrap: wrap;
+  justify-content: center; max-width: 34rem;
+}
+.signup-form input {
+  flex: 1 1 12rem; min-width: 0;
+  padding: .8em 1.2em; font: inherit;
+  border: 1px solid var(--line-light); border-radius: var(--radius-pill);
+  background: #fffdf8; color: var(--ink);
+}
+.signup-form input:focus-visible {
+  outline: 2px solid var(--gold-deep); outline-offset: 1px; border-color: transparent;
+}
+.signup-form .btn { flex: 0 0 auto; }
+@media (max-width: 560px) {
+  .signup-form { flex-direction: column; }
+  .signup-form .btn { width: 100%; }
+}

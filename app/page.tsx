@@ -3,7 +3,7 @@ import { GITA_CHAPTERS } from "@/lib/data";
 import VerseOfTheDay from "@/components/home/VerseOfTheDay";
 import Anatomy from "@/components/home/Anatomy";
 import EditionsGrid from "@/components/EditionsGrid";
-import DemoForm from "@/components/DemoForm";
+import SignupForm from "@/components/SignupForm";
 
 const SPREADS = [
   {
@@ -247,24 +247,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ CTA + NEWSLETTER ============ */}
-      <section className="section section--tight" id="begin">
-        <div className="container">
-          <div className="cta-band reveal">
-            <p className="eyebrow" style={{ justifyContent: "center" }}>Your Journey Begins Here</p>
-            <h2>Don&rsquo;t just read about the Gītā.<br />Read the Gītā.</h2>
-            <p className="lede">Follow the free 18-week reading plan, explore the verses, or open your own
-              copy tonight. Five thousand years of wisdom is waiting for one decision.</p>
-            <div className="cta-band__btns">
-              <Link className="btn btn--gold btn--lg" href="/course">See the Reading Plan</Link>
-              <Link className="btn btn--ghost-dark btn--lg" href="/book#editions">Get Your Copy</Link>
+      {/* ============ FREE LIVE COURSE ============ */}
+      <section className="section section--cream" id="live-course">
+        <div className="container" style={{ maxWidth: 780 }}>
+          <div className="center reveal">
+            <p className="eyebrow" style={{ justifyContent: "center" }}>Live &amp; Instructor-Led</p>
+            <h2 className="display-md">Study the Gītā with a teacher — free</h2>
+            <p className="lede">
+              A live, instructor-led course on <em>Bhagavad-gītā As It Is</em>. Taught in real
+              time, not pre-recorded — so you can ask questions, hear others&rsquo;, and be
+              guided through the chapters rather than reading alone. No fee, no prerequisites.
+            </p>
+            <ul className="course-points">
+              <li><strong>Live sessions</strong> — taught by an instructor, with time for questions</li>
+              <li><strong>Completely free</strong> — no fee, and no book purchase required</li>
+              <li><strong>Open to beginners</strong> — no Sanskrit or background needed</li>
+            </ul>
+            <div className="mt-6">
+              <SignupForm
+                kind="course"
+                idPrefix="lc"
+                placeholder="Your email"
+                cta="Sign Up Free"
+                withName
+              />
             </div>
-            <DemoForm
-              idPrefix="nl"
-              placeholder="Email — a weekly verse & reflection"
-              message="Welcome! Your first reflection arrives this week."
-            />
+            <p className="muted mt-4" style={{ fontSize: "var(--text-sm)" }}>
+              Register your interest and we&rsquo;ll email you as soon as the dates for the next
+              batch are confirmed.
+            </p>
           </div>
+        </div>
+      </section>
+
+      {/* ============ CTA + NEWSLETTER (full-bleed) ============ */}
+      <section className="cta-band reveal" id="begin">
+        <div className="container cta-band__inner">
+          <p className="eyebrow" style={{ justifyContent: "center" }}>Your Journey Begins Here</p>
+          <h2>Don&rsquo;t just read about the Gītā.<br />Read the Gītā.</h2>
+          <p className="lede">Follow the free 18-week reading plan, explore the verses, or open your own
+            copy tonight. Five thousand years of wisdom is waiting for one decision.</p>
+          <div className="cta-band__btns">
+            <Link className="btn btn--gold btn--lg" href="/course">See the Reading Plan</Link>
+            <Link className="btn btn--ghost-dark btn--lg" href="/book#editions">Get Your Copy</Link>
+          </div>
+          <SignupForm
+            kind="newsletter"
+            idPrefix="nl"
+            placeholder="Email — a weekly verse & reflection"
+            cta="Subscribe"
+            dark
+          />
         </div>
       </section>
     </main>

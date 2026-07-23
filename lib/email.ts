@@ -222,3 +222,55 @@ export async function notifyOrderRefunded(admin: SupabaseClient, rzpOrderId: str
     console.error("[notifyOrderRefunded]", err);
   }
 }
+
+/* ------------------------------------------------------- sign-up emails */
+
+/** Free live course — interest confirmed. Deliberately does NOT promise a
+    date, because none is scheduled yet; over-promising here would be the same
+    mistake as the old "ordering opens soon" copy. */
+export function courseSignupEmail(name?: string | null): { subject: string; html: string } {
+  const greeting = name?.trim() ? `Hare Kṛṣṇa ${esc(name.trim())},` : "Hare Kṛṣṇa,";
+  return {
+    subject: "You're on the list — free live Gītā course",
+    html: shell(
+      "You're on the list 🪔",
+      `<p style="line-height:1.6;">${greeting}</p>
+       <p style="line-height:1.6;">Thank you for registering your interest in the free,
+       live, instructor-led course on <em>Bhagavad-gītā As It Is</em>.</p>
+       <p style="line-height:1.6;">Sessions are taught live — not pre-recorded — so there is
+       room to ask questions and discuss. <strong>We'll email you as soon as the dates for
+       the next batch are confirmed</strong>, with the schedule and joining details.</p>
+       <p style="line-height:1.6;">In the meantime, the free reading plan walks through the
+       whole book at your own pace:</p>
+       <p><a href="${SITE_URL}/course" style="color:#9c430b;">Open the reading plan</a></p>`
+    ),
+  };
+}
+
+export function newsletterSignupEmail(): { subject: string; html: string } {
+  return {
+    subject: "Subscribed — a weekly verse from the Gītā",
+    html: shell(
+      "A verse a week 🌿",
+      `<p style="line-height:1.6;">You're subscribed. Once a week you'll receive a single
+       verse from <em>Bhagavad-gītā As It Is</em> with a short reflection — nothing more.</p>
+       <p style="line-height:1.6;">To stop at any time, just reply to one of the emails and
+       say so.</p>
+       <p><a href="${SITE_URL}/explorer" style="color:#9c430b;">Explore the verses</a></p>`
+    ),
+  };
+}
+
+/** Tells the seller a lead came in, so they can act on it. */
+export function signupAlertEmail(kind: string, email: string, name?: string | null): { subject: string; html: string } {
+  const label = kind === "course" ? "Free live course" : "Newsletter";
+  return {
+    subject: `🪔 New ${label.toLowerCase()} signup — ${email}`,
+    html: shell(
+      `New ${label} signup`,
+      `<p style="line-height:1.6;"><strong>${esc(email)}</strong>${name?.trim() ? ` — ${esc(name.trim())}` : ""}</p>
+       <p style="line-height:1.6;color:#77624e;">List: ${esc(label)}</p>`,
+      "Seller notification — Bhagavad-gītā <em>As It Is</em>."
+    ),
+  };
+}
