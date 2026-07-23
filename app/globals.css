@@ -1410,6 +1410,17 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
     linear-gradient(180deg, var(--night-900), var(--night-950));
   color: var(--moon);
 }
+
+/* Saffron variant — same flame treatment as the home hero, scaled for a
+   shorter band. Used on /book so the commercial page opens in the brand
+   colour rather than midnight. Add the class to any other .page-hero to
+   match. */
+.page-hero--flame {
+  background:
+    radial-gradient(900px 420px at 78% 8%, rgba(255, 216, 152, 0.30), transparent 58%),
+    radial-gradient(800px 520px at 5% 92%, rgba(23, 20, 37, 0.42), transparent 70%),
+    linear-gradient(178deg, var(--flame-hi) 0%, var(--flame) 55%, var(--flame-lo) 100%);
+}
 .page-hero h1 { font-size: var(--text-3xl); font-weight: 500; }
 .breadcrumb {
   display: flex;
@@ -2067,4 +2078,14 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 @media (max-width: 760px) {
   .admin-signup { grid-template-columns: 1fr auto; row-gap: .3rem; }
   .admin-signup__name, .admin-signup__date { grid-column: 1 / -1; }
+}
+
+/* The muted text tones in .page-hero were tuned against midnight. On the
+   saffron variant they drop below AA (breadcrumb hit 2.66:1, lede 4.06:1),
+   so brighten them to --moon, which measures 5.62:1 on the flame mid-tone. */
+.page-hero--flame .lede,
+.page-hero--flame .breadcrumb,
+.page-hero--flame .breadcrumb a,
+.page-hero--flame .breadcrumb li {
+  color: var(--moon);
 }
