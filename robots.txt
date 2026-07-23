@@ -1,6 +1,8 @@
+# This site has moved to https://gita.vrnda.store
+# Every page here redirects to its counterpart there and declares a canonical
+# URL, so search engines should transfer ranking to the new domain.
+
 User-agent: *
 Allow: /
-Disallow: /checkout.html
-Disallow: /account.html
 
-Sitemap: https://visham108.github.io/gita-website/sitemap.xml
+Sitemap: https://gita.vrnda.store/sitemap.xml

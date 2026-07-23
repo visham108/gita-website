@@ -1,3 +1,8 @@
+> **This site has moved to <https://gita.vrnda.store>.**
+> Every page in this repository now redirects there. The live application lives on the
+> `nextjs` branch (Next.js on Cloudflare Workers) — this branch keeps only the redirect
+> stubs so existing links and search results keep working.
+
 # Bhagavad-gītā As It Is — Premium Digital Experience
 
 A complete design prototype and strategy package for a world-class website dedicated to
