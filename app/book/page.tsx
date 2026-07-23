@@ -30,7 +30,7 @@ export default function BookPage() {
   return (
     <main id="main">
       {/* ============ PAGE HERO ============ */}
-      <section className="page-hero page-hero--flame">
+      <section className="page-hero">
         <div className="container">
           <nav aria-label="Breadcrumb">
             <ol className="breadcrumb">
