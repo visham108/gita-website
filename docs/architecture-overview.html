@@ -253,26 +253,30 @@
     gap: 0.6rem;
   }
 
+  /* Absolute-positioned counter, not a grid column. A grid container turns each
+     inline child into its own grid item, so a <strong> mid-sentence would split
+     the line and shove the rest into the narrow number column. */
   .steps li {
     counter-increment: step;
-    display: grid;
-    grid-template-columns: 1.8rem 1fr;
-    gap: 0.85rem;
-    align-items: baseline;
+    position: relative;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 8px;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.1rem 0.75rem 3rem;
     font-size: 0.95rem;
     color: var(--ink-soft);
   }
 
   .steps li::before {
     content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 3rem;
+    text-align: center;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--accent);
-    text-align: center;
   }
 
   .steps strong { color: var(--ink); font-weight: 650; }
