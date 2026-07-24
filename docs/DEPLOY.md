@@ -198,3 +198,33 @@ Run locally against `wrangler dev` with real Supabase + Razorpay test mode:
 - `/admin` renders for the admin; anonymous gets 404 on page and all APIs
 - Admin price edit → storefront updated immediately (`revalidateTag` works)
 - Legacy `/book.html` → 308 → `/book`
+
+---
+
+## Security posture (reviewed 2026-07-22)
+
+**Verified good:** payment signatures HMAC-checked server-side (forged → 403);
+prices always recomputed server-side; RLS blocks the public key from every table
+except the active catalog (orders, signups, notes, profiles all 401); admin
+routes 404 for anonymous *and* signed-in non-admins, including refund and
+reprice; no secrets reachable from client code; customer text escaped in email.
+
+**Added:**
+- HTTP security headers (`X-Frame-Options`, `nosniff`, `Referrer-Policy`,
+  `Permissions-Policy`, HSTS) — the site previously sent none.
+- **CSP is `Content-Security-Policy-Report-Only`.** Do not flip it to enforcing
+  without checking reports first: the initial policy blocked
+  `cdn.razorpay.com`, which `checkout.js` uses for risk detection. Enforcing it
+  blind would have degraded fraud checks on live payments.
+- Length caps on checkout free-text (name/address/city/state/phone/gift note).
+- **Cloudflare rate-limiting rule** "Throttle public API endpoints": 10 requests
+  per 10s per IP on `/api/checkout`, `/api/signup`, `/api/orders/lookup`, block
+  for 10s. Deliberately **excludes `/api/razorpay/webhook`** — throttling
+  Razorpay's servers would cause missed payments — and `/api/admin/*`, which is
+  already auth-gated and polled by the dashboard. Verified: abuse blocked at
+  request 12, block self-clears, a normal customer session is untouched, and 12
+  rapid webhook calls returned 403 (never 429).
+
+**Known, accepted:** order numbers are sequential, so someone who knows a
+customer's email could try numbers to find their order — rate limiting now makes
+this slow, and the response exposes no payment details.
