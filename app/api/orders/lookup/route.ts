@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { readJsonObject } from "@/lib/http";
 
 /** Guest order lookup: order number + the email it was placed with.
     Requiring both prevents enumeration; responses are sanitized. */
 export async function POST(request: Request) {
-  let body: { orderNo?: string; email?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{ orderNo?: string; email?: string }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
   const no = Number(String(body.orderNo ?? "").replace(/^bg-/i, "").trim());
   const email = String(body.email ?? "").trim().toLowerCase();

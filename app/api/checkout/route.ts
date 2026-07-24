@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { supabaseServer } from "@/lib/supabase/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { shippingFor, MAX_ITEM_QTY, BULK_ENQUIRY_EMAIL, type DbProduct } from "@/lib/commerce";
+import { readJsonObject } from "@/lib/http";
 
 interface CheckoutBody {
   items: Record<string, number>; // productId -> qty (client cart; prices ignored)
@@ -23,14 +24,13 @@ interface CheckoutBody {
     it re-reads the catalog, validates stock, computes totals in paise,
     and opens a matching Razorpay order for the widget. */
 export async function POST(request: Request) {
-  let body: CheckoutBody;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
-  }
+  const body = await readJsonObject<CheckoutBody>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
 
-  const rawItems = Object.entries(body.items ?? {});
+  const rawItems =
+    body.items && typeof body.items === "object" && !Array.isArray(body.items)
+      ? Object.entries(body.items)
+      : [];
   // Reject an over-large quantity loudly. Silently dropping the line used to
   // turn a 50-copy order into "your cart is empty", losing the biggest sales.
   const tooMany = rawItems.find(([, q]) => Number.isInteger(q) && (q as number) > MAX_ITEM_QTY);

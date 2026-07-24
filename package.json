@@ -14,7 +14,7 @@
   "dependencies": {
     "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.7",
-    "next": "^15.3.0",
+    "next": "15.5.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -25,5 +25,10 @@
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.7.0",
     "wrangler": "^4.112.0"
+  },
+  "//overrides": "postcss and sharp are nested under next, which pins vulnerable versions. Neither runs in production here (postcss is build-time; sharp would only be used by the image optimizer, which is not served on Workers) but pinning them keeps `npm audit` honest so a real advisory is not lost in noise.",
+  "overrides": {
+    "postcss": "^8.5.22",
+    "sharp": "^0.35.3"
   }
 }

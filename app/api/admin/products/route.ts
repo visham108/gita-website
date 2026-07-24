@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { CATALOG_TAG } from "@/lib/products";
+import { readJsonObject } from "@/lib/http";
 
 /** GET: the full catalog (inactive rows included — the public read policy
     only exposes active ones). POST: patch price / stock / tag / active. */
@@ -22,12 +23,10 @@ export async function GET() {
 export async function POST(request: Request) {
   if (!(await requireAdmin())) return new NextResponse(null, { status: 404 });
 
-  let body: { id?: string; price_paise?: unknown; stock_qty?: unknown; tag?: unknown; active?: unknown };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{
+    id?: string; price_paise?: unknown; stock_qty?: unknown; tag?: unknown; active?: unknown;
+  }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   if (typeof body.id !== "string" || !body.id)
     return NextResponse.json({ error: "Missing product id" }, { status: 400 });
 

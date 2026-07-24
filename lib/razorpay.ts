@@ -31,6 +31,30 @@ export async function createRazorpayOrder(amountPaise: number, receipt: string):
   return json as RazorpayOrder;
 }
 
+export interface RazorpayPayment {
+  id: string;
+  order_id: string | null;
+  status: "created" | "authorized" | "captured" | "refunded" | "failed";
+  amount: number;
+  currency: string;
+}
+
+/** Reads a payment back from Razorpay.
+
+    The checkout signature proves the identifiers came from Razorpay, but not
+    that the money was actually taken: an *authorized* payment is only a hold.
+    Fulfilling one means posting a book against funds that may never settle.
+    This is the independent check — Razorpay's own record, over the server-side
+    API, not something the browser can influence. */
+export async function fetchPayment(paymentId: string): Promise<RazorpayPayment> {
+  const res = await fetch(`${API}/payments/${encodeURIComponent(paymentId)}`, {
+    headers: { Authorization: authHeader() },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(`Razorpay payment fetch failed: ${JSON.stringify(json.error ?? json).slice(0, 200)}`);
+  return json as RazorpayPayment;
+}
+
 export async function refundPayment(paymentId: string, amountPaise?: number): Promise<{ id: string; status: string }> {
   const res = await fetch(`${API}/payments/${paymentId}/refund`, {
     method: "POST",

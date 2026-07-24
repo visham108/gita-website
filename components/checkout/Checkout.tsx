@@ -121,7 +121,15 @@ export default function Checkout() {
             clearCart();
             setConfirmation({ orderNo: vj.orderNo, email: vj.email, testMode });
             goStep(3);
-            toast("Payment received. Hare Kṛṣṇa!");
+            /* `pending` means the bank authorised the payment but it is not
+               captured yet. The order is real and the cart is done with, so
+               the customer should not be alarmed — but we must not promise it
+               is settled. The webhook completes it, usually within seconds. */
+            toast(
+              vj.pending
+                ? "Payment authorised — we're confirming it with the bank. Your confirmation email follows shortly."
+                : "Payment received. Hare Kṛṣṇa!"
+            );
           } else {
             toast("Payment received but confirmation failed — we will reconcile it; note your order number " + data.orderNo);
           }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { readJsonObject } from "@/lib/http";
 
 /** Course-interest and newsletter sign-ups, newest first. 404 to non-admins —
     this is a list of people's names and email addresses. */
@@ -22,12 +23,8 @@ export async function GET() {
 export async function DELETE(request: Request) {
   if (!(await requireAdmin())) return new NextResponse(null, { status: 404 });
 
-  let body: { id?: unknown };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{ id?: unknown }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   if (typeof body.id !== "string" || !body.id)
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
 

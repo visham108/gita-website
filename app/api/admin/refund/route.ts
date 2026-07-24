@@ -4,6 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { refundPayment } from "@/lib/razorpay";
 import { isRefundable, REFUNDABLE_STATUSES } from "@/lib/commerce";
 import { notifyOrderRefunded } from "@/lib/email";
+import { readJsonObject } from "@/lib/http";
 
 /** Full refund via Razorpay. Money moves only if Razorpay accepts the refund;
     we then flip status optimistically (guarded, so the refund.processed
@@ -11,12 +12,8 @@ import { notifyOrderRefunded } from "@/lib/email";
 export async function POST(request: Request) {
   if (!(await requireAdmin())) return new NextResponse(null, { status: 404 });
 
-  let body: { orderId?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{ orderId?: string }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   if (typeof body.orderId !== "string" || !body.orderId)
     return NextResponse.json({ error: "Missing orderId" }, { status: 400 });
 

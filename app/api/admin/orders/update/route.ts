@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { notifyOrderShipped } from "@/lib/email";
+import { readJsonObject } from "@/lib/http";
 
 /* Fulfillment state machine. Every transition is guarded by the current
    status in the WHERE clause, so a stale dashboard tab can't double-apply
@@ -25,12 +26,10 @@ function isAction(v: unknown): v is Action {
 export async function POST(request: Request) {
   if (!(await requireAdmin())) return new NextResponse(null, { status: 404 });
 
-  let body: { orderId?: string; action?: Action; awb?: string; trackingUrl?: string };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{
+    orderId?: string; action?: Action; awb?: string; trackingUrl?: string;
+  }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   const { orderId, action } = body;
   if (typeof orderId !== "string" || !orderId || !isAction(action))
     return NextResponse.json({ error: "Missing orderId or unknown action" }, { status: 400 });

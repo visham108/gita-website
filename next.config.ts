@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Nothing gained by announcing the framework and its version to scanners.
+  poweredByHeader: false,
+
   // Old static-site URLs (*.html) permanently redirect to their new routes so
   // existing links, bookmarks and search results keep working.
   async redirects() {

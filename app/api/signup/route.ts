@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { adminEmails } from "@/lib/admin";
 import { sendEmail, courseSignupEmail, newsletterSignupEmail, signupAlertEmail } from "@/lib/email";
+import { readJsonObject } from "@/lib/http";
 
 /** Free-course interest and newsletter subscriptions.
 
@@ -18,12 +19,8 @@ function isKind(v: unknown): v is Kind {
 }
 
 export async function POST(request: Request) {
-  let body: { kind?: unknown; email?: unknown; name?: unknown };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+  const body = await readJsonObject<{ kind?: unknown; email?: unknown; name?: unknown }>(request);
+  if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
   if (!isKind(body.kind))
     return NextResponse.json({ error: "Unknown list" }, { status: 400 });

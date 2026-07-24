@@ -228,3 +228,62 @@ reprice; no secrets reachable from client code; customer text escaped in email.
 **Known, accepted:** order numbers are sequential, so someone who knows a
 customer's email could try numbers to find their order — rate limiting now makes
 this slow, and the response exposes no payment details.
+
+---
+
+## Second security review (2026-07-24)
+
+An independent review of commit `ebc1aca` reported 0 critical, 3 high, 7 medium
+and 5 low findings. Six items were fixed and deployed the same day; the rest are
+triaged below so nothing is silently dropped.
+
+**Fixed and verified live:**
+
+| Finding | Fix |
+|---|---|
+| CSV formula injection in admin exports | `neutralize()` in `AdminDashboard.tsx` prefixes `'` to any cell whose first meaningful character is `= + - @`, skipping leading whitespace/tab/CR/LF. Plain numbers are exempt so the money columns stay numeric. |
+| Open redirect in `/auth/callback` | `safePath()` accepts only same-origin paths — rejects `//host`, `\`, and absolute URLs, defaulting to `/account`. |
+| Malformed bodies returned 500 | New `lib/http.ts` `readJsonObject()`; `request.json()` succeeds on `null`, `[]`, `"x"` and `42`, all of which were then dereferenced. Now a 400. Applied to all 4 public routes **and** the 4 admin routes. |
+| Payment marked paid on signature alone | `verify/route.ts` now also fetches the payment from Razorpay and requires `status === "captured"`, matching `order_id`, exact `amount` and `INR`. Anything else leaves the order **pending** and returns `202 {pending:true}` — the customer sees a confirmation, the seller sees nothing shippable, and the webhook completes it. |
+| `X-Powered-By: Next.js` | `poweredByHeader: false`. |
+| Vulnerable dependencies | Next `15.5.20 → 15.5.21` (the `backport` tag — **not** 16, which is a major and would risk the OpenNext build). `overrides` pin postcss `^8.5.22` and sharp `^0.35.3`. `npm audit` now reports 0 across the full tree. |
+
+`readJsonObject` also caps bodies at 16 KB (Content-Length *and* decoded
+length, since chunked requests omit the header).
+
+**Assessed and not actioned, with reasons:**
+
+- *"Public APIs lack abuse controls."* They have them — the Cloudflare rate-limit
+  rule (above) covers exactly the three endpoints named. The reviewer could not
+  see Cloudflare config from the repo and said so. Zod is not warranted here.
+- *Most of the Next.js advisories do not reach this app.* Four require Server
+  Actions (none exist — zero `"use server"` in the tree), one requires
+  `rewrites()` (none configured), one requires the Image Optimization API
+  (`/_next/image` 404s in production; all images are local files). The two cache
+  confusion advisories were the ones worth patching. postcss is build-time only;
+  sharp never executes on Workers. Patched anyway so a real advisory is never
+  lost in the noise.
+- *Payment amount/currency mismatch.* Not reachable — the Razorpay order is
+  created server-side with the amount, and Razorpay enforces it. The check was
+  added regardless; it is free.
+- *CSP still report-only.* Deliberate, and it has already earned its keep by
+  catching `cdn.razorpay.com`. Enforcing needs nonces, which is real middleware
+  work on OpenNext. Add a `report-uri` first.
+- *GitHub Pages should 301 rather than meta-refresh.* Not achievable — Pages
+  serves no server-side redirects on a project page and `visham108.github.io`
+  is not a zone we control. Closed as won't-fix.
+
+**Still open, in priority order:**
+
+1. **Supabase MFA + `aal2` on admin** — the largest genuine risk in the report.
+   Everything (customer PII, refunds, repricing) sits behind one mailbox with no
+   second factor.
+2. **Privacy policy accuracy + unsubscribe** — the policy says cart data is a
+   cookie; it is localStorage. Newsletter mail has no unsubscribe link (the
+   DELETE endpoint exists, the link does not). DPDP Act 2023 applies.
+3. CSP reporting endpoint, then enforce.
+4. Opaque expiring tokens for guest order lookup; drop email from URLs.
+5. Admin audit log; `Origin`/`Sec-Fetch-Site` check on admin mutations.
+6. CHECK constraints and per-user quotas on study tables.
+7. Quote-escaping in `lib/email.ts` `esc()` for attribute contexts
+   (only `tracking_url`, which is seller-entered).
