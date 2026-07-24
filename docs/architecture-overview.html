@@ -1,0 +1,628 @@
+<title>How the Gītā store is put together</title>
+
+<style>
+  :root {
+    --bg: #fdf9f2;
+    --surface: #fffdf8;
+    --panel: #f7ecd9;
+    --line: rgba(51, 38, 26, 0.16);
+    --line-strong: rgba(51, 38, 26, 0.28);
+    --ink: #33261a;
+    --ink-soft: #5f4d3c;
+    --ink-faint: #7d6852;
+    --accent: #9c4610;
+    --accent-fill: #f4e2c8;
+    --teal: #0c6b5f;
+    --teal-fill: #dcece9;
+
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141122;
+      --surface: #1e1a30;
+      --panel: #262138;
+      --line: rgba(244, 236, 222, 0.16);
+      --line-strong: rgba(244, 236, 222, 0.34);
+      --ink: #f7f0e2;
+      --ink-soft: #d5c9b5;
+      --ink-faint: #a99b85;
+      --accent: #eda75c;
+      --accent-fill: #3b2a17;
+      --teal: #58c8b5;
+      --teal-fill: #14332e;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #141122;
+    --surface: #1e1a30;
+    --panel: #262138;
+    --line: rgba(244, 236, 222, 0.16);
+    --line-strong: rgba(244, 236, 222, 0.34);
+    --ink: #f7f0e2;
+    --ink-soft: #d5c9b5;
+    --ink-faint: #a99b85;
+    --accent: #eda75c;
+    --accent-fill: #3b2a17;
+    --teal: #58c8b5;
+    --teal-fill: #14332e;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #fdf9f2;
+    --surface: #fffdf8;
+    --panel: #f7ecd9;
+    --line: rgba(51, 38, 26, 0.16);
+    --line-strong: rgba(51, 38, 26, 0.28);
+    --ink: #33261a;
+    --ink-soft: #5f4d3c;
+    --ink-faint: #7d6852;
+    --accent: #9c4610;
+    --accent-fill: #f4e2c8;
+    --teal: #0c6b5f;
+    --teal-fill: #dcece9;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    margin: 0;
+    padding: clamp(1.5rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2rem) 4rem;
+  }
+
+  .wrap {
+    max-width: 68rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.25rem, 5vw, 3.5rem);
+  }
+
+  /* ---------- header ---------- */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.7rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3rem);
+    line-height: 1.12;
+    text-wrap: balance;
+    margin: 0 0 0.6rem;
+  }
+
+  .standfirst {
+    font-size: clamp(1rem, 0.96rem + 0.25vw, 1.15rem);
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .site-tag {
+    display: inline-block;
+    margin-top: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    background: var(--accent-fill);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.3em 0.9em;
+  }
+
+  /* ---------- sections ---------- */
+  section > h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    margin: 0 0 0.3rem;
+    text-wrap: balance;
+  }
+
+  section > .lede {
+    color: var(--ink-soft);
+    margin: 0 0 1.5rem;
+    max-width: 62ch;
+  }
+
+  /* ---------- diagram ---------- */
+  .diagram {
+    overflow-x: auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.5rem;
+  }
+
+  .diagram svg {
+    display: block;
+    min-width: 660px;
+    width: 100%;
+    height: auto;
+  }
+
+  .lane {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    fill: var(--ink-faint);
+  }
+
+  .box {
+    fill: var(--surface);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .box--accent { fill: var(--accent-fill); stroke: var(--accent); }
+  .box--teal { fill: var(--teal-fill); stroke: var(--teal); }
+
+  .n-name {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 650;
+    fill: var(--ink);
+  }
+  .n-role {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    fill: var(--ink-faint);
+  }
+
+  .link {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.6;
+    marker-end: url(#arrowhead);
+  }
+  .link--dashed { stroke-dasharray: 5 4; }
+
+  .link-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--ink-faint);
+  }
+
+  #arrowhead path { fill: var(--line-strong); }
+
+  .aside-note {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-style: italic;
+    fill: var(--ink-faint);
+  }
+
+  /* ---------- definitions ---------- */
+  .defs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 0.9rem;
+  }
+
+  .def {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+  }
+
+  .def h3 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    margin: 0 0 0.15rem;
+    color: var(--accent);
+  }
+
+  .def .kind {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .def p {
+    margin: 0;
+    font-size: 0.94rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- sequence ---------- */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
+    gap: 0.85rem;
+    align-items: baseline;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+
+  .steps li::before {
+    content: counter(step);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  .steps strong { color: var(--ink); font-weight: 650; }
+
+  /* ---------- footnote ---------- */
+  .footnote {
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+    color: var(--ink-faint);
+    font-size: 0.9rem;
+    max-width: 66ch;
+  }
+
+  .footnote code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .def, .steps li { transition: border-color 0.18s ease; }
+  }
+  .def:hover, .steps li:hover { border-color: var(--line-strong); }
+
+  /* ---------- save / download ---------- */
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1.4rem;
+  }
+
+  .actions button {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.5em 1.15em;
+    cursor: pointer;
+  }
+
+  .actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .actions button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- print / save-as-PDF ----------
+     Printing inherits whatever theme the screen is in, so a dark viewer would
+     produce pages of solid ink. Force the light palette, let the diagrams show
+     in full rather than in a scroll box, and keep cards off page seams. */
+  @page { margin: 14mm; }
+
+  @media print {
+    :root,
+    :root[data-theme="dark"],
+    :root[data-theme="light"] {
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --panel: #f7ecd9;
+      --line: rgba(51, 38, 26, 0.22);
+      --line-strong: rgba(51, 38, 26, 0.42);
+      --ink: #241a11;
+      --ink-soft: #4a3a2a;
+      --ink-faint: #6b5844;
+      --accent: #8c3e0d;
+      --accent-fill: #f6e8d3;
+      --teal: #0a5d53;
+      --teal-fill: #e3efec;
+    }
+
+    body { padding: 0; font-size: 10.5pt; }
+    .wrap { gap: 1.6rem; max-width: none; }
+    .actions { display: none; }
+
+    /* Show the whole diagram instead of a horizontally scrolling window. */
+    .diagram { overflow: visible; break-inside: avoid; }
+    .diagram svg { min-width: 0; }
+
+    section, .def, .steps li, .footnote { break-inside: avoid; }
+    section > h2 { break-after: avoid; }
+    header { break-after: avoid; }
+    .def:hover, .steps li:hover { border-color: var(--line); }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Architecture overview</p>
+    <h1>How the Gītā store is put together</h1>
+    <p class="standfirst">
+      Six services, each doing one job. This is the plain-language map — what every
+      piece is for, and how a page and a payment actually travel between them.
+    </p>
+    <span class="site-tag">gita.vrnda.store</span>
+
+    <div class="actions">
+      <button type="button" id="pdf">Save as PDF</button>
+      <button type="button" id="html">Download web page</button>
+    </div>
+  </header>
+
+  <!-- ============ RUNTIME FLOW ============ -->
+  <section>
+    <h2>When someone visits the shop</h2>
+    <p class="lede">
+      A reader's browser only ever talks to Cloudflare. Everything behind it is
+      reached by the site itself, never by the visitor directly.
+    </p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 980 330" role="img"
+           aria-label="Diagram: a customer's browser connects to Cloudflare, which runs the Next.js site. The site talks to Supabase for data, Razorpay for payments, and Resend for email.">
+        <defs>
+          <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+
+        <text class="lane" x="95" y="24" text-anchor="middle">VISITOR</text>
+        <text class="lane" x="335" y="24" text-anchor="middle">FRONT DOOR</text>
+        <text class="lane" x="590" y="24" text-anchor="middle">THE SITE</text>
+        <text class="lane" x="860" y="24" text-anchor="middle">SERVICES IT USES</text>
+
+        <!-- connections (drawn first, so boxes sit on top) -->
+        <path class="link" d="M 176 163 L 242 163" />
+        <path class="link" d="M 426 163 L 492 163" />
+        <path class="link" d="M 686 148 C 720 148 722 74 752 74" />
+        <path class="link" d="M 686 163 L 752 163" />
+        <path class="link" d="M 686 178 C 720 178 722 252 752 252" />
+
+        <text class="link-label" x="209" y="155" text-anchor="middle">visits</text>
+        <text class="link-label" x="459" y="155" text-anchor="middle">serves</text>
+
+        <!-- visitor -->
+        <g>
+          <rect class="box" x="20" y="127" width="156" height="72" rx="9" />
+          <text class="n-name" x="98" y="158" text-anchor="middle">Customer</text>
+          <text class="n-role" x="98" y="177" text-anchor="middle">a web browser</text>
+        </g>
+
+        <!-- cloudflare -->
+        <g>
+          <rect class="box box--accent" x="242" y="119" width="184" height="88" rx="9" />
+          <text class="n-name" x="334" y="152" text-anchor="middle">Cloudflare</text>
+          <text class="n-role" x="334" y="171" text-anchor="middle">address · speed</text>
+          <text class="n-role" x="334" y="186" text-anchor="middle">· protection</text>
+        </g>
+
+        <!-- the app -->
+        <g>
+          <rect class="box box--accent" x="492" y="107" width="194" height="112" rx="9" />
+          <text class="n-name" x="589" y="150" text-anchor="middle">Next.js app</text>
+          <text class="n-role" x="589" y="170" text-anchor="middle">the pages, the cart,</text>
+          <text class="n-role" x="589" y="185" text-anchor="middle">the order logic</text>
+        </g>
+
+        <!-- services -->
+        <g>
+          <rect class="box box--teal" x="752" y="44" width="208" height="62" rx="9" />
+          <text class="n-name" x="856" y="72" text-anchor="middle">Supabase</text>
+          <text class="n-role" x="856" y="90" text-anchor="middle">database + sign-in</text>
+        </g>
+        <g>
+          <rect class="box box--teal" x="752" y="133" width="208" height="62" rx="9" />
+          <text class="n-name" x="856" y="161" text-anchor="middle">Razorpay</text>
+          <text class="n-role" x="856" y="179" text-anchor="middle">takes the money</text>
+        </g>
+        <g>
+          <rect class="box box--teal" x="752" y="222" width="208" height="62" rx="9" />
+          <text class="n-name" x="856" y="250" text-anchor="middle">Resend</text>
+          <text class="n-role" x="856" y="268" text-anchor="middle">sends the emails</text>
+        </g>
+
+        <text class="aside-note" x="20" y="312">
+          You use the same path to reach the admin dashboard — it is just a page only your account can open.
+        </text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ DEPLOY FLOW ============ -->
+  <section>
+    <h2>When the site is changed</h2>
+    <p class="lede">
+      Worth knowing, because it surprises people: the code is pushed to GitHub and
+      deployed to Cloudflare as two separate acts. Pushing to GitHub alone changes
+      nothing a customer sees.
+    </p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 980 210" role="img"
+           aria-label="Diagram: your computer deploys to Cloudflare, which makes changes live, and separately pushes to GitHub, which is only a backup.">
+        <text class="lane" x="110" y="24" text-anchor="middle">WHERE WORK HAPPENS</text>
+        <text class="lane" x="640" y="24" text-anchor="middle">WHERE IT GOES</text>
+
+        <path class="link" d="M 202 92 C 300 92 330 62 412 62" />
+        <path class="link link--dashed" d="M 202 118 C 300 118 330 152 412 152" />
+
+        <text class="link-label" x="307" y="62" text-anchor="middle">deploy → goes live</text>
+        <text class="link-label" x="307" y="168" text-anchor="middle">push → saved copy</text>
+
+        <g>
+          <rect class="box" x="20" y="70" width="182" height="70" rx="9" />
+          <text class="n-name" x="111" y="99" text-anchor="middle">Your computer</text>
+          <text class="n-role" x="111" y="118" text-anchor="middle">where edits are made</text>
+        </g>
+
+        <g>
+          <rect class="box box--accent" x="412" y="30" width="216" height="64" rx="9" />
+          <text class="n-name" x="520" y="57" text-anchor="middle">Cloudflare</text>
+          <text class="n-role" x="520" y="75" text-anchor="middle">this is the live site</text>
+        </g>
+
+        <g>
+          <rect class="box" x="412" y="120" width="216" height="64" rx="9" />
+          <text class="n-name" x="520" y="147" text-anchor="middle">GitHub</text>
+          <text class="n-role" x="520" y="165" text-anchor="middle">code history + backup</text>
+        </g>
+
+        <text class="aside-note" x="648" y="150">GitHub never serves</text>
+        <text class="aside-note" x="648" y="168">the site to anyone.</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ DEFINITIONS ============ -->
+  <section>
+    <h2>What each piece does</h2>
+    <p class="lede">One job each — and if one were removed, this is what you would lose.</p>
+
+    <div class="defs">
+      <div class="def">
+        <h3>Cloudflare</h3>
+        <span class="kind">Hosting &amp; front door</span>
+        <p>Answers the web address, serves your pages quickly worldwide, and turns away
+           abusive traffic before it reaches anything else. The site runs here.</p>
+      </div>
+
+      <div class="def">
+        <h3>Next.js</h3>
+        <span class="kind">The website itself</span>
+        <p>Every page a reader sees, plus the private code that prices a cart, records an
+           order, and drives the admin dashboard.</p>
+      </div>
+
+      <div class="def">
+        <h3>Supabase</h3>
+        <span class="kind">Database &amp; sign-in</span>
+        <p>The permanent memory: orders, course signups, and readers' own bookmarks and
+           notes. Also handles logging in.</p>
+      </div>
+
+      <div class="def">
+        <h3>Razorpay</h3>
+        <span class="kind">Payments</span>
+        <p>Collects money by UPI, card or netbanking, and tells the site the moment a
+           payment truly succeeds. Card details never touch your site.</p>
+      </div>
+
+      <div class="def">
+        <h3>Resend</h3>
+        <span class="kind">Email</span>
+        <p>Sends order confirmations, shipping notices with tracking, refund notices, and
+           the alert that tells you a sale came in.</p>
+      </div>
+
+      <div class="def">
+        <h3>GitHub</h3>
+        <span class="kind">Code backup</span>
+        <p>A second copy of every file and every change ever made, so nothing is lost and
+           any change can be traced or undone.</p>
+      </div>
+
+      <div class="def">
+        <h3>GoDaddy</h3>
+        <span class="kind">Domain registrar</span>
+        <p>Where <code>vrnda.store</code> is registered. Its only job here is pointing the
+           name at Cloudflare.</p>
+      </div>
+
+      <div class="def">
+        <h3>Supabase Auth</h3>
+        <span class="kind">Access control</span>
+        <p>Decides who is who. It is what makes the admin dashboard open for you and
+           invisible to everyone else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PURCHASE SEQUENCE ============ -->
+  <section>
+    <h2>A single purchase, end to end</h2>
+    <p class="lede">The clearest way to see how the parts hand off to each other.</p>
+
+    <ol class="steps">
+      <li><strong>Cloudflare</strong> serves the book page; the price shown is read live from Supabase.</li>
+      <li>At checkout, <strong>the site</strong> ignores whatever the browser claims a price is and recalculates the total itself.</li>
+      <li><strong>Razorpay</strong> collects the payment, then signs a message proving it was genuine.</li>
+      <li><strong>The site</strong> checks that signature, records the order in <strong>Supabase</strong>, and gives it a number.</li>
+      <li><strong>Resend</strong> emails the customer a confirmation and alerts you that a sale came in.</li>
+    </ol>
+  </section>
+
+  <p class="footnote">
+    One thing that often needs explaining: <code>vrnda.store</code> and
+    <code>gita.vrnda.store</code> are two different sites. The root address still goes to
+    your Shopify clothing store; only the <code>gita.</code> subdomain points at this one.
+    They share a domain name and nothing else, so either can change without disturbing the other.
+  </p>
+
+</div>
+
+<script>
+  // "Save as PDF" — the browser's own print dialogue, with the print styles
+  // above shaping the result. Choosing "Save as PDF" as the destination is what
+  // produces the file.
+  document.getElementById("pdf").addEventListener("click", function () {
+    window.print();
+  });
+
+  // "Download web page" — writes a standalone copy: every style is already
+  // inline and the diagrams are SVG, so the saved file needs no network and
+  // keeps its light/dark behaviour offline.
+  document.getElementById("html").addEventListener("click", function () {
+    var styles = Array.prototype.map
+      .call(document.querySelectorAll("style"), function (s) { return s.outerHTML; })
+      .join("\n");
+    var body = document.querySelector(".wrap").outerHTML;
+
+    var doc =
+      '<!doctype html>\n<html lang="en">\n<head>\n' +
+      '<meta charset="utf-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      "<title>How the Gītā store is put together</title>\n" +
+      styles +
+      "\n</head>\n<body>\n" +
+      body +
+      "\n</body>\n</html>";
+
+    var url = URL.createObjectURL(new Blob([doc], { type: "text/html;charset=utf-8" }));
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "gita-architecture-overview.html";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
