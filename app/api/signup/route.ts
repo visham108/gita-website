@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { adminEmails } from "@/lib/admin";
-import { sendEmail, courseSignupEmail, newsletterSignupEmail, signupAlertEmail } from "@/lib/email";
+import {
+  sendEmail, courseSignupEmail, newsletterSignupEmail, signupAlertEmail,
+  unsubscribeUrl, unsubscribePostUrl,
+} from "@/lib/email";
 import { readJsonObject } from "@/lib/http";
 
 /** Free-course interest and newsletter subscriptions.
@@ -50,8 +53,17 @@ export async function POST(request: Request) {
   if (isNew) {
     // Email failures must not fail the signup — the row is already saved.
     try {
-      const conf = body.kind === "course" ? courseSignupEmail(name) : newsletterSignupEmail();
-      await sendEmail(email, conf.subject, conf.html);
+      const unsub = unsubscribeUrl(data[0].id);
+      const conf =
+        body.kind === "course" ? courseSignupEmail(unsub, name) : newsletterSignupEmail(unsub);
+      /* RFC 8058: Gmail and Outlook render their own unsubscribe control from
+         these headers, which is what keeps people from reaching for "report
+         spam" instead — a complaint would harm the domain that also carries
+         order confirmations. One-Click needs the URL to accept a bare POST. */
+      await sendEmail(email, conf.subject, conf.html, {
+        "List-Unsubscribe": `<${unsubscribePostUrl(data[0].id)}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      });
       const seller = adminEmails()[0];
       if (seller) {
         const alert = signupAlertEmail(body.kind, email, name);

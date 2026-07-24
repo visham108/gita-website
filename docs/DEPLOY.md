@@ -3,64 +3,76 @@
 The site runs on Cloudflare Workers via `@opennextjs/cloudflare`. Free tier is
 fine for launch volume, and commercial use is permitted.
 
-## Live status (2026-07-21)
+## Live status (2026-07-24)
 
-**DEPLOYED and verified in production** at
-<https://gita-website.visham-rawat.workers.dev>. wrangler is authenticated
-(OAuth). The 5 runtime secrets are set on the Worker (service role, 3 Razorpay,
-ADMIN_EMAILS). Verified live: pages render, catalog from Postgres, made-to-order
-editions purchasable with stock untouched on capture, admin 404s for anonymous,
-a real Razorpay test order created + captured by valid signature, tampered
-signature and webhook both 403.
+**LIVE and selling** at <https://gita.vrnda.store>, on Cloudflare Workers, with
+live Razorpay keys.
 
-Nameservers have propagated — `vrnda.store` now answers from Cloudflare, store
-still resolves to Shopify.
+Everything in the launch checklist is done:
 
-**Done since:** ✅ custom domain `gita.vrnda.store` attached · ✅
-`NEXT_PUBLIC_SITE_URL` baked in · ✅ Razorpay **live keys** set + production
-webhook registered (id `TGSRw1BtlSQcUB`) with a fresh 64-char secret · ✅ Resend
-key + `EMAIL_FROM=orders@vrnda.store` set, domain DKIM/SPF added to Cloudflare
-(verification auto-completing) · ✅ test orders deleted, order sequence reset to
-BG-1001.
+- ✅ Custom domain attached; nameservers propagated. `vrnda.store` and `www`
+  still resolve to Shopify, DNS-only — the two sites are independent.
+- ✅ All 10 runtime secrets set on the Worker.
+- ✅ Razorpay **live** keys; production webhook `TGSRw1BtlSQcUB` with a 64-char
+  secret; `gita.vrnda.store` on the authorised website list.
+- ✅ Resend sending from `orders@vrnda.store`, domain DKIM/SPF verified.
+- ✅ **Real end-to-end purchase completed by the seller** — a ₹2 UPI payment run
+  the whole way through: paid → packed → shipped (with AWB) → delivered →
+  refunded (`rfnd_TGafa7tOp0eYFR`). Every email arrived.
+- ✅ Test orders deleted, sequence reset. Next real order is BG-1008.
+- ✅ Old GitHub Pages site redirects here (canonical + meta-refresh + JS
+  fallback — Pages cannot serve a 301 on a project page).
+- ✅ Single edition: hardcover, ₹399. Shipping ₹79 first copy, ₹39 each extra.
+  Orders above 10 copies route to `orders@vrnda.store` for a bulk quote.
+- ✅ Security review remediated (see the two review sections below).
+- ✅ Self-serve unsubscribe with RFC 8058 One-Click; privacy policy matches the
+  implementation.
 
-**Still to do before real customers:**
-- **A real ₹1 end-to-end test** — must be done by the seller (enters real
-  payment; the assistant cannot). Temporarily price something at ₹1 in `/admin`,
-  buy it, confirm the email + admin flow, refund, restore the price.
-- **Real MRP prices** (seller decided to keep ₹399/₹199 — must stay at/below the
-  printed cover MRP; over-MRP is an offence under the Legal Metrology Act).
-- **Redirect the old GitHub Pages site** to `gita.vrnda.store` — do AFTER the ₹1
-  test proves live payments end to end.
+**Open, all seller-side:**
+- **Supabase SMTP via Resend** — the built-in auth sender is capped around
+  2 emails/hour, which will throttle magic-link sign-ins if several people try
+  at once. Not yet hit; will bite on a busy day.
+- **Domain auto-renew is OFF.** `vrnda.store` expires 2027-11-19. If it lapses
+  the site and the Shopify store both go dark.
+- **MFA on the admin account** — see the open list at the end of this file.
 
 ---
 
-## 0. Before you deploy — the placeholder audit
+## 0. Commercial settings — where each one lives
 
-These are wrong on purpose right now. Fix them or you'll launch with fake data.
+No placeholders remain. This is the map for changing them later.
 
-| What | Where | Current (fake) value |
+| What | Where | Current value |
 |---|---|---|
-| Hardcover price | Supabase `products`, or `/admin` → Inventory | ₹399 |
-| Paperback price | same | ₹199 |
-| Stock counts | same | 18 / 28 (left over from test orders) |
-| Shipping charge | `lib/commerce.ts` `SHIPPING_FLAT_PAISE` | ₹49 |
-| Free-shipping threshold | `lib/commerce.ts` `FREE_SHIPPING_THRESHOLD_PAISE` | ₹499 |
-| ~~Business name, address, phone~~ | ~~Contact + Terms~~ | ✅ done — Visham Singh Rawat, Pune |
-| ~~Support email~~ | ~~Contact + Terms~~ | ✅ done — orders@vrnda.store (**mailbox must exist before launch**) |
-| ~~Grievance officer~~ | ~~Contact + Terms~~ | ✅ done |
-| ~~Test admin account~~ | ~~`ADMIN_EMAILS`~~ | ✅ done — test account removed, only your address remains |
-| Test orders | Supabase `orders` | BG-1001, BG-1002, BG-1003 — delete before launch |
+| Book price | `/admin` → Inventory (no redeploy) | ₹399 hardcover, the only edition |
+| Stock count | same | Made-to-order: `track_stock` off, never sells out |
+| Shipping, first copy | `lib/commerce.ts` `SHIPPING_FIRST_ITEM_PAISE` | ₹79 |
+| Shipping, each extra | `lib/commerce.ts` `SHIPPING_EXTRA_ITEM_PAISE` | ₹39 |
+| Free-shipping threshold | `lib/commerce.ts` `FREE_SHIPPING_THRESHOLD_PAISE` | `0` — disabled |
+| Self-serve order cap | `lib/commerce.ts` `MAX_ITEM_QTY` | 10 copies; above that → bulk enquiry |
+| Bulk enquiry address | `lib/commerce.ts` `BULK_ENQUIRY_EMAIL` | orders@vrnda.store |
+| Business details, grievance officer | Contact + Terms pages | Visham Singh Rawat, Pune |
+| Admin allowlist | `ADMIN_EMAILS` secret | One address. Lowercased both sides, so case doesn't matter. |
 
-Prices and stock are editable at `/admin` after launch without a redeploy;
-the rest are code/config changes.
+> **Price ceiling:** ₹399 must stay at or below the printed cover MRP. Selling
+> above MRP is an offence under the Legal Metrology Act.
+
+The shipping constants are typed `number`, not literals, specifically so that
+setting one to `0` stays a valid one-line change.
+
+**A trap worth remembering:** the free-shipping threshold was once ₹499 while
+the only book cost ₹399 — unreachable, so every customer silently paid shipping
+that the site implied they could avoid. If you re-enable a threshold, check it
+against a real cart total.
 
 ---
 
-## 1. Pending database migration
+## 1. Database migrations
 
-`supabase/migrations/0003_admin.sql` adds `cancel_order`. Until it runs, the
-**Cancel order** button in `/admin` returns a 500. Paste it into the Supabase
-SQL editor and run it.
+All six under `supabase/migrations/` have been applied. This project **strips
+default privileges**, so any new table needs explicit grants to `authenticated`
+*and* `service_role` — omitting them produces confusing permission errors well
+after the table appears to work.
 
 ---
 
@@ -278,9 +290,14 @@ length, since chunked requests omit the header).
 1. **Supabase MFA + `aal2` on admin** — the largest genuine risk in the report.
    Everything (customer PII, refunds, repricing) sits behind one mailbox with no
    second factor.
-2. **Privacy policy accuracy + unsubscribe** — the policy says cart data is a
-   cookie; it is localStorage. Newsletter mail has no unsubscribe link (the
-   DELETE endpoint exists, the link does not). DPDP Act 2023 applies.
+2. ~~Privacy policy accuracy + unsubscribe~~ — **done 2026-07-24.** The policy
+   now names all five processors, states retention periods, and describes the
+   cart correctly as localStorage rather than a cookie. `/unsubscribe` is a
+   confirm page (not a bare GET, which mail scanners would trigger), backed by
+   `/api/unsubscribe`; subscription mail carries `List-Unsubscribe` and
+   `List-Unsubscribe-Post` so Gmail and Outlook show their native control. The
+   signup row's random UUID is the credential, so no email address travels in
+   the URL.
 3. CSP reporting endpoint, then enforce.
 4. Opaque expiring tokens for guest order lookup; drop email from URLs.
 5. Admin audit log; `Origin`/`Sec-Fetch-Site` check on admin mutations.

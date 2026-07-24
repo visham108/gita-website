@@ -30,8 +30,9 @@ export default function Footer() {
           <div>
             <h4>Get the Book</h4>
             <ul>
-              <li><Link href="/book#editions">Hardcover</Link></li>
-              <li><Link href="/book#editions">Paperback</Link></li>
+              {/* One edition only. Listing a paperback here advertised
+                  something the catalog no longer sells. */}
+              <li><Link href="/book#editions">Hardcover Edition</Link></li>
               <li><Link href="/orders">Track Your Order</Link></li>
               <li><Link href="/policies/shipping">Shipping Policy</Link></li>
               <li><Link href="/policies/refunds">Refunds &amp; Cancellation</Link></li>

@@ -1875,6 +1875,16 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 .policy-body h2:first-child { margin-top: 0; }
 .policy-body p { color: var(--ink-soft); max-width: 68ch; }
 .policy-body a { color: var(--gold-deep); font-weight: 600; }
+/* The processor list in the privacy policy. Matches paragraph colour and
+   measure so a list does not read as a different voice from the prose. */
+.policy-body ul {
+  color: var(--ink-soft);
+  max-width: 68ch;
+  margin: 0 0 var(--space-4);
+  padding-left: 1.3rem;
+  list-style: disc;
+}
+.policy-body li { margin-bottom: 0.5rem; line-height: 1.7; }
 
 /* ---------- Utility ---------- */
 

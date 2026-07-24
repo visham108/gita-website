@@ -9,17 +9,27 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const FROM = process.env.EMAIL_FROM ?? "Bhagavad-gītā As It Is <onboarding@resend.dev>";
 
-export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+export async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  /* Extra RFC headers. Used for List-Unsubscribe on subscription mail, which
+     is what makes Gmail and Outlook show their own native "Unsubscribe"
+     control next to the sender name. That control is the reason people click
+     it instead of "report spam" — and spam complaints on newsletter mail
+     would damage the same sending domain that carries order confirmations. */
+  headers?: Record<string, string>
+): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
-    console.log(`[email skipped — RESEND_API_KEY not set] to=${to} subject="${subject}"`);
+    console.log(`[email skipped — RESEND_API_KEY not set] subject="${subject}"`);
     return false;
   }
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: FROM, to: [to], subject, html }),
+      body: JSON.stringify({ from: FROM, to: [to], subject, html, ...(headers ? { headers } : {}) }),
     });
     if (!res.ok) console.error(`[email failed] ${res.status} ${(await res.text()).slice(0, 200)}`);
     return res.ok;
@@ -228,7 +238,7 @@ export async function notifyOrderRefunded(admin: SupabaseClient, rzpOrderId: str
 /** Free live course — interest confirmed. Deliberately does NOT promise a
     date, because none is scheduled yet; over-promising here would be the same
     mistake as the old "ordering opens soon" copy. */
-export function courseSignupEmail(name?: string | null): { subject: string; html: string } {
+export function courseSignupEmail(unsubUrl: string, name?: string | null): { subject: string; html: string } {
   const greeting = name?.trim() ? `Hare Kṛṣṇa ${esc(name.trim())},` : "Hare Kṛṣṇa,";
   return {
     subject: "You're on the list — free live Gītā course",
@@ -242,21 +252,41 @@ export function courseSignupEmail(name?: string | null): { subject: string; html
        the next batch are confirmed</strong>, with the schedule and joining details.</p>
        <p style="line-height:1.6;">In the meantime, the free reading plan walks through the
        whole book at your own pace:</p>
-       <p><a href="${SITE_URL}/course" style="color:#9c430b;">Open the reading plan</a></p>`
+       <p><a href="${SITE_URL}/course" style="color:#9c430b;">Open the reading plan</a></p>`,
+      unsubFooter(unsubUrl)
     ),
   };
 }
 
-export function newsletterSignupEmail(): { subject: string; html: string } {
+/** One-click opt-out. The signup row's primary key is a random v4 UUID, so the
+    link is unguessable without needing a separate signing secret — and it is
+    the only thing in the URL, so no email address travels in a query string. */
+export function unsubscribeUrl(signupId: string): string {
+  return `${SITE_URL}/unsubscribe?id=${encodeURIComponent(signupId)}`;
+}
+
+/** The One-Click target for the List-Unsubscribe header. Mail providers POST
+    here directly, so it points at the API rather than the confirm page. */
+export function unsubscribePostUrl(signupId: string): string {
+  return `${SITE_URL}/api/unsubscribe?id=${encodeURIComponent(signupId)}`;
+}
+
+/** Footer for subscription mail. Non-transactional email must carry a visible
+    way out; "reply and ask" is not one, because nobody does it. */
+function unsubFooter(unsubUrl: string): string {
+  return `Bhagavad-gītā <em>As It Is</em> — questions? Just reply to this email.<br/>
+    <a href="${unsubUrl}" style="color:#77624e;">Unsubscribe</a> to stop receiving these.`;
+}
+
+export function newsletterSignupEmail(unsubUrl: string): { subject: string; html: string } {
   return {
     subject: "Subscribed — a weekly verse from the Gītā",
     html: shell(
       "A verse a week 🌿",
       `<p style="line-height:1.6;">You're subscribed. Once a week you'll receive a single
        verse from <em>Bhagavad-gītā As It Is</em> with a short reflection — nothing more.</p>
-       <p style="line-height:1.6;">To stop at any time, just reply to one of the emails and
-       say so.</p>
-       <p><a href="${SITE_URL}/explorer" style="color:#9c430b;">Explore the verses</a></p>`
+       <p><a href="${SITE_URL}/explorer" style="color:#9c430b;">Explore the verses</a></p>`,
+      unsubFooter(unsubUrl)
     ),
   };
 }

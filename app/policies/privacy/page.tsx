@@ -12,6 +12,8 @@ export default function PrivacyPolicy() {
         minimum needed to deliver books and send order updates.{" "}
         <strong>Accounts (optional):</strong> your email, and the study data you create —
         bookmarks, highlights, reflections, course progress and reading plan.{" "}
+        <strong>Course and newsletter sign-ups:</strong> your email, and your name if you
+        give one.{" "}
         <strong>Payments:</strong> handled entirely by Razorpay; we never see or store your
         card, UPI or banking details.
       </p>
@@ -19,10 +21,29 @@ export default function PrivacyPolicy() {
       <h2>What we do with it</h2>
       <p>
         Fulfil orders, provide the study features, and send the emails you ask for
-        (order updates; a weekly verse if you subscribe). We do not sell or share your data
-        with anyone except the services that make the site work: Razorpay (payments),
-        Supabase (secure data storage), and our shipping carriers (name, address and phone,
-        for delivery only).
+        (order updates; a weekly verse if you subscribe). We do not sell your data, and we
+        share it only with the services that make the site work.
+      </p>
+
+      <h2>Who processes it for us</h2>
+      <ul>
+        <li><strong>Cloudflare</strong> — hosts and serves the site. All traffic passes through it, and it keeps standard request logs and aggregate traffic counts.</li>
+        <li><strong>Supabase</strong> — the database and sign-in system. Orders, sign-ups and study data are stored here.</li>
+        <li><strong>Razorpay</strong> — takes the payment. Card, UPI and banking details go to them directly and never reach us.</li>
+        <li><strong>Resend</strong> — delivers our email, so it handles your address and the message contents.</li>
+        <li><strong>Shipping carriers</strong> — receive your name, address and phone, for delivery only.</li>
+      </ul>
+      <p>
+        We run no advertising trackers and no third-party analytics on this site.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        <strong>Orders</strong> are kept for as long as tax and accounting rules require,
+        which is at least six years. <strong>Sign-up records</strong> are kept until you
+        unsubscribe, at which
+        point the record is deleted outright. <strong>Study data</strong> is kept for as
+        long as your account exists, and goes when the account goes.
       </p>
 
       <h2>Your data, your rights</h2>
@@ -30,13 +51,28 @@ export default function PrivacyPolicy() {
         Your study data is private to your account — it is technically impossible for other
         users to read it. You may request a copy or deletion of everything we hold about you
         at any time via the <a href="/policies/contact">Contact page</a>; deletion is
-        permanent and completed within 30 days.
+        permanent and completed within 30 days. Order records we are legally required to
+        retain are the one exception, and we will tell you if that applies.
       </p>
 
-      <h2>Cookies</h2>
+      <h2>Email you can stop</h2>
       <p>
-        We use only functional cookies: your session when signed in, and your cart. No
-        advertising trackers, no third-party analytics cookies.
+        Every weekly-verse and course email carries an unsubscribe link, and one click ends
+        it — no account or reply needed. Order confirmations and shipping updates are
+        separate: they relate to something you bought, so they keep arriving for as long as
+        the order is live.
+      </p>
+
+      <h2>Cookies and what is stored on your device</h2>
+      <p>
+        We set one <strong>cookie</strong>, and only when you sign in: the session that
+        keeps you signed in. There are no advertising or analytics cookies.
+      </p>
+      <p>
+        Your <strong>cart</strong>, and any study data created before you sign in, are held
+        in your browser&apos;s local storage rather than in a cookie. That means they stay on
+        your own device and are never sent to us until you place an order or sign in.
+        Clearing your browser data clears them.
       </p>
     </PolicyPage>
   );
