@@ -15,18 +15,6 @@ import { ORDERED_VERSES, dailyVerseIndex } from "@/lib/verses";
 import { useToast } from "@/components/Toast";
 import { useStudy } from "@/lib/study/StudyProvider";
 
-const PLAN_NAMES: Record<string, string> = {
-  pilgrim: "The Pilgrim's Path — one chapter a week for 18 weeks.",
-  essence: "The Essence First — chapters 2, 9 and 18 in two weeks.",
-  daily: "A Verse a Day — 700 mornings with the Gītā.",
-};
-
-const PLANS = [
-  { value: "pilgrim", badge: "18 weeks", badgeClass: "badge badge--sage", title: "The Pilgrim's Path", body: "One chapter a week with the purports. The classic first journey through the whole book." },
-  { value: "essence", badge: "2 weeks", badgeClass: "badge", title: "The Essence First", body: "Chapters 2, 9 and 18 in a fortnight — the summary, the summit and the conclusion." },
-  { value: "daily", badge: "700 days", badgeClass: "badge badge--night", title: "A Verse a Day", body: "One verse with purport every morning. Small, unbreakable, and quietly life-changing." },
-];
-
 function AuthCard() {
   const toast = useToast();
   const study = useStudy();
@@ -109,7 +97,6 @@ export default function MyStudy() {
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { setNameInput(study.name); }, [study.name]);
 
-  const plan = mounted ? study.plan : null;
   const daily = ORDERED_VERSES[mounted ? dailyVerseIndex() : 0];
 
   return (
@@ -196,41 +183,6 @@ export default function MyStudy() {
               <Link className="link-arrow" href="/book#editions">Read it in full — get the book <span aria-hidden="true">→</span></Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ============ READING PLANS ============ */}
-      <section className="section section--cream" id="plans">
-        <div className="container">
-          <div className="center mb-6 reveal">
-            <p className="eyebrow">Reading Plans</p>
-            <h2 className="display-md">Choose your pace</h2>
-            <p className="lede">A plan turns intention into habit. Pick one — you can change it any time.</p>
-          </div>
-          <div className="grid-3">
-            {PLANS.map((p) => (
-              <label className="plan-option" key={p.value}>
-                <input
-                  type="radio"
-                  name="plan"
-                  value={p.value}
-                  checked={plan === p.value}
-                  onChange={() => {
-                    study.setPlan(p.value);
-                    toast("Reading plan saved. See you tomorrow.");
-                  }}
-                />
-                <span className="card" style={{ display: "block" }}>
-                  <span className={p.badgeClass + " mb-4"} style={{ display: "inline-flex", ...(p.value === "daily" ? { color: "var(--moon)" } : {}) }}>{p.badge}</span>
-                  <h3 style={{ fontSize: "var(--text-md)" }}>{p.title}</h3>
-                  <p>{p.body}</p>
-                </span>
-              </label>
-            ))}
-          </div>
-          <p className="center muted mt-5">
-            {plan && PLAN_NAMES[plan] ? "Active plan: " + PLAN_NAMES[plan] : "No plan selected yet."}
-          </p>
         </div>
       </section>
 

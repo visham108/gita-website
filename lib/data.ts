@@ -402,12 +402,18 @@ export const PRODUCTS: Product[] = [
   }
 ];
 
-/* -------------------- Reading plan --------------------
-   NOT a taught course — a structured path through the book. Each stage says
-   what to read, names the concepts devotees actually centre on, and shows
-   where each one bites in ordinary working life. All wording here is original;
-   Prabhupāda's translations and purports are © BBT and are never reproduced —
-   we point to verse numbers so the reader meets the text in the book itself. */
+/* -------------------- Study companion --------------------
+   NOT rendered anywhere on the site. This is the source text for the
+   downloadable PDF at /downloads/gita-study-companion.pdf — keep it, or that
+   file becomes impossible to regenerate.
+
+   It was originally the on-site reading plan; that came off when the site
+   narrowed to the live course, and the same content now ships as a printable
+   companion instead. Each part names the concepts devotees actually centre on
+   and shows where each one bites in ordinary working life. All wording is
+   original; Prabhupāda's translations and purports are © BBT and are never
+   reproduced — we point to verse numbers so the reader meets the text in the
+   book itself. */
 
 export const READING_PLAN: PlanStage[] = [
   {

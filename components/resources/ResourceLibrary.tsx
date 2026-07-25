@@ -27,11 +27,11 @@ const RESOURCES: Resource[] = [
   },
   {
     typeLabel: "Download · PDF",
-    title: "Reading Plan & Companion (PDF)",
-    body: "The whole plan as a print-ready booklet: every concept, the verses it rests on, how each meets ordinary life, and a reflection for each stage.",
+    title: "A Study Companion (PDF)",
+    body: "A print-ready booklet of the Gītā's key ideas: each concept, the verses it rests on, how it meets ordinary life, and something to sit with before moving on.",
     meta: "Free · Print-ready A4",
     action: "Download the PDF",
-    href: "/downloads/gita-reading-plan.pdf",
+    href: "/downloads/gita-study-companion.pdf",
     download: true,
   },
   {
@@ -102,10 +102,10 @@ export default function ResourceLibrary() {
           <div className="cta-band mt-7 reveal">
             <p className="eyebrow" style={{ justifyContent: "center" }}>After the Gītā</p>
             <h2 style={{ fontSize: "var(--text-xl)" }}>Recommended next steps</h2>
-            <p className="lede">Finished your first reading? Continue with the reading plan, or find a temple or
+            <p className="lede">Finished your first reading? Join the free live course, or find a temple or
               study group near you — the Gītā opens a door; a whole world lies beyond it.</p>
             <div style={{ display: "flex", gap: "var(--space-3)", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link className="btn btn--gold" href="/course">Follow the Reading Plan</Link>
+              <Link className="btn btn--gold" href="/course">Join the Free Course</Link>
               <a
                 className="btn btn--ghost-dark"
                 href="https://centres.iskcon.org/"

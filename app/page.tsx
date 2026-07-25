@@ -320,10 +320,15 @@ export default function HomePage() {
           <SignupForm
             kind="newsletter"
             idPrefix="nl"
-            placeholder="Email — a weekly verse & reflection"
+            placeholder="Email — a verse & reflection"
             cta="Subscribe"
             dark
           />
+          {/* Honest about timing: the weekly send is not running yet, so the
+              form does not imply mail starts arriving tomorrow. */}
+          <p className="muted" style={{ textAlign: "center", margin: "var(--space-3) 0 0", fontSize: "var(--text-xs)", color: "#ffe9d6" }}>
+            A single verse and a short reflection, once the series begins. Unsubscribe any time.
+          </p>
         </div>
       </section>
     </main>

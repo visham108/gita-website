@@ -250,9 +250,9 @@ export function courseSignupEmail(unsubUrl: string, name?: string | null): { sub
        <p style="line-height:1.6;">Sessions are taught live — not pre-recorded — so there is
        room to ask questions and discuss. <strong>We'll email you as soon as the dates for
        the next batch are confirmed</strong>, with the schedule and joining details.</p>
-       <p style="line-height:1.6;">In the meantime, the free reading plan walks through the
-       whole book at your own pace:</p>
-       <p><a href="${SITE_URL}/course" style="color:#9c430b;">Open the reading plan</a></p>`,
+       <p style="line-height:1.6;">In the meantime, you can see everything the course
+       covers — all eight sessions — here:</p>
+       <p><a href="${SITE_URL}/course" style="color:#9c430b;">See the course outline</a></p>`,
       unsubFooter(unsubUrl)
     ),
   };
@@ -280,11 +280,18 @@ function unsubFooter(unsubUrl: string): string {
 
 export function newsletterSignupEmail(unsubUrl: string): { subject: string; html: string } {
   return {
-    subject: "Subscribed — a weekly verse from the Gītā",
+    subject: "You're on the list — a verse from the Gītā",
     html: shell(
       "A verse a week 🌿",
-      `<p style="line-height:1.6;">You're subscribed. Once a week you'll receive a single
-       verse from <em>Bhagavad-gītā As It Is</em> with a short reflection — nothing more.</p>
+      /* Deliberately does NOT say "every Monday" or imply the series is already
+         running. There is no scheduled sender yet, and a confirmation that
+         promises weekly mail nobody sends is the fastest way to be marked as
+         spam — which would damage the same domain that carries order
+         confirmations. */
+      `<p style="line-height:1.6;">You're on the list. When the weekly verse begins, a single
+       verse from <em>Bhagavad-gītā As It Is</em> with a short reflection will arrive in your
+       inbox — nothing more, and never anything else.</p>
+       <p style="line-height:1.6;">In the meantime, the free live course is the best way in:</p>
        <p><a href="${SITE_URL}/course" style="color:#9c430b;">See the free live course</a></p>`,
       unsubFooter(unsubUrl)
     ),

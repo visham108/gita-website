@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
          bookmarks and search results land on the course instead of a 404. */
       { source: "/explorer", destination: "/course", permanent: true },
       { source: "/explorer.html", destination: "/course", permanent: true },
+      /* The reading-plan PDF was reframed as a study companion when the
+         self-study plan came off the site. Anyone holding the old link keeps
+         getting the file. */
+      {
+        source: "/downloads/gita-reading-plan.pdf",
+        destination: "/downloads/gita-study-companion.pdf",
+        permanent: true,
+      },
     ];
   },
 

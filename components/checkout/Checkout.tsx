@@ -324,7 +324,7 @@ export default function Checkout() {
               </p>
               <div style={{ display: "flex", gap: "var(--space-3)", justifyContent: "center", flexWrap: "wrap", marginTop: "var(--space-5)" }}>
                 <Link className="btn btn--gold" href={`/orders?no=${encodeURIComponent(confirmation.orderNo)}&email=${encodeURIComponent(confirmation.email)}`}>Track Your Order</Link>
-                <Link className="btn btn--ghost-dark" href="/course">Explore the Reading Plan While You Wait</Link>
+                <Link className="btn btn--ghost-dark" href="/course">Join the Free Live Course</Link>
               </div>
             </div>
           )}
