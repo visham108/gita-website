@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   // Old static-site URLs (*.html) permanently redirect to their new routes so
   // existing links, bookmarks and search results keep working.
   async redirects() {
-    const pages = ["book", "explorer", "course", "resources", "account", "checkout"];
+    const pages = ["book", "course", "resources", "account", "checkout"];
     return [
       { source: "/index.html", destination: "/", permanent: true },
       ...pages.map((p) => ({
@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
         destination: `/${p}`,
         permanent: true,
       })),
+      /* The Verse Explorer was removed — VedaBase does that job better, and
+         hosting the text without a licence meant no translation. Old links,
+         bookmarks and search results land on the course instead of a 404. */
+      { source: "/explorer", destination: "/course", permanent: true },
+      { source: "/explorer.html", destination: "/course", permanent: true },
     ];
   },
 

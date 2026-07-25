@@ -201,7 +201,7 @@ export default function BookPage() {
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Read a little every day rather than a lot occasionally. The Gītā is a practice, not a sprint.</li>
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Read the purports. They are where the book becomes a teacher.</li>
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Try reading the transliteration aloud. The sound of the Gītā is part of the Gītā.</li>
-                  <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Keep a notebook — or use the <Link href="/explorer" style={{ color: "var(--gold-bright)" }}>Verse Explorer</Link> to bookmark and annotate as you go.</li>
+                  <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Keep a notebook. Writing down what a verse asks of you is how it stops being theory.</li>
                   <li style={{ display: "flex", gap: ".8em" }}><span style={{ color: "var(--gold-bright)" }}>✦</span> Ask questions. Join a local or online study group; the Gītā was spoken in dialogue and is best studied in one.</li>
                 </ul>
                 <Link className="btn btn--gold btn--block mt-6" href="/course">Follow the Reading Plan — Free</Link>
@@ -228,9 +228,10 @@ export default function BookPage() {
           </div>
           <div className="center mt-7 reveal">
             <div className="cta-band">
-              <h2 style={{ fontSize: "var(--text-xl)" }}>Still deciding? Let the book decide.</h2>
-              <p className="lede">Open the Verse Explorer, read three verses, and notice what happens.</p>
-              <Link className="btn btn--gold btn--lg" href="/explorer">Open the Verse Explorer</Link>
+              <h2 style={{ fontSize: "var(--text-xl)" }}>Still deciding?</h2>
+              <p className="lede">Sit in on the free live course first. No cost, no commitment — see how the
+                book reads when someone walks you through it.</p>
+              <Link className="btn btn--gold btn--lg" href="/course">See the Free Course</Link>
             </div>
           </div>
         </div>

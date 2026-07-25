@@ -22,8 +22,7 @@ export default function Footer() {
             <h4>Discover</h4>
             <ul>
               <li><Link href="/book">About the Book</Link></li>
-              <li><Link href="/explorer">Verse Explorer</Link></li>
-              <li><Link href="/course">Reading Plan</Link></li>
+              <li><Link href="/course">Free Live Course</Link></li>
               <li><Link href="/resources">Resource Library</Link></li>
             </ul>
           </div>
@@ -41,8 +40,8 @@ export default function Footer() {
           <div>
             <h4>Study</h4>
             <ul>
+              <li><Link href="/course">Free Live Course</Link></li>
               <li><Link href="/account">My Study</Link></li>
-              <li><Link href="/account#plans">Reading Plans</Link></li>
               <li><Link href="/book#faq">FAQ</Link></li>
               <li><Link href="/resources">Lectures &amp; Articles</Link></li>
             </ul>
@@ -50,7 +49,7 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <p style={{ margin: 0 }}>
-            Bhagavad-gītā As It Is © Bhaktivedanta Book Trust; verse study renderings are placeholders pending BBT license.{" "}
+            Bhagavad-gītā <em style={{ fontStyle: "italic" }}>As It Is</em> © Bhaktivedanta Book Trust. Sanskrit verses are public domain; all commentary on this site is our own.{" "}
             <Link href="/policies/terms">Terms</Link> · <Link href="/policies/privacy">Privacy</Link> · <Link href="/policies/contact">Contact</Link>
           </p>
           <label>

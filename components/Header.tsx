@@ -9,8 +9,7 @@ import { cartCount, useCart } from "@/lib/cart";
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/book", label: "The Book" },
-  { href: "/explorer", label: "Verse Explorer" },
-  { href: "/course", label: "Reading Plan" },
+  { href: "/course", label: "Free Course" },
   { href: "/resources", label: "Resources" },
   { href: "/account", label: "My Study" },
 ];

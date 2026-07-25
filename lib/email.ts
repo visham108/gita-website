@@ -285,7 +285,7 @@ export function newsletterSignupEmail(unsubUrl: string): { subject: string; html
       "A verse a week 🌿",
       `<p style="line-height:1.6;">You're subscribed. Once a week you'll receive a single
        verse from <em>Bhagavad-gītā As It Is</em> with a short reflection — nothing more.</p>
-       <p><a href="${SITE_URL}/explorer" style="color:#9c430b;">Explore the verses</a></p>`,
+       <p><a href="${SITE_URL}/course" style="color:#9c430b;">See the free live course</a></p>`,
       unsubFooter(unsubUrl)
     ),
   };

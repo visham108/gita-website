@@ -1,12 +1,16 @@
 "use client";
 
-/* My Study dashboard — aggregates bookmarks, reflections, course progress,
-   reading plan and the daily verse from the StudyProvider (device-local when
-   anonymous, account-synced when signed in), plus magic-link sign in. */
+/* My Study — the reader's own corner: sign-in, name, today's verse and the
+   reading pace they've chosen.
+
+   Bookmarks, highlights and per-verse reflections used to live here too. They
+   were created inside the Verse Explorer and every link opened there; with the
+   Explorer removed (VedaBase does that job better, and we have no licence to
+   show the translation) they had nowhere to come from and nowhere to go, so
+   they are gone from the UI. The tables remain in the database, untouched. */
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { READING_PLAN, GITA_VERSES } from "@/lib/data";
 import { ORDERED_VERSES, dailyVerseIndex } from "@/lib/verses";
 import { useToast } from "@/components/Toast";
 import { useStudy } from "@/lib/study/StudyProvider";
@@ -18,13 +22,10 @@ const PLAN_NAMES: Record<string, string> = {
 };
 
 const PLANS = [
-  { value: "pilgrim", badge: "18 weeks", badgeClass: "badge badge--sage", title: "The Pilgrim's Path", body: "One chapter a week with purports, aligned to the free reading plan. The classic first journey." },
+  { value: "pilgrim", badge: "18 weeks", badgeClass: "badge badge--sage", title: "The Pilgrim's Path", body: "One chapter a week with the purports. The classic first journey through the whole book." },
   { value: "essence", badge: "2 weeks", badgeClass: "badge", title: "The Essence First", body: "Chapters 2, 9 and 18 in a fortnight — the summary, the summit and the conclusion." },
   { value: "daily", badge: "700 days", badgeClass: "badge badge--night", title: "A Verse a Day", body: "One verse with purport every morning. Small, unbreakable, and quietly life-changing." },
 ];
-
-const ALL_READINGS = READING_PLAN.flatMap((s) => s.readings);
-const TOTAL_LESSONS = ALL_READINGS.length;
 
 function AuthCard() {
   const toast = useToast();
@@ -108,21 +109,8 @@ export default function MyStudy() {
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { setNameInput(study.name); }, [study.name]);
 
-  const bookmarks = mounted ? study.bookmarks : [];
-  const notes = mounted ? study.notes : {};
-  const lastRead = mounted ? study.lastRead : null;
   const plan = mounted ? study.plan : null;
-
-  // Count only readings that exist in the current plan — the exact same basis
-  // the Reading Plan page uses. Counting every truthy key in `done` instead
-  // (the old approach) also tallied orphaned ids left over from the previous
-  // course structure, so this figure read higher than the Reading Plan bar and
-  // could even exceed 100%.
-  const doneLessons = ALL_READINGS.filter((r) => study.course.done[r.id]).length;
-  const coursePct = TOTAL_LESSONS ? Math.round((doneLessons / TOTAL_LESSONS) * 100) : 0;
-  const noteEntries = Object.entries(notes);
   const daily = ORDERED_VERSES[mounted ? dailyVerseIndex() : 0];
-  const lastVerse = lastRead && GITA_VERSES[lastRead.ref] ? GITA_VERSES[lastRead.ref] : null;
 
   return (
     <main id="main">
@@ -139,11 +127,11 @@ export default function MyStudy() {
             <div>
               <p className="eyebrow">Personal Study Space</p>
               <h1>{mounted && study.name ? `Hare Kṛṣṇa, ${study.name}` : "Welcome, seeker"}</h1>
-              <p className="lede">Your bookmarks, reflections, reading plan and course progress — kept together.{" "}
+              <p className="lede">Your reading pace, today&rsquo;s verse and your orders — kept together.{" "}
                 <span style={{ color: "var(--gold-bright)" }}>
                   {mounted && study.user
                     ? "Synced securely to your account, on every device you sign in to."
-                    : "Saved on this device — sign in and they follow you everywhere."}
+                    : "Saved on this device — sign in and it follows you everywhere."}
                 </span>
               </p>
             </div>
@@ -177,50 +165,35 @@ export default function MyStudy() {
         </div>
       </section>
 
-      {/* ============ DASHBOARD STATS ============ */}
+      {/* ============ TODAY + THE COURSE ============ */}
       <section className="section section--tight">
         <div className="container">
-          <div className="dash-grid">
-            <div className="card dash-stat">
-              <span className="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"><path d="M6.5 3.5h11V21L12 16.8 6.5 21V3.5Z" /></svg></span>
-              <div><strong>{bookmarks.length}</strong><span>Bookmarked verses</span></div>
-            </div>
-            <div className="card dash-stat">
-              <span className="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M5 4h14v13l-4 4H5V4Z" /><path d="M15 21v-4h4M9 9h6M9 12.5h4" /></svg></span>
-              <div><strong>{noteEntries.length}</strong><span>Reflections written</span></div>
-            </div>
-            <div className="card dash-stat">
-              <span className="dash-stat__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 3a9 9 0 1 0 9 9" /><path d="M12 7v5l3.2 1.8" /></svg></span>
-              <div><strong>{coursePct}%</strong><span>Reading plan</span></div>
-            </div>
-          </div>
-
-          <div className="grid-2 mt-5" style={{ alignItems: "stretch" }}>
-            <div className="card card--night">
-              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Continue Reading</p>
-              {lastRead && lastVerse ? (
-                <div>
-                  <p className="verse-card__ref" style={{ marginBottom: ".6rem" }}>Bhagavad-gītā {lastRead.ref}</p>
-                  <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", marginBottom: "var(--space-4)" }}>{lastVerse.r}</p>
-                  <Link className="btn btn--gold" href={`/explorer#${lastRead.ref}`}>Resume at {lastRead.ref}</Link>
-                </div>
-              ) : (
-                <div>
-                  <p style={{ color: "var(--moon-soft)" }}>You haven&rsquo;t opened a verse yet. The journey of 700
-                    verses begins with a single śloka.</p>
-                  <Link className="btn btn--gold" href="/explorer">Open the Verse Explorer</Link>
-                </div>
-              )}
+          <div className="grid-2" style={{ alignItems: "stretch" }}>
+            <div className="card card--night" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "var(--space-4)" }}>
+              <div>
+                <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>The Free Live Course</p>
+                <h2 style={{ fontSize: "var(--text-lg)", color: "var(--moon)", margin: "0 0 var(--space-3)" }}>
+                  Learn the Gītā with a teacher
+                </h2>
+                <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", margin: 0 }}>
+                  Live sessions on what the Gītā actually asks of a working life — pressure, anger,
+                  duty, comparison, loss. Free, and you can ask questions as you go.
+                </p>
+              </div>
+              <Link className="btn btn--gold" href="/course">See the course</Link>
             </div>
             <div className="card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "var(--space-4)" }}>
               <div>
-                <p className="eyebrow">Today&rsquo;s Practice</p>
-                <p className="verse-detail__translation" style={{ fontSize: "var(--text-md)", marginBottom: "var(--space-2)" }}>
-                  &ldquo;{daily?.r}&rdquo;
+                <p className="eyebrow">Today&rsquo;s Verse</p>
+                <p className="iast" style={{ fontSize: "var(--text-sm)", textAlign: "left", marginBottom: "var(--space-3)" }}>
+                  {daily?.t.split("\n")[0]}
+                </p>
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--ink-soft)", margin: "0 0 var(--space-2)" }}>
+                  {daily?.e}
                 </p>
                 <p className="muted">Bhagavad-gītā {daily?.ref}</p>
               </div>
-              <Link className="link-arrow" href={`/explorer#${daily?.ref ?? ""}`}>Read today&rsquo;s verse in context <span aria-hidden="true">→</span></Link>
+              <Link className="link-arrow" href="/book#editions">Read it in full — get the book <span aria-hidden="true">→</span></Link>
             </div>
           </div>
         </div>
@@ -261,73 +234,16 @@ export default function MyStudy() {
         </div>
       </section>
 
-      {/* ============ BOOKMARKS & NOTES ============ */}
+      {/* ============ ORDERS ============ */}
       <section className="section">
-        <div className="container">
-          <div className="grid-2" style={{ gap: "var(--space-7)", alignItems: "start" }}>
-            <div>
-              <div className="flex-between mb-5">
-                <h2 className="display-sm" style={{ margin: 0 }}>Bookmarks</h2>
-                <Link className="link-arrow" href="/explorer">Add more <span aria-hidden="true">→</span></Link>
-              </div>
-              <div className="stack-3">
-                {bookmarks.length === 0 ? (
-                  <div className="empty-state">
-                    <p>No bookmarks yet. Star the verses that speak to you in the{" "}
-                      <Link href="/explorer" style={{ color: "var(--gold-deep)", fontWeight: 600 }}>Verse Explorer</Link>.</p>
-                  </div>
-                ) : (
-                  bookmarks.map((ref) => {
-                    const v = GITA_VERSES[ref];
-                    if (!v) return null;
-                    return (
-                      <div className="card" key={ref} style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "var(--space-4)", alignItems: "center", padding: "var(--space-4) var(--space-5)" }}>
-                        <span className="verse-row__ref">{ref}</span>
-                        <span className="verse-row__text">{v.r}</span>
-                        <span style={{ display: "flex", gap: ".4rem" }}>
-                          <Link className="btn btn--ghost-light btn--sm" href={`/explorer#${ref}`}>Open</Link>
-                          <button
-                            className="btn btn--ghost-light btn--sm"
-                            type="button"
-                            aria-label={`Remove bookmark ${ref}`}
-                            onClick={() => {
-                              study.removeBookmark(ref);
-                              toast("Bookmark removed.");
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </span>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-            <div>
-              <div className="flex-between mb-5">
-                <h2 className="display-sm" style={{ margin: 0 }}>My Reflections</h2>
-                <span className="muted">{noteEntries.length ? `${noteEntries.length} saved` : ""}</span>
-              </div>
-              <div className="stack-3">
-                {noteEntries.length === 0 ? (
-                  <div className="empty-state">
-                    <p>No reflections yet. Open any verse and choose <strong>Note</strong> — your thoughts
-                      become your own commentary over time.</p>
-                  </div>
-                ) : (
-                  noteEntries.map(([ref, text]) => (
-                    <div className="card" key={ref} style={{ padding: "var(--space-4) var(--space-5)" }}>
-                      <div className="flex-between mb-2" style={{ marginBottom: ".5rem" }}>
-                        <span className="verse-row__ref">{ref}</span>
-                        <Link className="link-arrow" href={`/explorer#${ref}`} style={{ fontSize: "var(--text-xs)" }}>Edit <span aria-hidden="true">→</span></Link>
-                      </div>
-                      <p style={{ fontSize: "var(--text-sm)", color: "var(--ink-soft)", margin: 0 }}>{text}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+        <div className="container" style={{ maxWidth: 760 }}>
+          <div className="card" style={{ textAlign: "center" }}>
+            <p className="eyebrow" style={{ justifyContent: "center" }}>Your Orders</p>
+            <h2 className="display-sm" style={{ margin: "0 0 var(--space-3)" }}>Track a book you&rsquo;ve ordered</h2>
+            <p className="lede" style={{ marginInline: "auto" }}>
+              Look up any order with your order number and the email you used at checkout.
+            </p>
+            <Link className="btn btn--gold" href="/orders">Track your order</Link>
           </div>
         </div>
       </section>

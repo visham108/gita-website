@@ -18,19 +18,11 @@ interface Resource {
 
 const RESOURCES: Resource[] = [
   {
-    typeLabel: "Study tool",
-    title: "The Verse Explorer",
-    body: "Move through the Gītā verse by verse — the original Sanskrit, transliteration, word-for-word meanings and translation, side by side.",
-    meta: "On this site · All levels",
-    action: "Open the Explorer",
-    href: "/explorer",
-  },
-  {
-    typeLabel: "Guided plan",
-    title: "The Reading Plan",
-    body: "A six-stage path through the book's core teachings over eighteen weeks — shaped for students, working professionals, and everyday life.",
+    typeLabel: "Free live course",
+    title: "Learn the Gītā with a teacher",
+    body: "A free, live, instructor-led course on applying the Gītā to ordinary life — work, pressure, relationships, decisions. Ask questions as you go.",
     meta: "On this site · Beginner-friendly",
-    action: "Start the plan",
+    action: "See the course",
     href: "/course",
   },
   {

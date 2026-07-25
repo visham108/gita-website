@@ -83,7 +83,10 @@ export default function VerseOfTheDay() {
             </span>
           ))}
         </p>
-        <p className="bi-trans">{v?.r}</p>
+        {/* Our own note on the verse, not a translation. The English rendering
+            that used to sit here read too close to the BBT text to be safe on a
+            commercial page; the Sanskrit above is public domain. */}
+        <p className="bi-trans">{v?.e}</p>
         <div className="bi-nav">
           <button type="button" aria-label="Previous verse" onClick={() => setIndex((i) => (i - 1 + n) % n)}>‹</button>
           <span>{mounted ? `${index + 1} of ${n}` : ""}</span>

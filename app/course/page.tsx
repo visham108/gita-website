@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Course from "@/components/course/Course";
 
 export const metadata: Metadata = {
-  title: "Reading Plan — A Free Path Through the Gītā",
+  title: "Free Live Course — The Bhagavad-gītā for Everyday Life",
   description:
-    "A free 18-week reading plan for Bhagavad-gītā As It Is: six stages, what to read at each, the key concepts, and how they apply to study, work and daily life.",
+    "A free, live, instructor-led course on Bhagavad-gītā As It Is. Eight sessions on pressure, anger, duty, comparison and loss — taught in real time, open to complete beginners.",
 };
 
 export default function CoursePage() {

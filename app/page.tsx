@@ -82,6 +82,14 @@ export default function HomePage() {
         <div className="container hero__inner">
           <div>
             <p className="hero__sanskrit">श्रीमद्भगवद्गीता · धर्मक्षेत्रे कुरुक्षेत्रे</p>
+            {/* Announcement pill. The course is the strongest free offer on the
+                site, so it gets the first line of the hero — but as a quiet
+                badge, not a second headline competing with the book. */}
+            <Link className="hero__announce" href="/course">
+              <span className="hero__announce-tag">Free</span>
+              <span>Live Gītā course — register</span>
+              <span aria-hidden="true">→</span>
+            </Link>
             <h1 className="hero__title">
               <span className="line"><span>The song of the Divine,</span></span>
               <span className="line"><span><em>presented as it is.</em></span></span>
@@ -94,7 +102,7 @@ export default function HomePage() {
             </p>
             <div className="hero__ctas">
               <Link className="btn btn--gold btn--lg" href="/book#editions">Get the Book</Link>
-              <Link className="btn btn--ghost-dark btn--lg" href="/explorer">Begin Reading — Free</Link>
+              <Link className="btn btn--ghost-dark btn--lg" href="/course">Join the Free Course</Link>
             </div>
             <div className="hero__proof">
               <div className="proof-item"><strong>700</strong><span>Sanskrit verses</span></div>
@@ -123,20 +131,71 @@ export default function HomePage() {
                   teaching — the yoga of devotion, <em>bhakti</em>. It is not a book of abstract
                   philosophy. It is a call to live with clarity, courage, and love for the Divine — in
                   the middle of the battlefield of life.</p>
-                <Link className="link-arrow" href="/explorer">Explore all 18 chapters <span aria-hidden="true">→</span></Link>
+                <Link className="link-arrow" href="/course">See what the free course covers <span aria-hidden="true">→</span></Link>
               </div>
             </div>
           </div>
-          <nav className="ribbon reveal" aria-label="The eighteen chapters">
+          {/* A display of the book's shape, not navigation. These used to open
+              the Verse Explorer; with that gone they are plain items rather
+              than links that look clickable and go nowhere. */}
+          <div className="ribbon reveal" aria-label="The eighteen chapters">
             <div className="ribbon__scroll">
               {GITA_CHAPTERS.map((ch) => (
-                <Link key={ch.n} href={`/explorer#ch${ch.n}`}>
+                <span key={ch.n}>
                   <i>{ch.n}</i>
                   <b>{ch.en}<span className="muted-row">{ch.verses} verses</span></b>
-                </Link>
+                </span>
               ))}
             </div>
-          </nav>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ FREE LIVE COURSE ============
+          Placed high deliberately: it is the strongest free offer on the site
+          and the lowest-friction way in. It also sells books rather than
+          competing with them — the course reads from the book throughout. */}
+      <section className="section section--cream" id="live-course">
+        <div className="container">
+          <div className="course-promo reveal">
+            <div>
+              <p className="eyebrow">Live &amp; Instructor-Led · Free</p>
+              <h2 className="display-md" style={{ marginBottom: "var(--space-4)" }}>
+                Study the Gītā with a teacher
+              </h2>
+              <p className="lede">
+                Eight live sessions on what this book says about pressure, anger, duty, comparison
+                and loss. Taught in real time — so you can ask the question you actually have,
+                instead of reading alone.
+              </p>
+              <ul className="course-points">
+                <li><strong>Live sessions</strong> — with time for questions, not pre-recorded</li>
+                <li><strong>Completely free</strong> — no fee and no upsell</li>
+                <li><strong>Open to beginners</strong> — no Sanskrit or background needed</li>
+              </ul>
+              <Link className="link-arrow mt-5" href="/course">
+                See all eight sessions <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="card card--night course-promo__form">
+              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Register your interest</p>
+              <h3 style={{ fontSize: "var(--text-lg)", color: "var(--moon)", margin: "0 0 var(--space-2)" }}>
+                Save your place
+              </h3>
+              <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", marginBottom: "var(--space-5)" }}>
+                Dates for the next batch aren&rsquo;t fixed yet. Leave your email and we&rsquo;ll write
+                to you once, when they are.
+              </p>
+              <SignupForm
+                kind="course"
+                idPrefix="lc"
+                placeholder="you@example.com"
+                cta="Save my place"
+                withName
+                dark
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -169,7 +228,7 @@ export default function HomePage() {
             </article>
           ))}
           <div className="night-cta reveal">
-            <Link className="btn btn--ghost-dark" href="/explorer">Open the Verse Explorer</Link>
+            <Link className="btn btn--ghost-dark" href="/book#editions">Get the Book</Link>
           </div>
         </div>
       </section>
@@ -247,48 +306,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ FREE LIVE COURSE ============ */}
-      <section className="section section--cream" id="live-course">
-        <div className="container" style={{ maxWidth: 780 }}>
-          <div className="center reveal">
-            <p className="eyebrow" style={{ justifyContent: "center" }}>Live &amp; Instructor-Led</p>
-            <h2 className="display-md">Study the Gītā with a teacher — free</h2>
-            <p className="lede">
-              A live, instructor-led course on <em>Bhagavad-gītā As It Is</em>. Taught in real
-              time, not pre-recorded — so you can ask questions, hear others&rsquo;, and be
-              guided through the chapters rather than reading alone. No fee, no prerequisites.
-            </p>
-            <ul className="course-points">
-              <li><strong>Live sessions</strong> — taught by an instructor, with time for questions</li>
-              <li><strong>Completely free</strong> — no fee, and no book purchase required</li>
-              <li><strong>Open to beginners</strong> — no Sanskrit or background needed</li>
-            </ul>
-            <div className="mt-6">
-              <SignupForm
-                kind="course"
-                idPrefix="lc"
-                placeholder="Your email"
-                cta="Sign Up Free"
-                withName
-              />
-            </div>
-            <p className="muted mt-4" style={{ fontSize: "var(--text-sm)" }}>
-              Register your interest and we&rsquo;ll email you as soon as the dates for the next
-              batch are confirmed.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* ============ CTA + NEWSLETTER (full-bleed) ============ */}
       <section className="cta-band reveal" id="begin">
         <div className="container cta-band__inner">
           <p className="eyebrow" style={{ justifyContent: "center" }}>Your Journey Begins Here</p>
           <h2>Don&rsquo;t just read about the Gītā.<br />Read the Gītā.</h2>
-          <p className="lede">Follow the free 18-week reading plan, explore the verses, or open your own
-            copy tonight. Five thousand years of wisdom is waiting for one decision.</p>
+          <p className="lede">Join the free live course, or open your own copy tonight. Five thousand
+            years of wisdom is waiting for one decision.</p>
           <div className="cta-band__btns">
-            <Link className="btn btn--gold btn--lg" href="/course">See the Reading Plan</Link>
+            <Link className="btn btn--gold btn--lg" href="/course">Join the Free Course</Link>
             <Link className="btn btn--ghost-dark btn--lg" href="/book#editions">Get Your Copy</Link>
           </div>
           <SignupForm
