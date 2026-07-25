@@ -87,6 +87,12 @@ export interface DbProduct {
   stock_qty: number;
   /** false = made to order: stock never gates the sale, never moves. */
   track_stock: boolean;
+  /** Catalog grouping added with the multi-language range. Older rows (the
+      digital placeholders) leave these null; the Bhagavad-gītā editions set
+      all three so the edition selector can group by language and binding. */
+  book: string | null;
+  language: string | null;
+  binding: "standard" | "deluxe" | null;
 }
 
 /** Can a customer buy this right now? Digital is not on sale yet; tracked

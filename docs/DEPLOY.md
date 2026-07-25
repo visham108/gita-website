@@ -44,8 +44,8 @@ No placeholders remain. This is the map for changing them later.
 
 | What | Where | Current value |
 |---|---|---|
-| Book price | `/admin` → Inventory (no redeploy) | ₹399 hardcover, the only edition |
-| Stock count | same | Made-to-order: `track_stock` off, never sells out |
+| Book prices | `/admin` → Inventory (no redeploy) | Bhagavad-gītā in 13 languages (standard) + Hindi & English Deluxe — Marathon 2025 sheet, ₹210–500 |
+| Stock counts | same | All made-to-order: `track_stock` off, never sells out |
 | Shipping, first copy | `lib/commerce.ts` `SHIPPING_FIRST_ITEM_PAISE` | ₹79 |
 | Shipping, each extra | `lib/commerce.ts` `SHIPPING_EXTRA_ITEM_PAISE` | ₹39 |
 | Free-shipping threshold | `lib/commerce.ts` `FREE_SHIPPING_THRESHOLD_PAISE` | `0` — disabled |
@@ -54,8 +54,24 @@ No placeholders remain. This is the map for changing them later.
 | Business details, grievance officer | Contact + Terms pages | Visham Singh Rawat, Pune |
 | Admin allowlist | `ADMIN_EMAILS` secret | One address. Lowercased both sides, so case doesn't matter. |
 
-> **Price ceiling:** ₹399 must stay at or below the printed cover MRP. Selling
-> above MRP is an offence under the Legal Metrology Act.
+> **Price ceiling:** every price must stay at or below the printed cover MRP.
+> Selling above MRP is an offence under the Legal Metrology Act. The current
+> prices are the Marathon 2025 sheet (special distribution rates, dated Nov'25–
+> Jan'26), which sit at or below MRP.
+
+**Catalog model.** `products` carries `book`, `language` and `binding`. The
+Bhagavad-gītā range is one product concept presented through the edition
+selector (`components/EditionSelector.tsx`): pick a language, then a binding
+where more than one exists (only English and Hindi have Deluxe). Each
+language/binding is its own SKU, so cart, orders, emails and admin need no
+special handling — they key off product id. The old English row kept its id
+`hardcover` (past orders reference it by FK) and became English / Standard.
+
+**Only the Bhagavad-gītā is listed.** The rest of the Marathon sheet — Kṛṣṇa
+Book, SB Canto 1, Līlāmṛta, and the multi-volume Śrīmad-Bhāgavatam and
+Caitanya-caritāmṛta **sets** — is deliberately held back. The sets are the
+blocker: a 44-vol set is 20 kg+ and the flat ₹79 shipping would lose ~₹1,000 per
+order. Adding them needs either per-set shipping or an enquiry flow first.
 
 The shipping constants are typed `number`, not literals, specifically so that
 setting one to `0` stays a valid one-line change.
@@ -69,7 +85,7 @@ against a real cart total.
 
 ## 1. Database migrations
 
-All six under `supabase/migrations/` have been applied. This project **strips
+All seven under `supabase/migrations/` have been applied. This project **strips
 default privileges**, so any new table needs explicit grants to `authenticated`
 *and* `service_role` — omitting them produces confusing permission errors well
 after the table appears to work.

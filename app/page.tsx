@@ -2,7 +2,7 @@ import Link from "next/link";
 import { GITA_CHAPTERS } from "@/lib/data";
 import VerseOfTheDay from "@/components/home/VerseOfTheDay";
 import Anatomy from "@/components/home/Anatomy";
-import EditionsGrid from "@/components/EditionsGrid";
+import EditionSelector from "@/components/EditionSelector";
 import SignupForm from "@/components/SignupForm";
 
 const SPREADS = [
@@ -239,9 +239,9 @@ export default function HomePage() {
             <p className="eyebrow" style={{ justifyContent: "center" }}>Bring the Gītā Home</p>
             <h2 className="display-md">Get your copy</h2>
             <p className="lede">The complete, unabridged text — original Sanskrit,
-              transliteration, word meanings, translation and purports.</p>
+              transliteration, word meanings, translation and purports — in thirteen languages.</p>
           </div>
-          <EditionsGrid />
+          <EditionSelector />
           <p className="center muted mt-6">Ships across India. Pay securely by UPI, card or netbanking.
             Gifting? Add a personal inscription at checkout.</p>
         </div>

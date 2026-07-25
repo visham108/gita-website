@@ -1036,6 +1036,55 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 .format-card ul li { display: flex; gap: 0.6em; align-items: baseline; }
 .format-card ul li::before { content: "✦"; color: var(--gold); font-size: 0.72em; flex: none; }
 
+/* ---------- Edition selector (Bhagavad-gītā, many languages) ---------- */
+.edition-selector {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(1.5rem, 4vw, var(--space-8));
+  align-items: center;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+.edition-selector__panel { position: relative; display: flex; flex-direction: column; }
+.field-label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 0.5rem;
+}
+.edition-select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm, 8px);
+  cursor: pointer;
+}
+.edition-select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.edition-bindings { display: flex; gap: 0.5rem; }
+.edition-features {
+  list-style: none;
+  margin: var(--space-4) 0 var(--space-5);
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+.edition-features li { display: flex; gap: 0.6em; align-items: baseline; }
+.edition-features li::before { content: "✦"; color: var(--gold); font-size: 0.72em; flex: none; }
+
+@media (max-width: 720px) {
+  .edition-selector { grid-template-columns: 1fr; }
+  .edition-selector__cover { order: -1; }
+}
+
 /* ---------- Chips, badges ---------- */
 
 .chip {
