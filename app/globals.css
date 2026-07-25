@@ -810,14 +810,22 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   font-size: var(--text-sm);
   transition: color 0.2s, border-color 0.2s;
 }
+/* The number owns column 1 across BOTH rows, so the label and hint both live
+   in the wide 1fr column 2. Without the row span, grid auto-placement drops the
+   hint into the narrow `auto` column 1, which then stretches to fit the hint and
+   starves column 2 — squeezing a multi-word label like "Word for word" onto one
+   word per line. */
 .layer-btn::before {
   content: counter(layer, decimal-leading-zero);
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
   font-family: var(--font-display);
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
 }
-.layer-btn b { display: block; font-weight: 650; font-size: var(--text-base); }
-.layer-btn span { display: block; font-size: var(--text-xs); opacity: 0.75; }
+.layer-btn b { grid-column: 2; display: block; font-weight: 650; font-size: var(--text-base); }
+.layer-btn span { grid-column: 2; display: block; font-size: var(--text-xs); opacity: 0.75; }
 .layer-btn:hover { color: var(--moon); }
 .layer-btn[aria-selected="true"] { color: var(--moon); border-left-color: var(--gold-bright); }
 .layer-btn[aria-selected="true"]::before { color: var(--gold-bright); }

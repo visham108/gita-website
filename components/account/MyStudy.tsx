@@ -23,7 +23,8 @@ const PLANS = [
   { value: "daily", badge: "700 days", badgeClass: "badge badge--night", title: "A Verse a Day", body: "One verse with purport every morning. Small, unbreakable, and quietly life-changing." },
 ];
 
-const TOTAL_LESSONS = READING_PLAN.flatMap((s) => s.readings).length;
+const ALL_READINGS = READING_PLAN.flatMap((s) => s.readings);
+const TOTAL_LESSONS = ALL_READINGS.length;
 
 function AuthCard() {
   const toast = useToast();
@@ -112,8 +113,13 @@ export default function MyStudy() {
   const lastRead = mounted ? study.lastRead : null;
   const plan = mounted ? study.plan : null;
 
-  const doneLessons = Object.values(study.course.done).filter(Boolean).length;
-  const coursePct = Math.round((doneLessons / TOTAL_LESSONS) * 100);
+  // Count only readings that exist in the current plan — the exact same basis
+  // the Reading Plan page uses. Counting every truthy key in `done` instead
+  // (the old approach) also tallied orphaned ids left over from the previous
+  // course structure, so this figure read higher than the Reading Plan bar and
+  // could even exceed 100%.
+  const doneLessons = ALL_READINGS.filter((r) => study.course.done[r.id]).length;
+  const coursePct = TOTAL_LESSONS ? Math.round((doneLessons / TOTAL_LESSONS) * 100) : 0;
   const noteEntries = Object.entries(notes);
   const daily = ORDERED_VERSES[mounted ? dailyVerseIndex() : 0];
   const lastVerse = lastRead && GITA_VERSES[lastRead.ref] ? GITA_VERSES[lastRead.ref] : null;
