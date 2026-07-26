@@ -1025,7 +1025,7 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold-deep);
+  color: var(--flame-deep);
 }
 .card--night .format-card__type { color: var(--gold-bright); }
 .format-card__price { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -1094,21 +1094,56 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 }
 
 /* ---------- Kurukṣetra scene ---------- */
-.scene {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(1.75rem, 4vw, var(--space-8));
+
+/* Full-bleed band with the painting behind the text. The artwork's left two
+   thirds are open sky, which is where the words sit; the chariot holds the
+   right edge. Text is --ink, not --ink-soft: measured against the sky it makes
+   6.6:1 at the darkest point where ink-soft only reached 3.5:1. */
+.scene-band {
+  position: relative;
+  overflow: hidden;
+  display: flex;
   align-items: center;
+  min-height: clamp(26rem, 46vw, 40rem);
+  padding-block: var(--space-7);
+  background: #f3dcae; /* matches the sky, so any gap while loading is invisible */
 }
-.scene__art { margin: 0; }
-.kurukshetra {
+.scene-band__media { position: absolute; inset: 0; }
+.scene-band__media picture,
+.scene-band__media img {
   display: block;
   width: 100%;
-  height: auto;
-  border-radius: var(--radius-md);
+  height: 100%;
+  object-fit: cover;
+  /* Right of centre: as the band narrows, the figures must stay in frame. */
+  object-position: 74% 50%;
 }
-.scene__text > .lede { margin-bottom: var(--space-4); }
-.scene__text p:not(.lede):not(.eyebrow) { color: var(--moon-soft); }
+/* Held at 50%+ across the whole width the text occupies (it ends near 46%),
+   then falls away fast so the chariot and sky on the right stay untouched.
+   Measured: at 50% scrim over the darkest sky, ink reads 10.8:1 and flame-deep
+   6.1:1. Weaker than this and the small-caps citation drops under AA. */
+.scene-band__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(253, 249, 242, 0.86) 0%,
+    rgba(253, 249, 242, 0.72) 30%,
+    rgba(253, 249, 242, 0.52) 48%,
+    rgba(253, 249, 242, 0.14) 62%,
+    rgba(253, 249, 242, 0) 72%
+  );
+}
+.scene-band .container { position: relative; }
+.scene-band__text {
+  max-width: 34rem;
+  color: var(--ink);
+}
+.scene-band__text .eyebrow { color: var(--gold-deep); }
+.scene-band__text h2 { color: var(--ink); }
+.scene-band__text .lede,
+.scene-band__text p { color: var(--ink); }
+.scene-band__text > .lede { margin-bottom: var(--space-4); }
 
 /* The verse: Sanskrit only. Set apart with a rule rather than a box, so it
    reads as quoted scripture and not as another card. */
@@ -1117,19 +1152,22 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   padding-left: var(--space-5);
   border-left: 2px solid var(--gold);
 }
+/* Colours here are for a LIGHT ground. They were originally written against the
+   midnight section and used gold-bright / moon tones, which all but vanished
+   once the painting replaced it. */
 .scene__verse .sanskrit {
   border: none;
   padding: 0;
   margin: 0 0 var(--space-3);
   text-align: left;
   font-size: var(--text-md);
-  color: var(--gold-bright);
+  color: var(--flame-deep);
   line-height: 1.9;
 }
 .scene__verse .iast {
   text-align: left;
   margin: 0 0 var(--space-3);
-  color: var(--moon-soft);
+  color: var(--ink);
   font-size: var(--text-sm);
 }
 .scene__verse cite {
@@ -1138,12 +1176,30 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   font-size: var(--text-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--moon-faint);
+  color: var(--flame-deep);
 }
 
+/* Narrow: the painting can no longer carry text — the sky it needs is mostly
+   cropped away — so the two separate. Image on top at its own aspect ratio,
+   words below on cream. */
 @media (max-width: 900px) {
-  .scene { grid-template-columns: 1fr; }
-  .scene__art { order: -1; }
+  .scene-band {
+    display: block;
+    min-height: 0;
+    padding-block: 0;
+    background: var(--cream);
+  }
+  .scene-band__media { position: static; }
+  .scene-band__media img {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-position: 70% 50%;
+  }
+  .scene-band__scrim { display: none; }
+  .scene-band__text {
+    max-width: none;
+    padding-block: var(--space-6);
+  }
 }
 
 /* ---------- Hero announcement pill ---------- */
@@ -1815,7 +1871,7 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--gold-deep);
+  color: var(--flame-deep);
 }
 .verse-source__body {
   margin: 0 0 var(--space-4);
@@ -2115,7 +2171,7 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--gold-deep);
+  color: var(--flame-deep);
 }
 .resource-card h3 { font-size: var(--text-md); margin: 0; }
 .resource-card p { flex: 1; }

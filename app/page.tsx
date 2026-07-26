@@ -184,15 +184,18 @@ export default function HomePage() {
           Sanskrit is shown: the ślokas are public domain, while the English
           translation is the BBT's and belongs in the book. The caption carries
           the sense in our own words instead. */}
-      <section className="section section--night-deep" id="scene">
+      <section className="scene-band" id="scene">
+        {/* The painting sits behind, then a scrim to lift contrast on the left
+            where the text goes. Later siblings paint on top, so this needs no
+            z-index juggling. */}
+        <div className="scene-band__media">
+          <Kurukshetra />
+        </div>
+        <div className="scene-band__scrim" aria-hidden="true" />
         <div className="container">
-          <div className="scene reveal">
-            <figure className="scene__art">
-              <Kurukshetra />
-            </figure>
-            <div className="scene__text">
-              <p className="eyebrow">Kurukṣetra · Where it was spoken</p>
-              <h2 className="display-md">Two armies, and one question</h2>
+          <div className="scene-band__text reveal">
+            <p className="eyebrow">Kurukṣetra · Where it was spoken</p>
+            <h2 className="display-md">Two armies, and one question</h2>
 
               <blockquote className="scene__verse">
                 <p className="sanskrit">
@@ -217,7 +220,6 @@ export default function HomePage() {
                 outcome. The very first line calls that battlefield a <em>field of dharma</em> —
                 the book is spoken into an unavoidable, messy obligation, not away from one.
               </p>
-            </div>
           </div>
         </div>
       </section>
