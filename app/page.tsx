@@ -317,18 +317,6 @@ export default function HomePage() {
             <Link className="btn btn--gold btn--lg" href="/course">Join the Free Course</Link>
             <Link className="btn btn--ghost-dark btn--lg" href="/book#editions">Get Your Copy</Link>
           </div>
-          <SignupForm
-            kind="newsletter"
-            idPrefix="nl"
-            placeholder="Email — a verse & reflection"
-            cta="Subscribe"
-            dark
-          />
-          {/* Honest about timing: the weekly send is not running yet, so the
-              form does not imply mail starts arriving tomorrow. */}
-          <p className="muted" style={{ textAlign: "center", margin: "var(--space-3) 0 0", fontSize: "var(--text-xs)", color: "#ffe9d6" }}>
-            A single verse and a short reflection, once the series begins. Unsubscribe any time.
-          </p>
         </div>
       </section>
     </main>

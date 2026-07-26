@@ -226,14 +226,19 @@ export default function BookPage() {
               </details>
             ))}
           </div>
-          <div className="center mt-7 reveal">
-            <div className="cta-band">
-              <h2 style={{ fontSize: "var(--text-xl)" }}>Still deciding?</h2>
-              <p className="lede">Sit in on the free live course first. No cost, no commitment — see how the
-                book reads when someone walks you through it.</p>
-              <Link className="btn btn--gold btn--lg" href="/course">See the Free Course</Link>
-            </div>
-          </div>
+        </div>
+      </section>
+
+      {/* ============ CLOSING CTA (full-bleed) ============
+          .cta-band is a full-width section treatment — a viewport-scale
+          gradient and square edges. Nested inside a container it read as a
+          stray orange box, so it sits at page level like the home page one. */}
+      <section className="cta-band reveal">
+        <div className="container cta-band__inner">
+          <h2>Still deciding?</h2>
+          <p className="lede">Sit in on the free live course first. No cost, no commitment — see how the
+            book reads when someone walks you through it.</p>
+          <Link className="btn btn--gold btn--lg" href="/course">See the Free Course</Link>
         </div>
       </section>
     </main>

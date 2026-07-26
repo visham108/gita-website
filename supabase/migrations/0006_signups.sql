@@ -1,5 +1,8 @@
 -- ============================================================================
--- Sign-ups: free live course interest, and the weekly-verse newsletter.
+-- Sign-ups: free live course interest.
+-- (A 'newsletter' kind was also permitted here originally; the weekly-verse
+--  list was later removed because nothing ever sent it. The check constraint
+--  still allows the value, harmlessly — no code writes it. See 0011.)
 -- Both are captured server-side only. These rows are personal data (name +
 -- email), so nothing is readable by anon or authenticated clients — the
 -- service-role key is the only way in, exactly like orders.

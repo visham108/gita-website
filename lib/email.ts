@@ -278,25 +278,9 @@ function unsubFooter(unsubUrl: string): string {
     <a href="${unsubUrl}" style="color:#77624e;">Unsubscribe</a> to stop receiving these.`;
 }
 
-export function newsletterSignupEmail(unsubUrl: string): { subject: string; html: string } {
-  return {
-    subject: "You're on the list — a verse from the Gītā",
-    html: shell(
-      "A verse a week 🌿",
-      /* Deliberately does NOT say "every Monday" or imply the series is already
-         running. There is no scheduled sender yet, and a confirmation that
-         promises weekly mail nobody sends is the fastest way to be marked as
-         spam — which would damage the same domain that carries order
-         confirmations. */
-      `<p style="line-height:1.6;">You're on the list. When the weekly verse begins, a single
-       verse from <em>Bhagavad-gītā As It Is</em> with a short reflection will arrive in your
-       inbox — nothing more, and never anything else.</p>
-       <p style="line-height:1.6;">In the meantime, the free live course is the best way in:</p>
-       <p><a href="${SITE_URL}/course" style="color:#9c430b;">See the free live course</a></p>`,
-      unsubFooter(unsubUrl)
-    ),
-  };
-}
+/* newsletterSignupEmail lived here. The weekly-verse list was removed: nothing
+   ever sent it, and a subscription that never arrives earns spam complaints
+   against the same domain that carries order confirmations. */
 
 /** Tells the seller a lead came in, so they can act on it. */
 export function signupAlertEmail(kind: string, email: string, name?: string | null): { subject: string; html: string } {

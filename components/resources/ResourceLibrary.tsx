@@ -99,22 +99,27 @@ export default function ResourceLibrary() {
             ))}
           </div>
 
-          <div className="cta-band mt-7 reveal">
-            <p className="eyebrow" style={{ justifyContent: "center" }}>After the Gītā</p>
-            <h2 style={{ fontSize: "var(--text-xl)" }}>Recommended next steps</h2>
-            <p className="lede">Finished your first reading? Join the free live course, or find a temple or
-              study group near you — the Gītā opens a door; a whole world lies beyond it.</p>
-            <div style={{ display: "flex", gap: "var(--space-3)", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link className="btn btn--gold" href="/course">Join the Free Course</Link>
-              <a
-                className="btn btn--ghost-dark"
-                href="https://centres.iskcon.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Find a Temple Near You ↗
-              </a>
-            </div>
+        </div>
+      </section>
+
+      {/* Full-bleed, like the home page. Nested in a container this treatment
+          rendered as a stray orange box with square edges. */}
+      <section className="cta-band reveal">
+        <div className="container cta-band__inner">
+          <p className="eyebrow" style={{ justifyContent: "center" }}>After the Gītā</p>
+          <h2>Recommended next steps</h2>
+          <p className="lede">Finished your first reading? Join the free live course, or find a temple or
+            study group near you — the Gītā opens a door; a whole world lies beyond it.</p>
+          <div className="cta-band__btns">
+            <Link className="btn btn--gold btn--lg" href="/course">Join the Free Course</Link>
+            <a
+              className="btn btn--ghost-dark btn--lg"
+              href="https://centres.iskcon.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Find a Temple Near You ↗
+            </a>
           </div>
         </div>
       </section>

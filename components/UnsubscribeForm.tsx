@@ -23,7 +23,7 @@ export default function UnsubscribeForm({ id }: { id: string }) {
   if (state === "done")
     return (
       <>
-        <p><strong>Done — you&apos;re unsubscribed.</strong> You won&apos;t receive the weekly verse again.</p>
+        <p><strong>Done — you&apos;re unsubscribed.</strong> You won&apos;t hear from us about the course again.</p>
         <p style={{ color: "var(--ink-soft)" }}>
           Order confirmations and shipping updates are separate, and still arrive for
           anything you buy.
@@ -34,7 +34,7 @@ export default function UnsubscribeForm({ id }: { id: string }) {
 
   return (
     <>
-      <p>Confirm you&apos;d like to stop receiving the weekly verse email.</p>
+      <p>Confirm you&apos;d like to stop receiving emails about the free live course.</p>
       <p>
         <button
           type="button"

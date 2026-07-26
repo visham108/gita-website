@@ -2,19 +2,23 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { adminEmails } from "@/lib/admin";
 import {
-  sendEmail, courseSignupEmail, newsletterSignupEmail, signupAlertEmail,
+  sendEmail, courseSignupEmail, signupAlertEmail,
   unsubscribeUrl, unsubscribePostUrl,
 } from "@/lib/email";
 import { readJsonObject } from "@/lib/http";
 
-/** Free-course interest and newsletter subscriptions.
+/** Free-course interest.
 
-    Public and unauthenticated, so it is deliberately narrow: only two list
-    names are accepted, and the (kind, email) unique constraint means a repeated
-    submit inserts nothing and — importantly — sends nothing. That stops the
-    same address being used to pump out mail. */
+    Public and unauthenticated, so it is deliberately narrow: only one list name
+    is accepted, and the (kind, email) unique constraint means a repeated submit
+    inserts nothing and — importantly — sends nothing. That stops the same
+    address being used to pump out mail.
 
-const KINDS = ["course", "newsletter"] as const;
+    A "newsletter" list used to live here too. It was removed: nothing ever sent
+    the weekly verse it promised, and a subscription that never arrives earns
+    spam complaints against the domain that also carries order confirmations. */
+
+const KINDS = ["course"] as const;
 type Kind = (typeof KINDS)[number];
 
 function isKind(v: unknown): v is Kind {
@@ -54,8 +58,7 @@ export async function POST(request: Request) {
     // Email failures must not fail the signup — the row is already saved.
     try {
       const unsub = unsubscribeUrl(data[0].id);
-      const conf =
-        body.kind === "course" ? courseSignupEmail(unsub, name) : newsletterSignupEmail(unsub);
+      const conf = courseSignupEmail(unsub, name);
       /* RFC 8058: Gmail and Outlook render their own unsubscribe control from
          these headers, which is what keeps people from reaching for "report
          spam" instead — a complaint would harm the domain that also carries
@@ -78,9 +81,7 @@ export async function POST(request: Request) {
     ok: true,
     alreadySubscribed: !isNew,
     message: isNew
-      ? body.kind === "course"
-        ? "You're on the list — check your email for confirmation."
-        : "Subscribed. Your first verse arrives this week."
+      ? "You're on the list — check your email for confirmation."
       : "You're already on this list — nothing more to do.",
   });
 }

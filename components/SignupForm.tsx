@@ -14,11 +14,11 @@ export default function SignupForm({
   withName = false,
   dark = false,
 }: {
-  kind: "course" | "newsletter";
+  kind: "course";
   idPrefix: string;
   placeholder: string;
   cta: string;
-  /** Ask for a name too — worth it for the course, overkill for a newsletter. */
+  /** Ask for a name too — worth it when a teacher will be greeting people. */
   withName?: boolean;
   /** Sitting on a dark panel: labels and helper text need light colours. */
   dark?: boolean;

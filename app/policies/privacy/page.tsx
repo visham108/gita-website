@@ -11,8 +11,7 @@ export default function PrivacyPolicy() {
         <strong>Orders:</strong> your name, email, phone number and shipping address — the
         minimum needed to deliver books and send order updates.{" "}
         <strong>Accounts (optional):</strong> your email, and your name if you give one.{" "}
-        <strong>Course and newsletter sign-ups:</strong> your email, and your name if you
-        give one.{" "}
+        <strong>Course sign-ups:</strong> your email, and your name if you give one.{" "}
         <strong>Payments:</strong> handled entirely by Razorpay; we never see or store your
         card, UPI or banking details.
       </p>
@@ -20,7 +19,7 @@ export default function PrivacyPolicy() {
       <h2>What we do with it</h2>
       <p>
         Fulfil orders, run your account, and send the emails you ask for (order updates;
-        course announcements and a weekly verse if you sign up). We do not sell your data,
+        course announcements if you sign up). We do not sell your data,
         and we share it only with the services that make the site work.
       </p>
 
@@ -56,7 +55,7 @@ export default function PrivacyPolicy() {
 
       <h2>Email you can stop</h2>
       <p>
-        Every weekly-verse and course email carries an unsubscribe link, and one click ends
+        Every course email carries an unsubscribe link, and one click ends
         it — no account or reply needed. Order confirmations and shipping updates are
         separate: they relate to something you bought, so they keep arriving for as long as
         the order is live.

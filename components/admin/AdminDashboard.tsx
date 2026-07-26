@@ -64,7 +64,7 @@ const STATUS_LABEL: Record<string, string> = {
 
 interface AdminSignup {
   id: string;
-  kind: "course" | "newsletter";
+  kind: "course";
   name: string | null;
   email: string;
   created_at: string;
@@ -374,17 +374,13 @@ export default function AdminDashboard({ adminEmail }: { adminEmail: string }) {
 
 function SignupsPanel({ signups, onChanged }: { signups: AdminSignup[] | null; onChanged: () => Promise<void> }) {
   const toast = useToast();
-  const [kind, setKind] = useState<"all" | "course" | "newsletter">("all");
   const [busy, setBusy] = useState<string | null>(null);
 
   if (signups === null) return <p className="admin-empty">Loading signups…</p>;
 
-  const counts = {
-    all: signups.length,
-    course: signups.filter((s) => s.kind === "course").length,
-    newsletter: signups.filter((s) => s.kind === "newsletter").length,
-  };
-  const visible = signups.filter((s) => kind === "all" || s.kind === kind);
+  // One list now: the weekly-verse newsletter was removed, so the kind filter
+  // that used to sit here had nothing left to filter between.
+  const visible = signups;
 
   async function remove(s: AdminSignup) {
     if (!window.confirm(`Remove ${s.email} from the ${s.kind} list? Do this when someone asks to unsubscribe.`)) return;
@@ -405,25 +401,20 @@ function SignupsPanel({ signups, onChanged }: { signups: AdminSignup[] | null; o
 
   function exportSignups() {
     downloadCsv(
-      `signups-${kind}-${new Date().toISOString().slice(0, 10)}.csv`,
-      ["list", "name", "email", "signed_up"],
-      visible.map((s) => [s.kind, s.name, s.email, s.created_at])
+      `course-signups-${new Date().toISOString().slice(0, 10)}.csv`,
+      ["name", "email", "signed_up"],
+      visible.map((s) => [s.name, s.email, s.created_at])
     );
   }
 
   return (
     <>
       <p className="admin-hint">
-        People who asked to hear about the free live course, and weekly-verse subscribers.
-        Export the course list when you announce a batch — you promised these people an email
-        when dates are confirmed.
+        People who asked to hear about the free live course — {visible.length} so far.
+        Export this list when you announce a batch: you promised them an email when dates
+        are confirmed.
       </p>
       <div className="admin-filters">
-        {(["all", "course", "newsletter"] as const).map((k) => (
-          <button key={k} className={`chip ${kind === k ? "is-active" : ""}`} onClick={() => setKind(k)}>
-            {k === "all" ? "All" : k === "course" ? "Live course" : "Newsletter"} · {counts[k]}
-          </button>
-        ))}
         <button className="btn btn--ghost-light btn--sm admin-export" onClick={exportSignups} disabled={visible.length === 0}>
           Export CSV
         </button>
