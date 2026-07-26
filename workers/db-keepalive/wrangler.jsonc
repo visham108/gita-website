@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gita-db-keepalive",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+
+  // Daily, not weekly. Supabase pauses after 7 days idle, so a weekly ping
+  // leaves no margin — one missed run and the database sleeps. 04:20 UTC is
+  // ~09:50 IST, off-peak either way.
+  "triggers": {
+    "crons": ["20 4 * * *"]
+  },
+
+  // No routes and no custom domain: this Worker is only ever invoked by its
+  // cron trigger, plus its workers.dev URL for manual checks.
+  "observability": {
+    "enabled": true
+  }
+
+  // SUPABASE_URL and SUPABASE_ANON_KEY are set with `wrangler secret put`,
+  // never committed. The anon key is public by design (it ships in the browser
+  // bundle), but keeping it out of version control matches the rest of the repo.
+}
