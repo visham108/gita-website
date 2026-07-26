@@ -122,6 +122,40 @@
   --dur: 0.55s;
 }
 
+/* ---------- Phone scale ----------
+
+   The fluid type above is fluid between tablet and desktop, but its clamp()
+   MINIMUMS are desktop-sized — so a 375px phone was getting a 47px headline and
+   72px of padding on every section. Layout already collapsed correctly at these
+   widths; it was the scale that never came down, which is why the page read as
+   oversized and loose rather than broken.
+
+   Overriding the tokens fixes it everywhere at once, because every component
+   sizes from them. Values are tuned at 375px: hero ~32px, section headings
+   ~25px, section padding 48px. */
+@media (max-width: 600px) {
+  :root {
+    --text-hero: clamp(1.85rem, 1.3rem + 3.1vw, 2.5rem);
+    --text-3xl: clamp(1.65rem, 1.25rem + 2.2vw, 2.2rem);
+    --text-2xl: clamp(1.45rem, 1.15rem + 1.7vw, 1.9rem);
+    --text-xl: clamp(1.2rem, 1rem + 1.1vw, 1.5rem);
+    --text-verse: clamp(1.15rem, 0.95rem + 1.1vw, 1.5rem);
+    --text-lg: 1.2rem;
+    --text-md: 1.05rem;
+
+    /* Only the large steps shrink. The small ones set gaps inside components
+       and already read correctly; halving them would cramp everything. */
+    --space-9: 4rem;
+    --space-8: 3rem;
+    --space-7: 2.25rem;
+    --space-6: 1.5rem;
+
+    /* The header already drops its sub-label and shrinks its buttons below
+       620px, so it no longer needs 76px of height. */
+    --header-h: 64px;
+  }
+}
+
 /* ---------- Reset & base ---------- */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -2421,6 +2455,10 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
 @media (max-width: 560px) {
   .signup-form { flex-direction: column; }
   .signup-form .btn { width: 100%; }
+  /* `flex: 1 1 12rem` sizes along the MAIN axis. Once the form stacks, that
+     axis is vertical — so the basis became a 192px-tall input, and the sign-up
+     form, which is the main call to action, looked broken on every phone. */
+  .signup-form input { flex: 0 0 auto; width: 100%; }
 }
 
 /* ---- Admin: signups list ---- */
@@ -2445,4 +2483,42 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
    account are easy to hit with a thumb; desktop density is unchanged. */
 @media (pointer: coarse) {
   .icon-btn { width: 44px; height: 44px; }
+}
+
+/* Checkboxes must not inherit the full-width sizing that text fields get.
+   Previously handled by an inline style in Checkout.tsx, which then blocked the
+   touch-target rules below from enlarging it on phones. */
+.field input[type="checkbox"] { width: 16px; height: 16px; flex: none; }
+
+/* ---------- Touch targets ----------
+
+   Sized for fingers, not cursors. Several controls sat at 26–38px, which is
+   fiddly on a phone and was part of why the site felt unsteady there: the cart
+   and menu buttons, the edition binding chips, the quantity steppers and the
+   gift checkbox all sit directly in the buying path.
+
+   Keyed on coarse pointer OR a narrow viewport: the first catches tablets and
+   touchscreen laptops at any width, the second covers phones whose browsers
+   misreport pointer type — and makes the rules testable in a desktop browser
+   at a phone width. */
+@media (pointer: coarse), (max-width: 600px) {
+  .icon-btn { width: 44px; height: 44px; }
+  .chip { min-height: 44px; padding-inline: 1.1em; }
+  .edition-select { min-height: 44px; }
+
+  /* Steppers stay inline with the price, so 38px rather than a full 44 — big
+     enough to hit reliably without the row growing a second line. */
+  .qty button { width: 38px; height: 38px; font-size: 1.05rem; }
+  .qty__input { min-height: 38px; }
+
+  /* The gift checkbox was 13px. Its label is the real target, so the box grows
+     and the whole label becomes tappable. The label is styled inline in
+     Checkout.tsx and carries no class, so this matches on structure. */
+  .field input[type="checkbox"] { width: 20px; height: 20px; flex: none; }
+  .field label:has(input[type="checkbox"]) { min-height: 44px; }
+
+  /* 16px is the threshold below which iOS Safari zooms the page on focus —
+     which reads as the layout lurching. Nothing focusable may sit under it. */
+  input, select, textarea { font-size: max(1rem, var(--text-base)); }
+  .lang-select { min-height: 40px; font-size: 1rem; }
 }

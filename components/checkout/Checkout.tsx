@@ -271,7 +271,10 @@ export default function Checkout() {
                   <div className="field"><label htmlFor="f-pincode">PIN code</label><input id="f-pincode" required pattern="[0-9]{6}" inputMode="numeric" autoComplete="postal-code" /></div>
                   <div className="field" style={{ justifyContent: "end" }}>
                     <label style={{ display: "flex", alignItems: "center", gap: ".6em", fontWeight: 500, cursor: "pointer" }}>
-                      <input type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)} style={{ width: "auto" }} /> This is a gift
+                      {/* Sized in globals.css, not inline: an inline width beats
+                          any stylesheet rule, which stopped the touch-target
+                          styles from enlarging it on phones. */}
+                      <input type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)} /> This is a gift
                     </label>
                   </div>
                 </div>
