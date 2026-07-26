@@ -5,27 +5,6 @@ import Anatomy from "@/components/home/Anatomy";
 import EditionSelector from "@/components/EditionSelector";
 import SignupForm from "@/components/SignupForm";
 
-const SPREADS = [
-  {
-    ref: "2.47 · On action",
-    iast: "karmaṇy evādhikāras te mā phaleṣu kadācana",
-    translation: "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action.",
-    flip: false,
-  },
-  {
-    ref: "9.22 · On protection",
-    iast: "ananyāś cintayanto māṁ ye janāḥ paryupāsate",
-    translation: "To those who worship Me with exclusive devotion — I carry what they lack, and I preserve what they have.",
-    flip: true,
-  },
-  {
-    ref: "18.66 · The final word",
-    iast: "sarva-dharmān parityajya mām ekaṁ śaraṇaṁ vraja",
-    translation: "Abandon all varieties of religion and just surrender unto Me. I shall deliver you from all sinful reactions. Do not fear.",
-    flip: false,
-  },
-];
-
 const VOICES = [
   {
     quote: "In the morning I bathe my intellect in the stupendous and cosmogonal philosophy of the Bhagvat Geeta… in comparison with which our modern world and its literature seem puny and trivial.",
@@ -199,7 +178,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ ANATOMY OF A VERSE + VERSE SPREADS ============ */}
+      {/* ============ ANATOMY OF A VERSE ============ */}
       <section className="section section--night" id="verses">
         <div className="container">
           <div className="anatomy-head reveal">
@@ -216,17 +195,6 @@ export default function HomePage() {
             <div><b>The global standard</b>Translated into 80+ languages; the most widely distributed edition of the Gītā in history.</div>
           </div>
 
-          {SPREADS.map((s) => (
-            <article key={s.ref} className={"spread reveal" + (s.flip ? " spread--flip" : "")}>
-              <div className="spread__grid">
-                <p className="spread__ref">{s.ref}</p>
-                <div>
-                  <p className="iast">{s.iast}</p>
-                  <p className="spread__translation">{s.translation}</p>
-                </div>
-              </div>
-            </article>
-          ))}
           <div className="night-cta reveal">
             <Link className="btn btn--ghost-dark" href="/book#editions">Get the Book</Link>
           </div>
