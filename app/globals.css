@@ -1093,6 +1093,59 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   .edition-selector__cover { order: -1; }
 }
 
+/* ---------- Kurukṣetra scene ---------- */
+.scene {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.75rem, 4vw, var(--space-8));
+  align-items: center;
+}
+.scene__art { margin: 0; }
+.kurukshetra {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+.scene__text > .lede { margin-bottom: var(--space-4); }
+.scene__text p:not(.lede):not(.eyebrow) { color: var(--moon-soft); }
+
+/* The verse: Sanskrit only. Set apart with a rule rather than a box, so it
+   reads as quoted scripture and not as another card. */
+.scene__verse {
+  margin: var(--space-5) 0 var(--space-6);
+  padding-left: var(--space-5);
+  border-left: 2px solid var(--gold);
+}
+.scene__verse .sanskrit {
+  border: none;
+  padding: 0;
+  margin: 0 0 var(--space-3);
+  text-align: left;
+  font-size: var(--text-md);
+  color: var(--gold-bright);
+  line-height: 1.9;
+}
+.scene__verse .iast {
+  text-align: left;
+  margin: 0 0 var(--space-3);
+  color: var(--moon-soft);
+  font-size: var(--text-sm);
+}
+.scene__verse cite {
+  display: block;
+  font-style: normal;
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moon-faint);
+}
+
+@media (max-width: 900px) {
+  .scene { grid-template-columns: 1fr; }
+  .scene__art { order: -1; }
+}
+
 /* ---------- Hero announcement pill ---------- */
 
 /* Gives the free course the first line of the page without setting up a second

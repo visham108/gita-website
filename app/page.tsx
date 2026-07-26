@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GITA_CHAPTERS } from "@/lib/data";
 import VerseOfTheDay from "@/components/home/VerseOfTheDay";
 import Anatomy from "@/components/home/Anatomy";
+import Kurukshetra from "@/components/home/Kurukshetra";
 import EditionSelector from "@/components/EditionSelector";
 import SignupForm from "@/components/SignupForm";
 
@@ -173,6 +174,49 @@ export default function HomePage() {
                 withName
                 dark
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ KURUKṢETRA — the scene ============
+          Sits after the course so it doesn't push that down the page. Only the
+          Sanskrit is shown: the ślokas are public domain, while the English
+          translation is the BBT's and belongs in the book. The caption carries
+          the sense in our own words instead. */}
+      <section className="section section--night-deep" id="scene">
+        <div className="container">
+          <div className="scene reveal">
+            <figure className="scene__art">
+              <Kurukshetra />
+            </figure>
+            <div className="scene__text">
+              <p className="eyebrow">Kurukṣetra · Where it was spoken</p>
+              <h2 className="display-md">Two armies, and one question</h2>
+
+              <blockquote className="scene__verse">
+                <p className="sanskrit">
+                  धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः ।<br />
+                  मामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय ॥
+                </p>
+                <p className="iast">
+                  dharma-kṣetre kuru-kṣetre samavetā yuyutsavaḥ<br />
+                  māmakāḥ pāṇḍavāś caiva kim akurvata sañjaya
+                </p>
+                <cite>Bhagavad-gītā 1.1 — the opening verse</cite>
+              </blockquote>
+
+              <p className="lede">
+                The Bhagavad-gītā is a conversation of seven hundred verses, spoken some five
+                thousand years ago on the field of Kurukṣetra — in the last moments before a war,
+                when the warrior Arjuna lowered his bow and asked what was actually right.
+              </p>
+              <p>
+                Kṛṣṇa answers him from the driver&rsquo;s seat of his own chariot: on duty, on the
+                self that outlives the body, on acting wholeheartedly without being owned by the
+                outcome. The very first line calls that battlefield a <em>field of dharma</em> —
+                the book is spoken into an unavoidable, messy obligation, not away from one.
+              </p>
             </div>
           </div>
         </div>
