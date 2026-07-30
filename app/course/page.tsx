@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Course from "@/components/course/Course";
 
 export const metadata: Metadata = {
-  title: "Free Live Course — The Bhagavad-gītā for Everyday Life",
+  title: "Free Live Session — The Bhagavad-gītā in the Modern World",
   description:
-    "A free, live, instructor-led course on Bhagavad-gītā As It Is. Eight sessions on pressure, anger, duty, comparison and loss — taught in real time, open to complete beginners.",
+    "A free one-hour live session on Saturday 15 August, 8–9pm IST: what the Bhagavad-gītā says about pressure, anger, difficult decisions and identity. Open to everyone, no background needed.",
 };
 
 export default function CoursePage() {

@@ -3,6 +3,7 @@ import { GITA_CHAPTERS } from "@/lib/data";
 import VerseOfTheDay from "@/components/home/VerseOfTheDay";
 import Anatomy from "@/components/home/Anatomy";
 import Kurukshetra from "@/components/home/Kurukshetra";
+import { SESSION } from "@/lib/courseData";
 import EditionSelector from "@/components/EditionSelector";
 import SignupForm from "@/components/SignupForm";
 
@@ -67,7 +68,7 @@ export default function HomePage() {
                 badge, not a second headline competing with the book. */}
             <Link className="hero__announce" href="/course">
               <span className="hero__announce-tag">Free</span>
-              <span>Live Gītā course — register</span>
+              <span>Live session {SESSION.dayLabel.replace("Saturday ", "")} — join us</span>
               <span aria-hidden="true">→</span>
             </Link>
             <h1 className="hero__title">
@@ -139,38 +140,38 @@ export default function HomePage() {
         <div className="container">
           <div className="course-promo reveal">
             <div>
-              <p className="eyebrow">Live &amp; Instructor-Led · Free</p>
+              <p className="eyebrow">Free live session · {SESSION.dayLabel}</p>
               <h2 className="display-md" style={{ marginBottom: "var(--space-4)" }}>
-                Study the Gītā with a teacher
+                {SESSION.title}
               </h2>
               <p className="lede">
-                Eight live sessions on what this book says about pressure, anger, duty, comparison
-                and loss. Taught in real time — so you can ask the question you actually have,
-                instead of reading alone.
+                One hour on what this book says about the life you are actually living — pressure,
+                anger, difficult decisions, and who you are underneath the roles. Taught live, so
+                you can ask the question you actually have.
               </p>
               <ul className="course-points">
-                <li><strong>Live sessions</strong> — with time for questions, not pre-recorded</li>
-                <li><strong>Completely free</strong> — no fee and no upsell</li>
-                <li><strong>Open to beginners</strong> — no Sanskrit or background needed</li>
+                <li><strong>{SESSION.dayLabel}, {SESSION.timeLabel}</strong> — one hour, online</li>
+                <li><strong>Completely free</strong> — and you don&rsquo;t need the book to attend</li>
+                <li><strong>Open to everyone</strong> — no Sanskrit or background assumed</li>
               </ul>
               <Link className="link-arrow mt-5" href="/course">
-                See all eight sessions <span aria-hidden="true">→</span>
+                See what the hour holds <span aria-hidden="true">→</span>
               </Link>
             </div>
             <div className="card card--night course-promo__form">
-              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Register your interest</p>
+              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Save your seat</p>
               <h3 style={{ fontSize: "var(--text-lg)", color: "var(--moon)", margin: "0 0 var(--space-2)" }}>
-                Save your place
+                {SESSION.dayLabel}, {SESSION.timeLabel}
               </h3>
               <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", marginBottom: "var(--space-5)" }}>
-                Dates for the next batch aren&rsquo;t fixed yet. Leave your email and we&rsquo;ll write
-                to you once, when they are.
+                Leave your name and email and we&rsquo;ll send the joining link a day before.
+                Can&rsquo;t make it? Sign up anyway — it runs monthly.
               </p>
               <SignupForm
                 kind="course"
                 idPrefix="lc"
                 placeholder="you@example.com"
-                cta="Save my place"
+                cta="Save my seat"
                 withName
                 dark
               />

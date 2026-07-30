@@ -1,76 +1,118 @@
 import Link from "next/link";
 import SignupForm from "@/components/SignupForm";
-import { SESSIONS, AUDIENCE, FORMAT } from "@/lib/courseData";
+import { SESSION, AGENDA, AUDIENCE, FORMAT, SESSIONS } from "@/lib/courseData";
 
-/* The free live course — a preview, and the sign-up.
+/* The free session, and the sign-up.
 
-   This replaced a self-study reading tracker. The product here is the live
-   course, so the page has one job: make someone want to be in the room, and
-   let them register without hunting for a form. Sign-up appears twice — in the
-   hero, where intent is highest, and at the end, after the case is made — and
-   nowhere in between, so the middle of the page can just be honest about what
-   the course covers. */
+   Built around ONE dated evening rather than an eight-week commitment. That is a
+   small ask for a visitor who has never heard you teach, it carries a firm date
+   where a batch could not, and it repeats every month. The fuller course sits
+   lower on the page as a roadmap — what this leads to — and is introduced in the
+   closing minutes of the session itself, to a room that already chose to be
+   there.
+
+   Sign-up appears twice: in the hero where intent is highest, and at the close
+   after the case is made. Nowhere in between, so the middle of the page can just
+   be honest about what the hour contains. */
 
 export default function Course() {
   return (
     <main id="main">
-      {/* ============ HERO — the offer and the form together ============ */}
+      {/* ============ HERO — the session, the date, the form ============ */}
       <section className="page-hero">
         <div className="container">
           <nav aria-label="Breadcrumb">
             <ol className="breadcrumb">
               <li><Link href="/">Home</Link></li>
-              <li aria-current="page">Free Course</li>
+              <li aria-current="page">Free Session</li>
             </ol>
           </nav>
           <div className="course-hero">
             <div>
-              <p className="eyebrow">Free · Live · Instructor-led</p>
-              <h1>The Bhagavad-gītā,<br />for the life you actually have</h1>
+              <p className="eyebrow">Free · Live · Everyone welcome</p>
+              <h1>{SESSION.title}</h1>
               <p className="lede">
-                Eight live sessions on what this book says about pressure, anger, duty, comparison
-                and loss — taught in real time, with room to ask questions. No cost, no prior study
-                assumed.
+                One hour on what this five-thousand-year-old book says about the life you are
+                actually living — pressure, anger, difficult decisions, and who you are underneath
+                the roles. No cost, no preparation, and nothing to read beforehand.
               </p>
+
+              {/* The date, given its own weight — it is the single most useful
+                  thing on this page. */}
+              <div className="session-when">
+                <p className="session-when__date">
+                  <time dateTime={SESSION.startsAt}>{SESSION.dayLabel}</time>
+                </p>
+                <p className="session-when__time">{SESSION.timeLabel} · {SESSION.duration}</p>
+                <p className="session-when__note">
+                  Online. Joining details are emailed to you a day before.
+                </p>
+              </div>
+
               <ul className="course-hero__points">
-                <li>Taught live, so you can ask what you actually want to ask</li>
-                <li>Grounded in the verses, applied to work and family life</li>
-                <li>Open to complete beginners</li>
+                <li>Open to everyone — no Sanskrit, no scripture, no background assumed</li>
+                <li>You don&rsquo;t need to own the book to come</li>
+                <li>Runs every month, so a clash is not the end of it</li>
               </ul>
             </div>
+
             <div className="card card--night course-signup">
-              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Register your interest</p>
+              <p className="eyebrow" style={{ color: "var(--gold-bright)" }}>Save your seat</p>
               <h2 style={{ fontSize: "var(--text-lg)", color: "var(--moon)", margin: "0 0 var(--space-2)" }}>
-                Save your place
+                {SESSION.dayLabel}, {SESSION.timeLabel}
               </h2>
               <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", marginBottom: "var(--space-5)" }}>
-                Dates for the next batch aren&rsquo;t fixed yet. Leave your email and you&rsquo;ll be the
-                first to know when they are.
+                Leave your name and email and we&rsquo;ll send you the joining link. That is the
+                whole sign-up.
               </p>
               <SignupForm
                 kind="course"
                 idPrefix="course-hero"
                 placeholder="you@example.com"
-                cta="Save my place"
+                cta="Save my seat"
                 withName
                 dark
               />
               <p style={{ color: "var(--moon-faint)", fontSize: "var(--text-xs)", margin: "var(--space-4) 0 0" }}>
-                One email when the schedule is set. Unsubscribe in one click, any time.
+                Can&rsquo;t make this date? Sign up anyway — we&rsquo;ll tell you about the next one.
+                Unsubscribe in one click.
               </p>
             </div>
           </div>
         </div>
       </section>
 
+      {/* ============ THE HOUR ============ */}
+      <section className="section section--tight" id="agenda">
+        <div className="container">
+          <div className="center mb-7 reveal">
+            <p className="eyebrow" style={{ justifyContent: "center" }}>What the hour holds</p>
+            <h2 className="display-md">Sixty minutes, spent well</h2>
+            <p className="lede">Not a lecture at you. A short walk through the book&rsquo;s opening
+              situation, three ideas you can use immediately, and real time for questions.</p>
+          </div>
+          <ol className="agenda">
+            {AGENDA.map((a) => (
+              <li className="agenda__item reveal" key={a.title}>
+                <span className="agenda__time">{a.minutes}</span>
+                <div>
+                  <h3 className="agenda__title">{a.title}</h3>
+                  <p className="agenda__body">{a.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* ============ WHO IT'S FOR ============ */}
-      <section className="section section--tight">
+      <section className="section section--cream">
         <div className="container">
           <div className="center mb-6 reveal">
             <p className="eyebrow" style={{ justifyContent: "center" }}>Who it&rsquo;s for</p>
-            <h2 className="display-md">Written for people with jobs</h2>
-            <p className="lede">The Gītā was spoken to someone who had to act, under pressure, that day.
-              This course keeps it there.</p>
+            <h2 className="display-md">Come as you are</h2>
+            <p className="lede">The Gītā was spoken to someone who had to act, under pressure, that
+              day. This session keeps it there.</p>
           </div>
           <div className="grid-3">
             {AUDIENCE.map((a, i) => (
@@ -83,35 +125,7 @@ export default function Course() {
         </div>
       </section>
 
-      {/* ============ CURRICULUM ============ */}
-      <section className="section section--cream" id="sessions">
-        <div className="container">
-          <div className="center mb-7 reveal">
-            <p className="eyebrow" style={{ justifyContent: "center" }}>What we cover</p>
-            <h2 className="display-md">Eight sessions</h2>
-            <p className="lede">Each one starts with a question people actually arrive with, and answers it
-              from the text.</p>
-          </div>
-          <div className="sessions">
-            {SESSIONS.map((s) => (
-              <article className="session reveal" key={s.n}>
-                <div className="session__num" aria-hidden="true">{String(s.n).padStart(2, "0")}</div>
-                <div className="session__body">
-                  <h3 className="session__title">{s.title}</h3>
-                  <p className="session__question">&ldquo;{s.question}&rdquo;</p>
-                  <p className="session__text">{s.body}</p>
-                  <p className="session__takeaway">
-                    <strong>You leave with:</strong> {s.takeaway}
-                  </p>
-                  <p className="session__verses">{s.verses}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ FORMAT ============ */}
+      {/* ============ HOW IT WORKS ============ */}
       <section className="section">
         <div className="container">
           <div className="center mb-6 reveal">
@@ -126,35 +140,67 @@ export default function Course() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============ WHERE IT GOES — the fuller course ============ */}
+      <section className="section section--cream" id="series">
+        <div className="container">
+          <div className="center mb-7 reveal">
+            <p className="eyebrow" style={{ justifyContent: "center" }}>If you want to keep going</p>
+            <h2 className="display-md">The fuller course</h2>
+            <p className="lede">
+              For anyone who wants more than an hour, we run a longer course through the book&rsquo;s
+              core teachings — eight sessions, each opening with a question people actually arrive
+              with. It is introduced at the end of the free session, and it is free too. Nothing to
+              decide now.
+            </p>
+          </div>
+          <div className="sessions">
+            {SESSIONS.map((s) => (
+              <article className="session reveal" key={s.n}>
+                <div className="session__num" aria-hidden="true">{String(s.n).padStart(2, "0")}</div>
+                <div className="session__body">
+                  <h3 className="session__title">{s.title}</h3>
+                  <p className="session__question">&ldquo;{s.question}&rdquo;</p>
+                  <p className="session__text">{s.body}</p>
+                  <p className="session__takeaway"><strong>You leave with:</strong> {s.takeaway}</p>
+                  <p className="session__verses">{s.verses}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
           <div className="card card--night mt-7 reveal" style={{ textAlign: "center" }}>
-            <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold-bright)" }}>What you&rsquo;ll need</p>
+            <p className="eyebrow" style={{ justifyContent: "center", color: "var(--gold-bright)" }}>For the longer course</p>
             <h3 style={{ fontSize: "var(--text-lg)", color: "var(--moon)", margin: "0 0 var(--space-3)" }}>
-              A copy of the book
+              You&rsquo;ll want your own copy
             </h3>
             <p style={{ color: "var(--moon-soft)", maxWidth: "52ch", marginInline: "auto", marginBottom: "var(--space-5)" }}>
-              We read from <em>Bhagavad-gītā As It Is</em> throughout — the complete edition with the
-              original Sanskrit and Śrīla Prabhupāda&rsquo;s purports. Any copy works; if you don&rsquo;t
-              have one, we ship across India.
+              The free session needs nothing. The eight-session course reads from{" "}
+              <em>Bhagavad-gītā As It Is</em> throughout — the complete edition with the original
+              Sanskrit and Śrīla Prabhupāda&rsquo;s purports. Any copy works; if you don&rsquo;t have
+              one, we ship across India.
             </p>
-            <Link className="btn btn--gold" href="/book#editions">Get the book</Link>
+            <Link className="btn btn--gold" href="/book#editions">See the editions</Link>
           </div>
         </div>
       </section>
 
       {/* ============ CLOSING SIGN-UP ============ */}
       <section className="cta-band" id="signup">
-        <div className="container">
-          <p className="eyebrow" style={{ justifyContent: "center" }}>Next batch</p>
+        <div className="container cta-band__inner">
+          <p className="eyebrow" style={{ justifyContent: "center" }}>{SESSION.dayLabel} · {SESSION.timeLabel}</p>
           <h2 className="display-md">Come and sit in</h2>
           <p className="lede">
-            The dates aren&rsquo;t set yet. Leave your email and we&rsquo;ll write to you once — when the
-            schedule is confirmed.
+            One hour, online, free. Leave your email and we&rsquo;ll send the joining link a day
+            before.
           </p>
           <SignupForm
             kind="course"
             idPrefix="course-foot"
             placeholder="you@example.com"
-            cta="Save my place"
+            cta="Save my seat"
             withName
           />
         </div>

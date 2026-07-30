@@ -1,5 +1,6 @@
 import { moneyINR } from "@/lib/commerce";
 import { adminEmails } from "@/lib/admin";
+import { SESSION } from "@/lib/courseData";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /* Transactional email via Resend's REST API (Workers-safe fetch, no SDK).
@@ -235,24 +236,32 @@ export async function notifyOrderRefunded(admin: SupabaseClient, rzpOrderId: str
 
 /* ------------------------------------------------------- sign-up emails */
 
-/** Free live course — interest confirmed. Deliberately does NOT promise a
-    date, because none is scheduled yet; over-promising here would be the same
-    mistake as the old "ordering opens soon" copy. */
+/** Free live session — seat confirmed.
+
+    Now that there IS a date, this states it plainly. The one thing it must not
+    promise is the joining link, which does not exist until the meeting is
+    created — so it says the link follows a day before, and that is a promise the
+    seller has to keep by hand. Session details come from lib/courseData so the
+    page and this email can never disagree. */
 export function courseSignupEmail(unsubUrl: string, name?: string | null): { subject: string; html: string } {
   const greeting = name?.trim() ? `Hare Kṛṣṇa ${esc(name.trim())},` : "Hare Kṛṣṇa,";
   return {
-    subject: "You're on the list — free live Gītā course",
+    subject: `Your seat is saved — ${SESSION.dayLabel}, ${SESSION.timeLabel}`,
     html: shell(
-      "You're on the list 🪔",
+      "Your seat is saved 🪔",
       `<p style="line-height:1.6;">${greeting}</p>
-       <p style="line-height:1.6;">Thank you for registering your interest in the free,
-       live, instructor-led course on <em>Bhagavad-gītā As It Is</em>.</p>
-       <p style="line-height:1.6;">Sessions are taught live — not pre-recorded — so there is
-       room to ask questions and discuss. <strong>We'll email you as soon as the dates for
-       the next batch are confirmed</strong>, with the schedule and joining details.</p>
-       <p style="line-height:1.6;">In the meantime, you can see everything the course
-       covers — all eight sessions — here:</p>
-       <p><a href="${SITE_URL}/course" style="color:#9c430b;">See the course outline</a></p>`,
+       <p style="line-height:1.6;">You're booked in for <strong>${SESSION.title}</strong> — a free
+       one-hour session on what the Gītā says about the life you're actually living.</p>
+       <div style="background:#faefdf;border-left:3px solid #9c4610;padding:14px 18px;margin:18px 0;">
+         <p style="margin:0;font-size:17px;font-weight:bold;color:#9c430b;">${SESSION.dayLabel}</p>
+         <p style="margin:4px 0 0;color:#4a3826;">${SESSION.timeLabel} · ${SESSION.duration} · Online</p>
+       </div>
+       <p style="line-height:1.6;">Nothing to prepare, and you don't need to own the book to come.
+       <strong>We'll email you the joining link the day before.</strong></p>
+       <p style="line-height:1.6;">It's taught live, so bring your questions — most people in the
+       room will be meeting this book for the first time. Near the end we'll also show you the
+       longer course, for anyone who wants to keep going.</p>
+       <p><a href="${SITE_URL}/course" style="color:#9c430b;">See what the hour holds</a></p>`,
       unsubFooter(unsubUrl)
     ),
   };
