@@ -1,6 +1,14 @@
 import Link from "next/link";
 import SignupForm from "@/components/SignupForm";
-import { SESSION, AGENDA, AUDIENCE, FORMAT, SESSIONS } from "@/lib/courseData";
+import { SESSION, AGENDA, AUDIENCE, FORMAT, SESSIONS, MAHAVANI } from "@/lib/courseData";
+
+const lines = (s: string) =>
+  s.split("\n").map((l, i) => (
+    <span key={i}>
+      {i > 0 && <br />}
+      {l}
+    </span>
+  ));
 
 /* The free session, and the sign-up.
 
@@ -78,6 +86,34 @@ export default function Course() {
                 Unsubscribe in one click.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ WHY IT'S FREE — Mahāprabhu's instruction ============
+          Placed immediately after the hero because it answers the question a
+          free offer always raises. Quiet, dark surface: it is a moment to pause
+          on, not another sales panel. */}
+      <section className="section section--night-deep" id="why">
+        <div className="container">
+          <div className="mahavani reveal">
+            <p className="eyebrow" style={{ justifyContent: "center" }}>Why it costs nothing</p>
+            <blockquote className="mahavani__quote">
+              <p className="mahavani__script" lang="bn">{lines(MAHAVANI.bengali)}</p>
+              <p className="mahavani__iast">{lines(MAHAVANI.iast)}</p>
+              <p className="mahavani__rendering">{MAHAVANI.rendering}</p>
+              <cite className="mahavani__cite">{MAHAVANI.attribution}</cite>
+            </blockquote>
+            <p className="mahavani__note">
+              <em>Para-upakāra</em> — working for the good of others. That instruction is the whole
+              reason this session exists, and the reason there is nothing to pay. Giving the book
+              away is how we understand that line.
+            </p>
+            <p className="mahavani__note">
+              And to be clear about the welcome: the duty in the verse belongs to whoever is
+              teaching, not to you. Wherever you were born, whatever you believe, you are welcome
+              in the room.
+            </p>
           </div>
         </div>
       </section>

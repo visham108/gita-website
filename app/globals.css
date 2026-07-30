@@ -1282,6 +1282,58 @@ section[id], [id].section { scroll-margin-top: calc(var(--header-h) - 8px); }
   .hero__announce:hover { transform: none; }
 }
 
+/* ---------- Mahāprabhu's instruction ---------- */
+
+.mahavani { max-width: 46rem; margin-inline: auto; text-align: center; }
+.mahavani__quote {
+  margin: var(--space-5) 0 var(--space-6);
+  padding: 0;
+  border: none;
+}
+/* The verse is in BENGALI script, and the site ships no Bengali face. Modern
+   systems all include one, so this names the usual suspects and lets the OS
+   supply it rather than adding ~100KB of font for two lines. */
+.mahavani__script {
+  font-family: "Noto Sans Bengali", "Nirmala UI", "Bangla Sangam MN", "Vrinda",
+    "Shonar Bangla", var(--font-ui);
+  font-size: var(--text-lg);
+  line-height: 2;
+  color: var(--gold-bright);
+  margin: 0 0 var(--space-4);
+}
+.mahavani__iast {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-md);
+  line-height: 1.8;
+  color: var(--moon);
+  margin: 0 0 var(--space-4);
+}
+.mahavani__rendering {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--moon);
+  max-width: 34ch;
+  margin: 0 auto var(--space-4);
+  text-wrap: balance;
+}
+.mahavani__cite {
+  display: block;
+  font-style: normal;
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+.mahavani__note {
+  color: var(--moon-soft);
+  max-width: 58ch;
+  margin: 0 auto var(--space-4);
+}
+.mahavani__note:last-child { margin-bottom: 0; }
+.mahavani__note em { font-style: italic; color: var(--gold-bright); }
+
 /* ---------- Free live session ---------- */
 
 /* The date, given real weight. It is the most useful thing on the page, and it

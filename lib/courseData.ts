@@ -16,6 +16,22 @@ export const SESSION = {
   endsAt: "2026-08-15T21:00:00+05:30",
 };
 
+/* Śrī Caitanya Mahāprabhu's instruction, recorded by Kṛṣṇadāsa Kavirāja
+   Gosvāmī. The Bengali and its transliteration are 16th-century and public
+   domain; the English here is our own rendering, not the BBT translation.
+
+   It is on the page as the reason the session is free — para-upakāra is the
+   teacher's duty, not a debt placed on the reader. Framed deliberately that way,
+   because a verse about birth in Bhārata could otherwise read as an entry
+   requirement on a page that says everyone is welcome. */
+export const MAHAVANI = {
+  bengali: "ভারত–ভূমিতে হৈল মনুষ্য–জন্ম যার ।\nজন্ম সার্থক করি’ কর পর–উপকার ॥",
+  iast: "bhārata-bhūmite haila manuṣya janma yāra\njanma sārthaka kari’ kara para-upakāra",
+  rendering:
+    "Whoever has been given a human birth in the land of Bhārata — make that birth count for something, and then work for the good of others.",
+  attribution: "Śrī Caitanya Mahāprabhu · Caitanya-caritāmṛta, Ādi-līlā 9.41",
+};
+
 export interface AgendaItem {
   minutes: string;
   title: string;
