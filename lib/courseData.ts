@@ -7,13 +7,13 @@
 
 export const SESSION = {
   title: "The Bhagavad-gītā in the Modern World",
-  dayLabel: "Saturday 15 August",
+  dayLabel: "Saturday 22 August",
   timeLabel: "8:00–9:00 pm IST",
   duration: "One hour",
   /* Recorded here so the page, the email and the schema all read from one
      place. ISO in IST (+05:30). */
-  startsAt: "2026-08-15T20:00:00+05:30",
-  endsAt: "2026-08-15T21:00:00+05:30",
+  startsAt: "2026-08-22T20:00:00+05:30",
+  endsAt: "2026-08-22T21:00:00+05:30",
 };
 
 /* Śrī Caitanya Mahāprabhu's instruction, recorded by Kṛṣṇadāsa Kavirāja
