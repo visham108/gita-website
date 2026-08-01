@@ -238,13 +238,32 @@ export async function notifyOrderRefunded(admin: SupabaseClient, rzpOrderId: str
 
 /** Free live session — seat confirmed.
 
-    Now that there IS a date, this states it plainly. The one thing it must not
-    promise is the joining link, which does not exist until the meeting is
-    created — so it says the link follows a day before, and that is a promise the
-    seller has to keep by hand. Session details come from lib/courseData so the
-    page and this email can never disagree. */
+    Carries the joining link when SESSION.joinUrl is set, so nobody has to be
+    emailed by hand the day before. When it is empty the email falls back to
+    promising the link nearer the time — so a blank or half-configured value can
+    never go out as a dead button. Session details come from lib/courseData, so
+    this email and the page cannot disagree. */
 export function courseSignupEmail(unsubUrl: string, name?: string | null): { subject: string; html: string } {
   const greeting = name?.trim() ? `Hare Kṛṣṇa ${esc(name.trim())},` : "Hare Kṛṣṇa,";
+  const join = SESSION.joinUrl?.trim();
+
+  const joinBlock = join
+    ? `<p style="line-height:1.6;">Nothing to prepare, and you don't need to own the book to come.
+         When it's time, join from here:</p>
+       <p style="margin:18px 0;">
+         <a href="${esc(join)}"
+            style="display:inline-block;background:#9c430b;color:#fffdf8;padding:13px 26px;border-radius:6px;text-decoration:none;font-weight:bold;">
+           Join the session
+         </a>
+       </p>
+       <p style="line-height:1.6;font-size:14px;color:#77624e;">
+         Or paste this into your browser:<br/>
+         <span style="word-break:break-all;">${esc(join)}</span>
+       </p>
+       <p style="line-height:1.6;">Worth keeping this email — it is where the link lives.</p>`
+    : `<p style="line-height:1.6;">Nothing to prepare, and you don't need to own the book to come.
+       <strong>We'll email you the joining link the day before.</strong></p>`;
+
   return {
     subject: `Your seat is saved — ${SESSION.dayLabel}, ${SESSION.timeLabel}`,
     html: shell(
@@ -256,8 +275,7 @@ export function courseSignupEmail(unsubUrl: string, name?: string | null): { sub
          <p style="margin:0;font-size:17px;font-weight:bold;color:#9c430b;">${SESSION.dayLabel}</p>
          <p style="margin:4px 0 0;color:#4a3826;">${SESSION.timeLabel} · ${SESSION.duration} · Online</p>
        </div>
-       <p style="line-height:1.6;">Nothing to prepare, and you don't need to own the book to come.
-       <strong>We'll email you the joining link the day before.</strong></p>
+       ${joinBlock}
        <p style="line-height:1.6;">It's taught live, so bring your questions — most people in the
        room will be meeting this book for the first time. Near the end we'll also show you the
        longer course, for anyone who wants to keep going.</p>

@@ -164,7 +164,7 @@ export default function HomePage() {
                 {SESSION.dayLabel}, {SESSION.timeLabel}
               </h3>
               <p style={{ color: "var(--moon-soft)", fontSize: "var(--text-sm)", marginBottom: "var(--space-5)" }}>
-                Leave your name and email and we&rsquo;ll send the joining link a day before.
+                Leave your name and email and the joining link arrives straight away.
                 Can&rsquo;t make it? Sign up anyway — it runs monthly.
               </p>
               <SignupForm

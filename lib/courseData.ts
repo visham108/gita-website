@@ -14,6 +14,22 @@ export const SESSION = {
      place. ISO in IST (+05:30). */
   startsAt: "2026-08-22T20:00:00+05:30",
   endsAt: "2026-08-22T21:00:00+05:30",
+
+  /* The meeting link, sent in the confirmation email the moment someone signs
+     up — so nobody has to be emailed by hand the day before.
+
+     Left EMPTY until the meeting actually exists. The email checks this and
+     falls back to "we'll send the link nearer the time", so an empty value can
+     never go out as a broken or blank button. Paste the URL here, redeploy, and
+     every subsequent sign-up gets it automatically.
+
+     Anyone who signed up BEFORE this is filled in will not have received it —
+     they need one manual email.
+
+     This link belongs to the calendar event on visham.rawat@gmail.com for
+     22 Aug 2026, 8–9pm IST. If that event is deleted the link dies with it, so
+     move the date on the existing event rather than making a new one. */
+  joinUrl: "https://meet.google.com/kja-weev-hjs",
 };
 
 /* Śrī Caitanya Mahāprabhu's instruction, recorded by Kṛṣṇadāsa Kavirāja

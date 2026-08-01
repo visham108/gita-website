@@ -53,7 +53,7 @@ export default function Course() {
                 </p>
                 <p className="session-when__time">{SESSION.timeLabel} · {SESSION.duration}</p>
                 <p className="session-when__note">
-                  Online. Joining details are emailed to you a day before.
+                  Online. The joining link is emailed to you straight away.
                 </p>
               </div>
 
@@ -229,8 +229,7 @@ export default function Course() {
           <p className="eyebrow" style={{ justifyContent: "center" }}>{SESSION.dayLabel} · {SESSION.timeLabel}</p>
           <h2 className="display-md">Come and sit in</h2>
           <p className="lede">
-            One hour, online, free. Leave your email and we&rsquo;ll send the joining link a day
-            before.
+            One hour, online, free. Leave your email and the joining link arrives straight away.
           </p>
           <SignupForm
             kind="course"
