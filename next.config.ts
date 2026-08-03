@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   // Nothing gained by announcing the framework and its version to scanners.
   poweredByHeader: false,
 
+  /* No Cloudflare Images binding is configured, so the /_next/image route
+     already can't resize anything — it just fetches the original file and
+     passes it straight through. Skipping that route entirely means one fewer
+     Worker invocation per <Image>, which matters on the Workers CPU-time cap. */
+  images: { unoptimized: true },
+
   // Old static-site URLs (*.html) permanently redirect to their new routes so
   // existing links, bookmarks and search results keep working.
   async redirects() {
