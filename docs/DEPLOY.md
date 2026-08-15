@@ -177,6 +177,28 @@ Values come from `.env.local`, **except**:
 > `NEXT_PUBLIC_*` values are inlined at **build** time, so they must be set
 > before `cf:deploy`, and changing them requires a rebuild, not just a restart.
 
+### Meta Pixel (optional)
+
+`NEXT_PUBLIC_META_PIXEL_ID` — the numeric ID from Meta Events Manager. It
+measures whether an ad led to a course sign-up, which is what lets the campaign
+optimise for sign-ups instead of clicks.
+
+Because it is a `NEXT_PUBLIC_*` value it is **inlined at build time**, so
+`wrangler secret put` does nothing for it. Put it in `.env.local` and rebuild:
+
+```
+NEXT_PUBLIC_META_PIXEL_ID=<id from Events Manager>
+```
+
+Leave it unset and no tracker ships at all — `<MetaPixel />` renders nothing and
+`trackLead()` is a no-op. That is not merely cosmetic: the privacy policy
+describes the pixel, so **the policy and the build should go live together**.
+
+Events sent: `PageView` on every page (including client-side navigation) and
+`Lead` on a genuinely new course sign-up only — a repeat sign-up creates no row
+and fires nothing. No email address or name is sent; Advanced Matching is
+deliberately not enabled.
+
 ## 4. Deploy
 
 ```

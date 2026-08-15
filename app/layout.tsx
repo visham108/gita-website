@@ -6,6 +6,7 @@ import RevealObserver from "@/components/RevealObserver";
 import { ToastProvider } from "@/components/Toast";
 import { StudyProvider } from "@/lib/study/StudyProvider";
 import { CatalogProvider } from "@/components/CatalogProvider";
+import MetaPixel from "@/components/MetaPixel";
 import { getProducts } from "@/lib/products";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </StudyProvider>
         </ToastProvider>
         <RevealObserver />
+        <MetaPixel />
       </body>
     </html>
   );

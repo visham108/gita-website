@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Privacy Policy" };
 
 export default function PrivacyPolicy() {
   return (
-    <PolicyPage title="Privacy Policy" updated="July 2026">
+    <PolicyPage title="Privacy Policy" updated="August 2026">
       <h2>What we collect</h2>
       <p>
         <strong>Orders:</strong> your name, email, phone number and shipping address — the
@@ -30,9 +30,11 @@ export default function PrivacyPolicy() {
         <li><strong>Razorpay</strong> — takes the payment. Card, UPI and banking details go to them directly and never reach us.</li>
         <li><strong>Resend</strong> — delivers our email, so it handles your address and the message contents.</li>
         <li><strong>Shipping carriers</strong> — receive your name, address and phone, for delivery only.</li>
+        <li><strong>Meta (Facebook)</strong> — we advertise the free session on Facebook and Instagram, and the Meta Pixel on this site reports back which pages were viewed and whether a course sign-up was completed, so the advertising reaches people likely to be interested. It receives the page address, your IP address and browser details. It is <em>not</em> given your email address or your name, and it is not present on any payment or checkout step.</li>
       </ul>
       <p>
-        We run no advertising trackers and no third-party analytics on this site.
+        Apart from that advertising measurement, we run no third-party analytics on
+        this site. We do not sell your data to anyone.
       </p>
 
       <h2>How long we keep it</h2>
@@ -63,8 +65,15 @@ export default function PrivacyPolicy() {
 
       <h2>Cookies and what is stored on your device</h2>
       <p>
-        We set one <strong>cookie</strong>, and only when you sign in: the session that
-        keeps you signed in. There are no advertising or analytics cookies.
+        We set one <strong>cookie of our own</strong>, and only when you sign in: the
+        session that keeps you signed in.
+      </p>
+      <p>
+        The <strong>Meta Pixel</strong> described above also sets its own cookies, which
+        it uses to recognise a browser across visits and to measure whether an
+        advertisement led to a sign-up. Blocking third-party cookies in your browser, or
+        using any of the common ad-blocking extensions, stops the pixel loading and has
+        no effect on your ability to sign up, order, or use any part of this site.
       </p>
       <p>
         Your <strong>cart</strong> is held in your browser&apos;s local storage rather than in

@@ -50,13 +50,15 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       /* Next.js injects inline bootstrap scripts; Razorpay's widget is remote.
          cdn.razorpay.com is required too — checkout.js pulls their risk-detection
-         bundle from it, which a report-only run caught being blocked. */
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com",
+         bundle from it, which a report-only run caught being blocked.
+         connect.facebook.net serves the Meta Pixel's fbevents.js. */
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com https://connect.facebook.net",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      // Supabase (auth + data) and Razorpay (order creation) are called from the browser.
-      "connect-src 'self' https://*.supabase.co https://api.razorpay.com https://lumberjack.razorpay.com https://cdn.razorpay.com",
+      /* Supabase (auth + data) and Razorpay (order creation) are called from the
+         browser. The Meta Pixel beacons its events to facebook.com. */
+      "connect-src 'self' https://*.supabase.co https://api.razorpay.com https://lumberjack.razorpay.com https://cdn.razorpay.com https://www.facebook.com",
       // Razorpay renders its payment sheet in an iframe it owns.
       "frame-src https://api.razorpay.com https://checkout.razorpay.com",
       "form-action 'self'",

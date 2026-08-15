@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
+import { trackLead } from "@/components/MetaPixel";
 
 export default function SignupForm({
   kind,
@@ -49,6 +50,10 @@ export default function SignupForm({
         toast(json.error ?? "Something went wrong — please try again.");
         return;
       }
+      /* Only a genuinely new row is a conversion. Re-submitting an address that
+         is already on the list creates nothing and sends nothing, so counting
+         it would teach the ad campaign to chase people it already has. */
+      if (!json.alreadySubscribed) trackLead();
       toast(json.message ?? "You're signed up.");
       setDone(true);
       form.reset();
