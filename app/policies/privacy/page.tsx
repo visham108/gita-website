@@ -30,7 +30,22 @@ export default function PrivacyPolicy() {
         <li><strong>Razorpay</strong> — takes the payment. Card, UPI and banking details go to them directly and never reach us.</li>
         <li><strong>Resend</strong> — delivers our email, so it handles your address and the message contents.</li>
         <li><strong>Shipping carriers</strong> — receive your name, address and phone, for delivery only.</li>
-        <li><strong>Meta (Facebook)</strong> — we advertise the free session on Facebook and Instagram, and the Meta Pixel on this site reports back which pages were viewed and whether a course sign-up was completed, so the advertising reaches people likely to be interested. It receives the page address, your IP address and browser details. It is <em>not</em> given your email address or your name, and it is not present on any payment or checkout step.</li>
+        <li>
+          <strong>Meta (Facebook)</strong> — we advertise the free session on Facebook and
+          Instagram, and the Meta Pixel on this site reports back which pages were viewed
+          and whether a course sign-up was completed, so the advertising reaches people
+          likely to be interested. It receives the page address, your IP address and
+          browser details. Where you enter details into the course sign-up form, the pixel
+          also sends Meta a <em>scrambled</em> (one-way hashed) version of your email
+          address and name, which Meta uses to tell whether you are the same person who
+          saw the advertisement. We never send your details to Meta in readable form.
+          {" "}
+          <strong>
+            The pixel does not run on checkout, your orders, or your account
+          </strong>{" "}
+          — nothing you type when buying a book, including your address and phone number,
+          is seen by it.
+        </li>
       </ul>
       <p>
         Apart from that advertising measurement, we run no third-party analytics on

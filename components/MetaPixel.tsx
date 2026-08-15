@@ -25,6 +25,28 @@ import { useEffect, useRef } from "react";
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
+/* Pages the pixel must never run on.
+
+   Automatic Advanced Matching (enabled in Events Manager) makes the pixel read
+   form fields — email, phone, name, city, state, pincode — hash them, and
+   attach them to whatever event it sends. Checkout collects every one of those,
+   so a pixel firing there would hand a customer's shipping details to an ad
+   platform. Orders and the admin area are the same problem with different
+   fields.
+
+   None of these pages carries any advertising value either: the campaign
+   optimises for Lead, which only ever fires on the course sign-up form.
+
+   Advanced Matching only enriches events that are actually sent, so suppressing
+   the script AND the PageView here means nothing leaves these pages: a direct
+   load renders no script, and arriving by client-side navigation fires no
+   event. */
+const NO_PIXEL = ["/checkout", "/orders", "/account", "/admin", "/unsubscribe"];
+
+function pixelAllowed(pathname: string): boolean {
+  return !NO_PIXEL.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
 declare global {
   interface Window {
     fbq?: ((...args: unknown[]) => void) & { callMethod?: (...args: unknown[]) => void };
@@ -57,6 +79,11 @@ export default function MetaPixel() {
       firstRender.current = false;
       return;
     }
+    /* fbq stays loaded across client-side navigation, so this check is what
+       actually keeps events off the excluded pages once a visitor is inside the
+       app. Without it, walking from the book page into checkout would fire a
+       PageView there — carrying scraped form data with it. */
+    if (!pixelAllowed(pathname)) return;
     /* Next.js navigates without a document load, so the pixel would otherwise
        only ever see the page someone arrived on. */
     try {
@@ -67,6 +94,7 @@ export default function MetaPixel() {
   }, [pathname]);
 
   if (!PIXEL_ID) return null;
+  if (!pixelAllowed(pathname)) return null;
 
   return (
     <Script
