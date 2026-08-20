@@ -54,26 +54,33 @@ export interface AgendaItem {
   body: string;
 }
 
-/* Sixty minutes, honestly budgeted — including time for questions, which is the
-   part people actually come for. */
+/* The hour as actually delivered, matched to the session-1 deck rather than to
+   a rough sketch of it. Runs about 55 minutes of content plus questions, which
+   also keeps it inside the 60-minute cap on a free Google Meet call. */
 export const AGENDA: AgendaItem[] = [
   {
-    minutes: "10 min",
-    title: "Why this book, still",
+    minutes: "5 min",
+    title: "Gītā, or Google?",
     body:
-      "Five thousand years old, and the questions it opens with are the ones you had this week. What the Gītā actually is, and why it has outlasted almost everything written since.",
+      "Five quotes; you decide which ones are actually in the book. Most rooms get at least two wrong — and the ones that turn out not to be in it are usually the ones everybody has seen shared.",
   },
   {
     minutes: "10 min",
-    title: "A breakdown on a battlefield",
+    title: "What this book actually is",
     body:
-      "The Gītā does not begin with a sermon. It begins with a capable man whose nerve fails him, in the last moments before he has to act. We start where the book starts.",
+      "Seven hundred verses, spoken in about forty-five minutes, in the middle of a battlefield — to a capable man who came apart minutes before the biggest moment of his life. Kṛṣṇa could have chosen a sage. He chose someone with a job, a family and a crisis.",
   },
   {
-    minutes: "25 min",
-    title: "Three ideas you can use this week",
+    minutes: "15 min",
+    title: "The whole book in five subjects",
     body:
-      "Doing your work without being wrecked by how it lands. The exact sequence that runs from a stray thought to a decision you regret. And who you are when the roles fall away.",
+      "Everything across those seven hundred verses maps to five things: the Supreme, you, nature, time, and action. Once the frame is visible the book stops being intimidating and starts being navigable.",
+  },
+  {
+    minutes: "10 min",
+    title: "The verse everyone half-knows",
+    body:
+      "2.47 — your right is to the work, never to its fruits. Including the line at the end that almost nobody quotes, which rules out using detachment as a cover for not trying.",
   },
   {
     minutes: "10 min",
@@ -85,7 +92,7 @@ export const AGENDA: AgendaItem[] = [
     minutes: "5 min",
     title: "Where this goes next",
     body:
-      "A look at the fuller course we run from here, for anyone who wants to keep going. No obligation, and no cost to that either.",
+      "The six sessions that follow, and a thirty-day experiment small enough that you can start it on Monday.",
   },
 ];
 
@@ -120,80 +127,78 @@ export interface CourseSession {
   takeaway: string;
 }
 
-/* The fuller course, introduced in the closing minutes of the free session.
-   Shown on the page as a roadmap — what this leads to — not as the thing being
-   signed up for. */
+/* The seven-session series.
+
+   Session 1 is the free live session itself — the deck closes on "Session 1 of
+   7" — so this is not a separate course sold afterwards; it is the arc the
+   first hour begins. Sessions 2–6 follow the Gītā's own five subjects (īśvara,
+   jīva, prakṛti, kāla, karma) plus the yoga it teaches, and 7 lands all of it
+   on an ordinary week.
+
+   No BBT translations here: verse references only, plus our own plain-English
+   framing. */
 export const SESSIONS: CourseSession[] = [
   {
     n: 1,
-    title: "When you don't know what's right",
-    question: "How do I decide when every option costs something?",
+    title: "The life manual",
+    question: "What is this book, and why should it matter to me?",
     body:
-      "The Gītā opens with a capable man whose competence runs out. Arjuna is not confused about what he wants — he is confused about what is right, and the difference matters.",
-    verses: "Chapter 1 · 2.6–2.8",
-    takeaway: "Telling apart a problem of information from a problem of principle — and knowing which one you're in.",
+      "Seven hundred verses, spoken in about forty-five minutes, in the middle of a battlefield — to a capable man whose nerve had failed him minutes before the biggest moment of his life. Not to a renunciant in a cave. Kṛṣṇa could have chosen sages; he chose a married professional in the middle of a crisis at work.",
+    verses: "Chapter 1 · 2.13 · 2.47 · 18.66",
+    takeaway: "A clear map of what the Gītā actually contains — and why it was spoken to someone with a job, a family, and a problem.",
   },
   {
     n: 2,
-    title: "You are not your results",
-    question: "Why does one bad quarter feel like a verdict on me?",
+    title: "Who is actually speaking",
+    question: "Who is Kṛṣṇa, and why does that change the book?",
     body:
-      "The first teaching Kṛṣṇa gives is about identity: the self that occupied your childhood body still reads this sentence. Outcomes touch what you have; they do not touch what you are.",
-    verses: "2.13 · 2.20 · 2.22",
-    takeaway: "A working separation between your performance and your worth, and the language to hold it under pressure.",
+      "The Gītā is a conversation, and conversations happen between persons. Not a vague energy or a cosmic force — someone with character, humour and intent, who after seven hundred verses of analysis asks for a relationship rather than compliance.",
+    verses: "4.6–4.8 · 7.7 · 9.10 · 10.8",
+    takeaway: "Why the book reads completely differently once you notice it is addressed to you by someone, rather than about something.",
   },
   {
     n: 3,
-    title: "Work without the anxiety",
-    question: "How do I care about my work without being wrecked by how it lands?",
+    title: "What you are underneath",
+    question: "What stays the same when everything about me changes?",
     body:
-      "The most quoted verse in the book is a working instruction: your claim is on the action, never on the fruit. Not indifference — obsessing over the result actively degrades the work, because attention leaks from the task to the scoreboard.",
-    verses: "2.47 · 3.9 · 5.10",
-    takeaway: "A way to give full effort and genuinely let go of the outcome, tested against a real deadline in your own week.",
+      "The self that occupied your childhood body still reads this sentence. The Gītā starts here because every other question depends on who is asking it — and because the fear underneath most of our decisions is a fear about the body, not about us.",
+    verses: "2.13 · 2.17 · 2.20 · 2.22",
+    takeaway: "A working distinction between what you have and what you are, and what it does to the fear of losing either.",
   },
   {
     n: 4,
-    title: "The anatomy of anger",
-    question: "Why do I lose it over things that don't matter?",
+    title: "Saṁsāra and karma",
+    question: "Why does the same kind of trouble keep finding me?",
     body:
-      "Two verses lay out a precise sequence: dwelling on something, then attachment, then desire, then anger when it's blocked, then confusion, then a decision you regret. Every blow-up you've apologised for climbed those rungs in order.",
-    verses: "2.62–2.63",
-    takeaway: "Catching the sequence at the first rung, where it costs nothing, instead of the fifth, where it costs a relationship.",
+      "Karma is not instant justice and not a lightning bolt. It is closer to an accounting system: every action posts an entry, and the balance carries forward — across a lifetime, and past the end of one.",
+    verses: "2.22 · 3.9 · 4.17 · 8.6",
+    takeaway: "A way to read your own patterns as a ledger you are still writing, rather than luck happening to you.",
   },
   {
     n: 5,
-    title: "Your work, not theirs",
-    question: "Why does everyone else's career look better than mine?",
+    title: "Nature and time",
+    question: "Why can I never hold on to anything good?",
     body:
-      "Better to do your own duty imperfectly than another's well. The clearest answer to comparison in the book — the question stops being \"is this impressive?\" and becomes \"is this mine?\"",
-    verses: "3.35 · 18.45–18.47",
-    takeaway: "A way to weigh an opportunity by fit rather than prestige, and to stop running someone else's race.",
+      "Two of the Gītā's five subjects describe the setting rather than the players — the machinery you are entangled in, and the clock nobody pauses. Everything material degrades, on a schedule. Knowing that changes what you agree to build on.",
+    verses: "7.4–7.5 · 8.17 · 11.32 · 14.5",
+    takeaway: "Clear eyes about what is temporary by design, so that losing it stops feeling like a personal failure.",
   },
   {
     n: 6,
-    title: "A mind you can live with",
-    question: "Why can't I keep any discipline going?",
+    title: "The yoga ladder",
+    question: "There are so many paths — which one is actually mine?",
     body:
-      "The Gītā is blunt: the mind is your closest friend or your worst enemy, and nobody else holds that position. Then it gets practical — not for one who eats too much or too little, sleeps too much or too little. Most burnout is a moderation failure dressed up as dedication.",
-    verses: "6.5–6.6 · 6.16–6.17 · 6.35",
-    takeaway: "One discipline small enough that you will actually still be doing it in a month.",
+      "Yoga in the Gītā is not flexibility. Its own definition is evenness — samatvaṁ yoga ucyate. Four rungs: act and offer the results, know the self, still the mind, love the Person. Each one includes the rung below it rather than replacing it.",
+    verses: "2.48 · 6.5–6.6 · 6.47 · 12.6–12.8",
+    takeaway: "Where you actually stand on that ladder, and the next rung — not the top one.",
   },
   {
     n: 7,
-    title: "Steady when it goes wrong",
-    question: "How do some people stay level when everything shakes?",
+    title: "On an ordinary Monday",
+    question: "How does any of this survive contact with my real week?",
     body:
-      "Arjuna asks how such a person walks and speaks. The answer describes someone undisturbed by gain and loss — not because they feel nothing, but because their centre isn't outside them.",
-    verses: "2.54–2.72 · 12.13–12.19",
-    takeaway: "Composure as something you practise, not a temperament you were or weren't born with.",
-  },
-  {
-    n: 8,
-    title: "What it's all for",
-    question: "Where does this actually lead?",
-    body:
-      "The book's conclusion is not a technique but a relationship. After chapters of philosophy and discipline, the path named as most accessible is devotion — an offering of the heart rather than an intellectual or athletic feat.",
-    verses: "9.22 · 12.6–12.8 · 18.65–18.66",
-    takeaway: "An honest look at what the Gītā is finally asking of you — and why it asks it last, not first.",
+      "Effort without burnout. A mind that is a friend rather than an enemy — the Gītā is blunt that it is both, and that nobody else holds the position. Equal vision toward the people in front of you. An anchor that holds in a crisis.",
+    verses: "2.47 · 5.18 · 6.5–6.6 · 2.22",
+    takeaway: "A thirty-day experiment small enough that you will still be running it in a month.",
   },
 ];

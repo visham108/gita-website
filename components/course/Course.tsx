@@ -14,10 +14,10 @@ const lines = (s: string) =>
 
    Built around ONE dated evening rather than an eight-week commitment. That is a
    small ask for a visitor who has never heard you teach, it carries a firm date
-   where a batch could not, and it repeats every month. The fuller course sits
-   lower on the page as a roadmap — what this leads to — and is introduced in the
-   closing minutes of the session itself, to a room that already chose to be
-   there.
+   where a batch could not, and it repeats every month. It is also session one
+   of seven: the remaining six sit lower on the page as a roadmap — what this
+   leads to — and are introduced in the closing minutes of the session itself,
+   to a room that already chose to be there.
 
    Sign-up appears twice: in the hero where intent is highest, and at the close
    after the case is made. Nowhere in between, so the middle of the page can just
@@ -179,17 +179,18 @@ export default function Course() {
         </div>
       </section>
 
-      {/* ============ WHERE IT GOES — the fuller course ============ */}
+      {/* ============ WHERE IT GOES — sessions 2 to 7 ============ */}
       <section className="section section--cream" id="series">
         <div className="container">
           <div className="center mb-7 reveal">
-            <p className="eyebrow" style={{ justifyContent: "center" }}>If you want to keep going</p>
-            <h2 className="display-md">The fuller course</h2>
+            <p className="eyebrow" style={{ justifyContent: "center" }}>Where this goes</p>
+            <h2 className="display-md">Session one of seven</h2>
             <p className="lede">
-              For anyone who wants more than an hour, we run a longer course through the book&rsquo;s
-              core teachings — eight sessions, each opening with a question people actually arrive
-              with. It is introduced at the end of the free session, and it is free too. Nothing to
-              decide now.
+              This hour is the first of seven. The rest follow the Gītā&rsquo;s own structure — who
+              is speaking, what you are, how karma actually works, the nature and time you are
+              living inside, the yoga it teaches, and what to do with all of it on an ordinary
+              Monday. Every session is free, and each opens with a question people genuinely arrive
+              with. Come to the first and see; nothing to decide beyond that.
             </p>
           </div>
           <div className="sessions">
@@ -213,10 +214,10 @@ export default function Course() {
               You&rsquo;ll want your own copy
             </h3>
             <p style={{ color: "var(--moon-soft)", maxWidth: "52ch", marginInline: "auto", marginBottom: "var(--space-5)" }}>
-              The free session needs nothing. The eight-session course reads from{" "}
-              <em>Bhagavad-gītā As It Is</em> throughout — the complete edition with the original
-              Sanskrit and Śrīla Prabhupāda&rsquo;s purports. Any copy works; if you don&rsquo;t have
-              one, we ship across India.
+              The first session needs nothing — come empty-handed. The six that follow read from{" "}
+              <em>Bhagavad-gītā As It Is</em> throughout: the complete edition with the original
+              Sanskrit, word-for-word meanings and Śrīla Prabhupāda&rsquo;s purports. Any copy works;
+              if you don&rsquo;t have one, we ship across India.
             </p>
             <Link className="btn btn--gold" href="/book#editions">See the editions</Link>
           </div>
