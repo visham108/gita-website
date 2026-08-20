@@ -260,6 +260,12 @@ export function courseSignupEmail(unsubUrl: string, name?: string | null): { sub
          Or paste this into your browser:<br/>
          <span style="word-break:break-all;">${esc(join)}</span>
        </p>
+       <p style="line-height:1.6;font-size:14px;color:#77624e;">
+         One thing worth doing before Saturday: the call runs on Google Meet, so
+         <strong>you'll need to be signed in to a Google account</strong> (any Gmail address
+         works) on whichever device you join from. Meet won't let you in otherwise, and
+         eight o'clock is a bad time to find that out.
+       </p>
        <p style="line-height:1.6;">Worth keeping this email — it is where the link lives.</p>`
     : `<p style="line-height:1.6;">Nothing to prepare, and you don't need to own the book to come.
        <strong>We'll email you the joining link the day before.</strong></p>`;

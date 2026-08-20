@@ -53,7 +53,8 @@ export default function Course() {
                 </p>
                 <p className="session-when__time">{SESSION.timeLabel} · {SESSION.duration}</p>
                 <p className="session-when__note">
-                  Online. The joining link is emailed to you straight away.
+                  Online, on Google Meet. The joining link is emailed to you straight away —
+                  you&rsquo;ll just need to be signed in to a Google account to join.
                 </p>
               </div>
 
