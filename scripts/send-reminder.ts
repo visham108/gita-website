@@ -12,6 +12,9 @@
      npx tsx scripts/send-reminder.ts            # preview only
      npx tsx scripts/send-reminder.ts --send     # actually send
 
+   --only <email> restricts the run to one address, for checking how the mail
+   actually lands before sending it to the whole list.
+
    Resend's free tier allows 100 emails/day; this sends one per signup, so the
    ceiling is 100 recipients in a day. The script stops short of that rather
    than half-sending a batch.
@@ -69,7 +72,20 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const rows = (await res.json()) as { id: string; email: string; name: string | null }[];
+  let rows = (await res.json()) as { id: string; email: string; name: string | null }[];
+
+  /* --only <email>: a real send to one real row, so the unsubscribe link in it
+     is that person's live link. Used to check how the mail lands. */
+  const onlyIdx = process.argv.indexOf("--only");
+  if (onlyIdx !== -1) {
+    const target = (process.argv[onlyIdx + 1] ?? "").trim().toLowerCase();
+    rows = rows.filter((r) => r.email.toLowerCase() === target);
+    if (rows.length === 0) {
+      console.error(`No signup row for "${target}" — nothing to send.`);
+      process.exit(1);
+    }
+    console.log(`\n--only: restricted to ${target}`);
+  }
 
   console.log(`\n${rows.length} people signed up.\n`);
   rows.forEach((r, i) =>
