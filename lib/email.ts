@@ -290,6 +290,54 @@ export function courseSignupEmail(unsubUrl: string, name?: string | null): { sub
   };
 }
 
+/** Same-day reminder for the live session.
+
+    Sent a couple of hours before, which is when people actually decide about a
+    free evening. Deliberately short: the only thing that matters is the link,
+    so everything else stays out of its way.
+
+    Carries the unsubscribe footer and List-Unsubscribe headers like every other
+    subscription mail — this goes to a list, on the domain that also carries
+    order confirmations, and a spam complaint there is expensive. */
+export function courseReminderEmail(unsubUrl: string, name?: string | null): { subject: string; html: string } {
+  const greeting = name?.trim() ? `Hare Kṛṣṇa ${esc(name.trim())},` : "Hare Kṛṣṇa,";
+  const join = SESSION.joinUrl?.trim();
+
+  const linkBlock = join
+    ? `<p style="margin:22px 0;">
+         <a href="${esc(join)}"
+            style="display:inline-block;background:#9c430b;color:#fffdf8;padding:14px 30px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:17px;">
+           Join the session
+         </a>
+       </p>
+       <p style="line-height:1.6;font-size:14px;color:#77624e;">
+         Or paste this in:<br/>
+         <span style="word-break:break-all;">${esc(join)}</span>
+       </p>
+       <p style="line-height:1.6;font-size:14px;color:#77624e;">
+         If the call ends unexpectedly around the hour mark, click the same link again
+         and you'll come straight back in.
+       </p>`
+    : `<p style="line-height:1.6;">We'll send the joining link shortly.</p>`;
+
+  return {
+    subject: `Tonight at ${SESSION.timeLabel.split("–")[0].trim()} — your Gītā session`,
+    html: shell(
+      "Tonight 🪔",
+      `<p style="line-height:1.6;">${greeting}</p>
+       <p style="line-height:1.6;">Just a note that <strong>${SESSION.title}</strong> runs
+       tonight, ${SESSION.dayLabel}, at ${SESSION.timeLabel}. Here is the link — that is all
+       you need.</p>
+       ${linkBlock}
+       <p style="line-height:1.6;">An hour, nothing to prepare, and you don't need to own the
+       book. Most people in the room will be meeting the Gītā for the first time, so bring
+       whatever question you actually have — nothing is too basic.</p>
+       <p style="line-height:1.6;">See you at eight.</p>`,
+      unsubFooter(unsubUrl)
+    ),
+  };
+}
+
 /** One-click opt-out. The signup row's primary key is a random v4 UUID, so the
     link is unguessable without needing a separate signing secret — and it is
     the only thing in the URL, so no email address travels in a query string. */
